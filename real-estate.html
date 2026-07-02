@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScaleFlow — AI Employees for Dubai Real Estate</title>
+<style>
+:root{
+  --dark:#070707;
+  --panel:#0d0d0f;
+  --line:rgba(255,255,255,.09);
+  --line-strong:rgba(255,255,255,.16);
+  --ink:#f4f2ee;
+  --mute:#8f8d88;
+  --faint:#5c5a56;
+  --accent:#5b76f7;
+  --green:#7ee04f;
+  --gold:#c8a15a;
+  --serif:'Times New Roman',Georgia,serif;
+  --sans:'Helvetica Neue','Inter',system-ui,-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--dark);color:var(--ink);
+  font-family:var(--sans);
+  font-weight:400;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+a{color:inherit;text-decoration:none}
+.eyebrow{
+  font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--faint);font-weight:600;
+}
+.serif-i{font-family:var(--serif);font-style:italic;font-weight:400}
+
+/* ===== NAV ===== */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  backdrop-filter:blur(14px);background:rgba(7,7,7,.72);
+  border-bottom:1px solid var(--line);
+}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-size:15px;letter-spacing:.22em;font-weight:700}
+.logo span{color:var(--accent)}
+.nav-cta{
+  font-size:12.5px;letter-spacing:.04em;padding:9px 18px;
+  border:1px solid var(--line-strong);border-radius:100px;
+  transition:.25s;font-weight:500;
+}
+.nav-cta:hover{background:var(--ink);color:var(--dark);border-color:var(--ink)}
+.lang-toggle{margin-left:14px;font-family:var(--sans);font-size:12px;font-weight:700;
+  letter-spacing:.08em;color:var(--ink);background:transparent;
+  border:1px solid var(--line-strong);border-radius:100px;
+  width:44px;height:34px;cursor:pointer;transition:.25s}
+.lang-toggle:hover{border-color:var(--ink);background:rgba(255,255,255,.05)}
+@media(max-width:560px){.lang-toggle{margin-left:8px}}
+.nav-links{display:flex;gap:30px;font-size:13px;color:var(--mute)}
+.nav-links a:hover{color:var(--ink)}
+@media(max-width:820px){.nav-links{display:none}}
+
+/* ===== HERO ===== */
+.hero{
+  position:relative;padding:170px 0 90px;overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;top:-30%;left:50%;transform:translateX(-50%);
+  width:900px;height:700px;
+  background:radial-gradient(closest-side,rgba(91,118,247,.16),transparent 70%);
+  filter:blur(30px);pointer-events:none;
+}
+.hero-tag{margin-bottom:26px;display:flex;align-items:center;gap:10px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
+h1{
+  font-size:clamp(38px,6.6vw,80px);line-height:1.02;
+  font-weight:600;letter-spacing:-.02em;margin-bottom:26px;
+}
+h1 .sub{display:block;color:var(--mute);font-weight:400;
+  font-size:clamp(20px,2.6vw,30px);margin-top:14px;letter-spacing:-.01em}
+.hero-lede{
+  font-size:clamp(16px,1.9vw,19px);color:var(--mute);
+  max-width:600px;line-height:1.6;margin-bottom:34px;
+}
+.hero-lede b{color:var(--ink);font-weight:500}
+.btn-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:15px 28px;border-radius:100px;font-size:14.5px;font-weight:600;
+  letter-spacing:.01em;transition:.25s;cursor:pointer;border:1px solid transparent;
+}
+.btn-primary{background:var(--ink);color:var(--dark)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(244,242,238,.18)}
+.btn-ghost{border-color:var(--line-strong);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--ink)}
+.guarantee{
+  margin-top:26px;font-size:13.5px;color:var(--mute);
+  display:flex;align-items:center;gap:9px;
+}
+.guarantee b{color:var(--green);font-weight:600}
+
+/* ===== PAIN BAR ===== */
+.painbar{border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:var(--panel);padding:44px 0}
+.painbar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
+.pb-item .num{font-family:var(--serif);font-size:42px;color:var(--accent);line-height:1}
+.pb-item .lbl{font-size:13.5px;color:var(--mute);margin-top:10px;line-height:1.45}
+@media(max-width:720px){.painbar-grid{grid-template-columns:1fr;gap:26px}}
+
+/* ===== SECTION SHELL ===== */
+section{padding:96px 0}
+.sec-head{margin-bottom:56px;max-width:640px}
+.sec-head h2{font-size:clamp(28px,4vw,46px);font-weight:600;
+  letter-spacing:-.02em;line-height:1.08;margin-top:16px}
+
+/* ===== PROBLEM ===== */
+.prob-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.prob{background:var(--dark);padding:36px 32px}
+.prob .n{font-size:12px;color:var(--faint);letter-spacing:.2em;font-weight:600}
+.prob h3{font-size:19px;font-weight:600;margin:14px 0 10px;letter-spacing:-.01em}
+.prob p{font-size:14.5px;color:var(--mute);line-height:1.6}
+@media(max-width:720px){.prob-grid{grid-template-columns:1fr}}
+
+/* ===== SOLUTION ===== */
+.sol-list{display:flex;flex-direction:column;gap:1px;
+  border-top:1px solid var(--line)}
+.sol{display:grid;grid-template-columns:56px 1fr;gap:26px;
+  padding:34px 0;border-bottom:1px solid var(--line);align-items:start}
+.sol .idx{font-family:var(--serif);font-size:22px;color:var(--accent)}
+.sol h3{font-size:22px;font-weight:600;margin-bottom:10px;letter-spacing:-.01em}
+.sol p{font-size:15px;color:var(--mute);max-width:640px;line-height:1.62}
+.sol .tag{display:inline-block;margin-top:12px;font-size:11.5px;color:var(--green);
+  letter-spacing:.06em;border:1px solid rgba(126,224,79,.28);padding:4px 11px;border-radius:100px}
+@media(max-width:600px){.sol{grid-template-columns:1fr;gap:12px}}
+.sol-intro{font-size:15.5px;color:var(--mute);max-width:620px;line-height:1.62;margin:-30px 0 44px}
+.sol-intro b{color:var(--ink);font-weight:500}
+.sol-group{margin-bottom:52px}
+.grp-label{display:flex;align-items:center;gap:14px;font-size:15px;font-weight:600;
+  letter-spacing:-.01em;margin-bottom:6px;color:var(--ink)}
+.grp-n{width:28px;height:28px;border-radius:8px;background:rgba(91,118,247,.14);
+  border:1px solid rgba(91,118,247,.4);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:15px}
+
+/* ===== DEMO / CHAT ===== */
+.demo{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.demo-copy h2{font-size:clamp(26px,3.6vw,40px);font-weight:600;letter-spacing:-.02em;line-height:1.1;margin:16px 0 20px}
+.demo-copy p{font-size:15.5px;color:var(--mute);line-height:1.62;margin-bottom:16px}
+.chat{background:var(--dark);border:1px solid var(--line-strong);border-radius:18px;
+  padding:22px;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+.chat-hd{display:flex;align-items:center;gap:10px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.chat-hd .av{width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#8fa4ff);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.chat-hd .meta b{font-size:14px;display:block}
+.chat-hd .meta span{font-size:11.5px;color:var(--green)}
+.msg{max-width:82%;padding:11px 15px;border-radius:14px;font-size:14px;margin-bottom:12px;line-height:1.5}
+.msg.in{background:#17171a;border-bottom-left-radius:4px}
+.msg.out{background:var(--accent);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.msg .t{display:block;font-size:10px;opacity:.6;margin-top:5px}
+@media(max-width:820px){.demo-grid{grid-template-columns:1fr;gap:40px}}
+
+/* ===== OUTCOMES ===== */
+.out-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.out{background:var(--dark);padding:30px 24px}
+.out .k{font-family:var(--serif);font-size:40px;color:var(--ink);line-height:1}
+.out .k em{color:var(--green);font-style:normal}
+.out .d{font-size:13px;color:var(--mute);margin-top:10px;line-height:1.45}
+@media(max-width:820px){.out-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.out-grid{grid-template-columns:1fr}}
+
+/* ===== PROOF ===== */
+.proof{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.quote{font-family:var(--serif);font-size:clamp(24px,3.4vw,36px);line-height:1.32;
+  max-width:840px;letter-spacing:-.01em}
+.quote .hl{color:var(--accent);font-style:italic}
+.quote-by{margin-top:26px;font-size:13.5px;color:var(--mute)}
+.quote-by b{color:var(--ink);font-weight:600}
+
+/* ===== PACKAGES ===== */
+.pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+.pkg{border:1px solid var(--line);border-radius:18px;padding:32px 28px;
+  display:flex;flex-direction:column;transition:.3s;background:var(--dark)}
+.pkg:hover{border-color:var(--line-strong);transform:translateY(-4px)}
+.pkg.feat{border-color:var(--accent);background:linear-gradient(180deg,rgba(91,118,247,.08),transparent 60%)}
+.pkg .badge{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:14px;height:14px}
+.pkg h3{font-size:21px;font-weight:600;margin-bottom:6px}
+.pkg .price{font-family:var(--serif);font-size:34px;margin:10px 0 4px}
+.pkg .price small{font-size:13px;color:var(--faint);font-family:var(--sans)}
+.pkg .from{font-size:11.5px;color:var(--faint);margin-bottom:22px}
+.pkg ul{list-style:none;flex-grow:1;margin-bottom:24px}
+.pkg li{font-size:13.8px;color:var(--mute);padding:8px 0 8px 24px;position:relative;border-bottom:1px solid var(--line)}
+.pkg li::before{content:"→";position:absolute;left:0;color:var(--accent)}
+.pkg .btn{justify-content:center;width:100%}
+@media(max-width:860px){.pkg-grid{grid-template-columns:1fr}}
+
+/* ===== FINAL CTA ===== */
+.final{position:relative;text-align:center;overflow:hidden}
+.final::before{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:800px;height:500px;background:radial-gradient(closest-side,rgba(91,118,247,.14),transparent 70%);filter:blur(30px)}
+.final h2{font-size:clamp(30px,5vw,58px);font-weight:600;letter-spacing:-.02em;line-height:1.06;margin-bottom:22px;position:relative}
+.final p{font-size:16px;color:var(--mute);max-width:520px;margin:0 auto 34px;position:relative;line-height:1.6}
+.final .btn-row{justify-content:center;position:relative}
+.final .guarantee{justify-content:center}
+
+/* ===== FOOTER ===== */
+footer{border-top:1px solid var(--line);padding:48px 0 40px}
+.foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;align-items:center}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--mute)}
+.foot-links a:hover{color:var(--ink)}
+.copy{font-size:12px;color:var(--faint)}
+
+/* ===== AUDIT MODAL ===== */
+.modal-ov{position:fixed;inset:0;z-index:200;background:rgba(3,3,4,.72);
+  backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;
+  padding:22px;opacity:0;pointer-events:none;transition:opacity .28s}
+.modal-ov.open{opacity:1;pointer-events:auto}
+.modal{background:var(--panel);border:1px solid var(--line-strong);border-radius:20px;
+  width:100%;max-width:440px;padding:38px 34px;position:relative;
+  transform:translateY(14px) scale(.98);transition:transform .3s;box-shadow:0 40px 90px rgba(0,0,0,.6)}
+.modal-ov.open .modal{transform:translateY(0) scale(1)}
+.modal .x{position:absolute;top:16px;right:18px;font-size:22px;color:var(--faint);
+  background:none;border:none;cursor:pointer;line-height:1;transition:.2s}
+.modal .x:hover{color:var(--ink)}
+.modal .m-eyebrow{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.modal h3{font-size:24px;font-weight:600;letter-spacing:-.02em;margin:12px 0 8px;line-height:1.15}
+.modal .m-sub{font-size:14px;color:var(--mute);line-height:1.5;margin-bottom:24px}
+.modal .fld{margin-bottom:14px}
+.modal label{display:block;font-size:12px;color:var(--mute);margin-bottom:7px;letter-spacing:.02em}
+.modal input{width:100%;background:var(--dark);border:1px solid var(--line-strong);
+  border-radius:11px;padding:13px 15px;color:var(--ink);font-family:var(--sans);font-size:15px;transition:.2s}
+.modal input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(91,118,247,.15)}
+.modal input::placeholder{color:var(--faint)}
+.modal .m-submit{width:100%;margin-top:8px;justify-content:center}
+.modal .m-fine{font-size:11.5px;color:var(--faint);text-align:center;margin-top:14px;line-height:1.45}
+.m-done{text-align:center;padding:14px 0}
+.m-done .tick{width:56px;height:56px;border-radius:50%;background:rgba(126,224,79,.14);
+  border:1px solid rgba(126,224,79,.45);color:var(--green);font-size:28px;
+  display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.m-done h3{margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <a href="index.html" class="logo">SCALE<span>FLOW</span></a>
+    <div class="nav-links">
+      <a href="#problem" data-i18n="nav_problem">The Problem</a>
+      <a href="#solution" data-i18n="nav_solution">Solution</a>
+      <a href="#packages" data-i18n="nav_packages">Packages</a>
+      <a href="https://scaleflow.online/cases.html" data-i18n="nav_cases">Case Studies</a>
+    </div>
+    <button class="lang-toggle" id="langToggle" aria-label="Switch language">RU</button>
+    <a class="nav-cta" href="#" data-audit data-pkg="Nav — Get AI agent" data-i18n="nav_cta">Get my AI agent</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-tag"><span class="dot"></span><span class="eyebrow" data-i18n="hero_eyebrow">AI Employees for Dubai Real Estate</span></div>
+    <h1 data-i18n="hero_h1">The lead that closed<br>with your competitor<br><span class="sub">was answered while you <span class="serif-i">slept.</span></span></h1>
+    <p class="hero-lede" data-i18n="hero_lede">Your next buyer messages at 11 PM on Bayut or Property Finder. Your agent replies at 9 AM — <b>they've already booked a viewing elsewhere.</b> ScaleFlow deploys an AI agent that replies in 5 seconds, qualifies the buyer, and books the viewing — 24/7, in Arabic, English & Russian.</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#" data-audit data-pkg="Hero — Free lead audit" data-i18n="btn_audit">Get my free lead audit →</a>
+      <a class="btn btn-ghost" href="#demo" data-i18n="hero_btn2">See it reply live</a>
+    </div>
+    <div class="guarantee" data-i18n="guarantee"><span class="dot"></span><b>Live in 14 days</b>&nbsp;— or we work for free until it is.</div>
+  </div>
+</header>
+
+<!-- PAIN BAR -->
+<div class="painbar">
+  <div class="wrap painbar-grid">
+    <div class="pb-item">
+      <div class="num">8×</div>
+      <div class="lbl" data-i18n="pb1">Higher conversion when a lead is answered in 5 minutes vs 30. Speed is the whole game.</div>
+    </div>
+    <div class="pb-item">
+      <div class="num">78%</div>
+      <div class="lbl" data-i18n="pb2">Of buyers book with the agency that responds first — not the best-priced listing.</div>
+    </div>
+    <div class="pb-item">
+      <div class="num">40h</div>
+      <div class="lbl" data-i18n="pb3">Per week your agents lose to qualifying tyre-kickers, chasing replies and admin.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="prob_eyebrow">Where the money leaks</span>
+      <h2 data-i18n="prob_h2">You don't have a lead problem.<br>You have a <span class="serif-i">response</span> problem.</h2>
+    </div>
+    <div class="prob-grid">
+      <div class="prob">
+        <div class="n">01</div>
+        <h3 data-i18n="p1_h">Leads go cold overnight</h3>
+        <p data-i18n="p1_p">An inquiry lands after hours or during a viewing. By the time an agent sees it, the buyer has messaged three other agencies. First to reply wins — and it's rarely you.</p>
+      </div>
+      <div class="prob">
+        <div class="n">02</div>
+        <h3 data-i18n="p2_h">Agents drown in admin</h3>
+        <p data-i18n="p2_p">"Is this still available?" · sending the same brochure · qualifying budgets · scheduling. Hours a day on repetitive work instead of closing the buyers who are ready.</p>
+      </div>
+      <div class="prob">
+        <div class="n">03</div>
+        <h3 data-i18n="p3_h">Warm leads rot in the CRM</h3>
+        <p data-i18n="p3_p">Most sales need 5+ touchpoints. Most agents stop after two. The follow-up that would've closed the deal never happens — the lead just goes quiet and disappears.</p>
+      </div>
+      <div class="prob">
+        <div class="n">04</div>
+        <h3 data-i18n="p4_h">Channels everywhere, system nowhere</h3>
+        <p data-i18n="p4_p">Bayut, Property Finder, Instagram DMs, WhatsApp, website forms — inquiries scattered across six places with no single system catching them all. Leads slip through the gaps.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section id="solution">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="sol_eyebrow">The full system</span>
+      <h2 data-i18n="sol_h2">Every leak, plugged.<br>One AI system, built <span class="serif-i">around your agency.</span></h2>
+    </div>
+    <p class="sol-intro" data-i18n="sol_intro">We don't sell one bot. We deploy a connected system — each part fixes a specific place your agency loses money. Start with the core, add the rest as you grow.</p>
+
+    <!-- GROUP A -->
+    <div class="sol-group">
+      <div class="grp-label"><span class="grp-n">A</span><span data-i18n="grpA"> Capture &amp; convert new leads</span></div>
+      <div class="sol-list">
+        <div class="sol">
+          <div class="idx">01</div>
+          <div>
+            <h3 data-i18n="s1_h">Instant lead response · 24/7</h3>
+            <p data-i18n="s1_p">Every inquiry from Bayut, Property Finder, Instagram, WhatsApp and your site gets a reply in under 5 seconds — any hour, in Arabic, English or Russian. The buyer feels attended to before your competitor has even opened the notification.</p>
+            <span class="tag" data-i18n="s1_t">Under 5-second reply · 24/7</span>
+          </div>
+        </div>
+        <div class="sol">
+          <div class="idx">02</div>
+          <div>
+            <h3 data-i18n="s2_h">Qualification on autopilot</h3>
+            <p data-i18n="s2_p">Budget, timeline, cash vs mortgage, area — the AI asks the right questions naturally, filters out tyre-kickers, and hands your agents only serious buyers with a full summary attached.</p>
+            <span class="tag" data-i18n="s2_t">Only hot leads reach your team</span>
+          </div>
+        </div>
+        <div class="sol">
+          <div class="idx">03</div>
+          <div>
+            <h3 data-i18n="s3_h">Viewings booked into the calendar</h3>
+            <p data-i18n="s3_p">The AI checks agent availability, books the viewing, sends confirmations and reminders — cutting no-shows and removing the back-and-forth entirely.</p>
+            <span class="tag" data-i18n="s3_t">Fewer no-shows</span>
+          </div>
+        </div>
+        <div class="sol">
+          <div class="idx">04</div>
+          <div>
+            <h3 data-i18n="s4_h">Instant listing-matching</h3>
+            <p data-i18n="s4_p">The AI reads what the buyer wants and pulls the matching units from your live inventory — sending 3 tailored options in seconds, not the day after when they've moved on.</p>
+            <span class="tag" data-i18n="s4_t">Right unit, right buyer, instantly</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROUP B -->
+    <div class="sol-group">
+      <div class="grp-label"><span class="grp-n">B</span><span data-i18n="grpB"> Reactivate the leads you already paid for</span></div>
+      <div class="sol-list">
+        <div class="sol">
+          <div class="idx">05</div>
+          <div>
+            <h3 data-i18n="s5_h">Database reactivation</h3>
+            <p data-i18n="s5_p">Your CRM is full of buyers who enquired months ago and went quiet. The AI messages them on WhatsApp with new units that fit their old brief, re-qualifies, and books viewings — reviving the database you already paid to build. Fully compliant: your own opted-in contacts, approved templates.</p>
+            <span class="tag" data-i18n="s5_t">Dead leads → booked viewings</span>
+          </div>
+        </div>
+        <div class="sol">
+          <div class="idx">06</div>
+          <div>
+            <h3 data-i18n="s6_h">Follow-up that never quits</h3>
+            <p data-i18n="s6_p">Most deals need 5+ touchpoints; most agents stop after two. Warm-but-not-ready buyers get nurtured automatically across WhatsApp and email until they're ready to view — the follow-up that closes deals, done for you.</p>
+            <span class="tag" data-i18n="s6_t">Recovers leads you'd have lost</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROUP C -->
+    <div class="sol-group">
+      <div class="grp-label"><span class="grp-n">C</span><span data-i18n="grpC"> Free your agents from admin</span></div>
+      <div class="sol-list">
+        <div class="sol">
+          <div class="idx">07</div>
+          <div>
+            <h3 data-i18n="s7_h">AI listing content, on demand</h3>
+            <p data-i18n="s7_p">Feed it the photos and specs — it writes the full property description, social captions and portal copy in Arabic, English and Russian in seconds. What took an agent an hour now takes ten.</p>
+            <span class="tag" data-i18n="s7_t">Listings live faster</span>
+          </div>
+        </div>
+        <div class="sol">
+          <div class="idx">08</div>
+          <div>
+            <h3 data-i18n="s8_h">Documents &amp; admin automated</h3>
+            <p data-i18n="s8_p">MOUs, offers, and follow-up emails drafted from your deal data. Call and viewing notes transcribed and filed into the CRM automatically. Agents stop typing and start closing.</p>
+            <span class="tag" data-i18n="s8_t">Hours back, every week</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROUP D -->
+    <div class="sol-group">
+      <div class="grp-label"><span class="grp-n">D</span><span data-i18n="grpD"> See and control everything</span></div>
+      <div class="sol-list">
+        <div class="sol">
+          <div class="idx">09</div>
+          <div>
+            <h3 data-i18n="s9_h">One inbox · CRM-connected</h3>
+            <p data-i18n="s9_p">Every channel flows into a single system wired to your CRM. No inquiry lost between six apps — you see exactly where every lead stands and which agent owns it.</p>
+            <span class="tag" data-i18n="s9_t">Full visibility</span>
+          </div>
+        </div>
+        <div class="sol">
+          <div class="idx">10</div>
+          <div>
+            <h3 data-i18n="s10_h">Lead scoring &amp; analytics</h3>
+            <p data-i18n="s10_p">The AI ranks who's closest to buying and shows where leads leak, which source converts, and how each agent performs — so you spend budget on what actually books viewings.</p>
+            <span class="tag" data-i18n="s10_t">Know what's working</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section id="demo" class="demo">
+  <div class="wrap demo-grid">
+    <div class="demo-copy">
+      <span class="eyebrow" data-i18n="demo_eyebrow">See it in action</span>
+      <h2 data-i18n="demo_h2">This is your AI agent handling a real lead.</h2>
+      <p data-i18n="demo_p1">11:47 PM. A buyer messages your Property Finder listing. No agent is awake. The AI qualifies them and books the viewing before morning — the deal is already in motion by the time your team logs in.</p>
+      <p data-i18n="demo_p2">Want to see it reply to <i>your</i> real lead? We'll set up a live demo on your own listings during the free audit.</p>
+      <a class="btn btn-primary" href="#" data-audit data-pkg="Demo — Live demo" data-i18n="demo_btn">Book my live demo →</a>
+    </div>
+    <div class="chat">
+      <div class="chat-hd">
+        <div class="av">SF</div>
+        <div class="meta"><b>ScaleFlow AI · Sales</b><span data-i18n="chat_status">● Online — replies instantly</span></div>
+      </div>
+      <div class="msg in"><span data-i18n="chat_m1">Hi, is the 2BR in Dubai Marina still available? Saw it on Property Finder</span><span class="t">11:47 PM</span></div>
+      <div class="msg out"><span data-i18n="chat_m2">Yes it is! 👋 Great choice — that unit has full marina views. Are you looking to move in soon, or exploring as an investment?</span><span class="t">11:47 PM</span></div>
+      <div class="msg in"><span data-i18n="chat_m3">Investment, budget around 2.2M</span><span class="t">11:48 PM</span></div>
+      <div class="msg out"><span data-i18n="chat_m4">Perfect — that's right in range. Cash or mortgage? And would a viewing this week work for you?</span><span class="t">11:48 PM</span></div>
+      <div class="msg in"><span data-i18n="chat_m5">Cash. Thursday evening ideally</span><span class="t">11:49 PM</span></div>
+      <div class="msg out"><span data-i18n="chat_m6">Done ✅ I've booked you Thursday 6 PM with Omar, our marina specialist. He'll confirm by morning. Sending you 3 similar units in the meantime.</span><span class="t">11:49 PM</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTCOMES -->
+<section id="outcomes">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="out_eyebrow">What agencies get</span>
+      <h2 data-i18n="out_h2">More viewings. Fewer lost leads.<br><span class="serif-i">Same team.</span></h2>
+    </div>
+    <div class="out-grid">
+      <div class="out"><div class="k">5<em>s</em></div><div class="d" data-i18n="out1">Average reply time, day or night — beating every competitor to the buyer.</div></div>
+      <div class="out"><div class="k">3<em>×</em></div><div class="d" data-i18n="out2">More qualified leads reaching agents, with tyre-kickers already filtered out.</div></div>
+      <div class="out"><div class="k">40<em>h</em></div><div class="d" data-i18n="out3">Per week freed from admin — agents spend it closing, not chasing.</div></div>
+      <div class="out"><div class="k">24<em>/7</em></div><div class="d" data-i18n="out4">Coverage across every channel, so no inquiry is ever missed again.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section class="proof">
+  <div class="wrap">
+    <span class="eyebrow" data-i18n="proof_eyebrow">From a Dubai agency</span>
+    <p class="quote" style="margin-top:18px" data-i18n="proof_q">ScaleFlow transformed how we handle leads. The AI works <span class="hl">24/7</span> — it books viewings while we sleep, and our conversion rate went up <span class="hl">3×</span> in the first month.</p>
+    <div class="quote-by" data-i18n="proof_by"><b>Ahmad Al Mansoori</b> — CEO, Dubai Real Estate Agency</div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section id="packages">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="pkg_eyebrow">Transparent pricing — no hidden fees</span>
+      <h2 data-i18n="pkg_h2">Start capturing every lead.</h2>
+    </div>
+    <p style="color:var(--mute);font-size:14.5px;margin-bottom:32px;max-width:560px" data-i18n="pkg_note">Starting prices. Your final quote is locked after a free audit — never more than listed, often less.</p>
+    <div class="pkg-grid">
+      <div class="pkg">
+        <div class="badge"></div>
+        <h3 data-i18n="pk1_name">Lead Responder</h3>
+        <div class="price">$999<small data-i18n="pkg_per">/project</small></div>
+        <div class="from" data-i18n="pkg_from">from · starting price</div>
+        <ul>
+          <li data-i18n="pk1_l1">AI agent on one channel</li>
+          <li data-i18n="pk1_l2">Instant reply &amp; qualification</li>
+          <li data-i18n="pk1_l3">Listing-matching replies</li>
+          <li data-i18n="pk1_l4">Buyer summary to agents</li>
+          <li data-i18n="pk1_l5">CRM connection · 90 days support</li>
+        </ul>
+        <a class="btn btn-ghost" href="#" data-audit data-pkg="Lead Responder" data-i18n="pkg_btn">Book free audit</a>
+      </div>
+      <div class="pkg feat">
+        <div class="badge" data-i18n="pkg_badge">Most popular</div>
+        <h3 data-i18n="pk2_name">Lead Engine</h3>
+        <div class="price">$1,999<small data-i18n="pkg_per">/project</small></div>
+        <div class="from" data-i18n="pkg_from">from · starting price</div>
+        <ul>
+          <li data-i18n="pk2_l1">All channels: Bayut · PF · IG · WhatsApp · site</li>
+          <li data-i18n="pk2_l2">Full qualification, matching &amp; viewing booking</li>
+          <li data-i18n="pk2_l3">Database reactivation of old leads</li>
+          <li data-i18n="pk2_l4">Multi-touch follow-up engine</li>
+          <li data-i18n="pk2_l5">Unified inbox + CRM</li>
+          <li data-i18n="pk2_l6">90 days optimization</li>
+        </ul>
+        <a class="btn btn-primary" href="#" data-audit data-pkg="Lead Engine" data-i18n="pkg_btn">Book free audit</a>
+      </div>
+      <div class="pkg">
+        <div class="badge"></div>
+        <h3 data-i18n="pk3_name">Agency OS</h3>
+        <div class="price">$3,999<small data-i18n="pkg_per">/project</small></div>
+        <div class="from" data-i18n="pkg_from">from · starting price</div>
+        <ul>
+          <li data-i18n="pk3_l1">Everything in Lead Engine</li>
+          <li data-i18n="pk3_l2">AI listing content (RU/EN/AR)</li>
+          <li data-i18n="pk3_l3">Documents &amp; admin automation</li>
+          <li data-i18n="pk3_l4">Lead scoring + analytics dashboard</li>
+          <li data-i18n="pk3_l5">Dedicated AI consultant</li>
+          <li data-i18n="pk3_l6">Priority support</li>
+        </ul>
+        <a class="btn btn-ghost" href="#" data-audit data-pkg="Agency OS" data-i18n="pkg_btn">Book free audit</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final">
+  <div class="wrap">
+    <h2 data-i18n="final_h2">How many leads did you<br>lose <span class="serif-i">last night?</span></h2>
+    <p data-i18n="final_p">Book a free 20-minute audit. We'll map exactly where your leads are leaking — and show you the 14-day plan to plug it.</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#" data-audit data-pkg="Final — Free lead audit" data-i18n="btn_audit">Get my free lead audit →</a>
+      <a class="btn btn-ghost" href="https://www.instagram.com/scaleflow.co" data-i18n="final_btn2">See our work</a>
+    </div>
+    <div class="guarantee" data-i18n="guarantee"><span class="dot"></span><b>Live in 14 days</b>&nbsp;— or we work for free until it is.</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap foot-in">
+    <a href="index.html" class="logo">SCALE<span>FLOW</span></a>
+    <div class="foot-links">
+      <a href="https://scaleflow.online" data-i18n="foot_main">Main site</a>
+      <a href="https://scaleflow.online/cases.html">Case Studies</a>
+      <a href="https://www.instagram.com/scaleflow.co">Instagram</a>
+      <a href="mailto:Scaleflow.ae@gmail.com">Email</a>
+      <a href="https://wa.me/971563057577">WhatsApp</a>
+    </div>
+    <div class="copy" data-i18n="foot_copy">© 2026 ScaleFlow · Dubai, UAE</div>
+  </div>
+</footer>
+
+
+<!-- AUDIT MODAL -->
+<div class="modal-ov" id="auditOv">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="x" id="auditX" aria-label="Close">&times;</button>
+    <div id="auditForm">
+      <span class="m-eyebrow" data-i18n="m_eyebrow">Free lead audit</span>
+      <h3 data-i18n="m_title">Let's find your lost leads.</h3>
+      <p class="m-sub" data-i18n="m_sub">Leave your details — we'll reach out within 24 hours to book your free 20-minute audit.</p>
+      <div class="fld">
+        <label data-i18n="m_name_l">Your name</label>
+        <input type="text" id="afName" placeholder="Ahmed" autocomplete="name">
+      </div>
+      <div class="fld">
+        <label data-i18n="m_phone_l">WhatsApp / phone</label>
+        <input type="tel" id="afPhone" placeholder="+971 50 000 0000" autocomplete="tel">
+      </div>
+      <div class="fld">
+        <label data-i18n="m_email_l">Email (optional)</label>
+        <input type="email" id="afEmail" placeholder="you@agency.com" autocomplete="email">
+      </div>
+      <button class="btn btn-primary m-submit" id="afSubmit" data-i18n="m_send">Send request →</button>
+      <p class="m-fine" data-i18n="m_fine">No spam. We only use this to contact you about your audit.</p>
+    </div>
+    <div class="m-done" id="auditDone" style="display:none">
+      <div class="tick">&checkmark;</div>
+      <h3 data-i18n="m_done_h">Request received.</h3>
+      <p class="m-sub" data-i18n="m_done_p" style="margin-bottom:0">We'll message you within 24 hours to lock in your free audit. Talk soon.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const RU = {
+  nav_problem:"Проблема", nav_solution:"Решение", nav_packages:"Пакеты", nav_cases:"Кейсы",
+  nav_cta:"Хочу AI-агента",
+
+  hero_eyebrow:"AI-сотрудники для недвижимости Дубая",
+  hero_h1:'Клиент, который закрылся<br>у конкурента,<br><span class="sub">получил ответ, пока вы <span class="serif-i">спали.</span></span>',
+  hero_lede:'Ваш будущий покупатель пишет в 23:00 на Bayut или Property Finder. Агент отвечает в 9 утра — <b>он уже записался на просмотр в другом агентстве.</b> ScaleFlow ставит AI-агента, который отвечает за 5 секунд, квалифицирует покупателя и записывает на просмотр — 24/7, на арабском, английском и русском.',
+  btn_audit:"Бесплатный аудит лидов →",
+  hero_btn2:"Посмотреть, как отвечает",
+  guarantee:'<span class="dot"></span><b>Запуск за 14 дней</b>&nbsp;— или работаем бесплатно, пока не запустим.',
+
+  pb1:"Выше конверсия при ответе за 5 минут против 30. Скорость решает всё.",
+  pb2:"Покупателей выбирают агентство, которое ответило первым — а не с лучшей ценой.",
+  pb3:"В неделю ваши агенты теряют на квалификации пустых лидов, переписке и рутине.",
+
+  prob_eyebrow:"Где утекают деньги",
+  prob_h2:'У вас не проблема с лидами.<br>У вас проблема с <span class="serif-i">ответом.</span>',
+  p1_h:"Лиды остывают за ночь",
+  p1_p:"Заявка приходит вечером или во время просмотра. Пока агент её увидит, покупатель уже написал в три других агентства. Побеждает тот, кто ответил первым — и это редко вы.",
+  p2_h:"Агенты тонут в рутине",
+  p2_p:"«Ещё доступно?» · отправка одной и той же брошюры · квалификация бюджета · запись. Часы в день на повторяющейся работе вместо закрытия готовых покупателей.",
+  p3_h:"Тёплые лиды гниют в CRM",
+  p3_p:"Большинству сделок нужно 5+ касаний. Большинство агентов бросает после двух. Дожим, который закрыл бы сделку, не случается — лид просто затихает и исчезает.",
+  p4_h:"Каналов много, системы нет",
+  p4_p:"Bayut, Property Finder, Instagram, WhatsApp, формы сайта — заявки разбросаны по шести местам без единой системы, которая ловит всё. Лиды проваливаются в щели.",
+
+  sol_eyebrow:"Полная система",
+  sol_h2:'Каждая утечка — закрыта.<br>Одна AI-система, собранная <span class="serif-i">под ваше агентство.</span>',
+  sol_intro:'Мы продаём не одного бота. Мы ставим связанную систему — каждая часть чинит конкретное место, где агентство теряет деньги. Начните с ядра, добавляйте остальное по мере роста.',
+  grpA:" Захват и закрытие новых лидов",
+  grpB:" Реактивация уже оплаченных лидов",
+  grpC:" Освобождение агентов от рутины",
+  grpD:" Полный контроль и аналитика",
+
+  s1_h:"Мгновенный ответ на лид · 24/7",
+  s1_p:"Каждая заявка с Bayut, Property Finder, Instagram, WhatsApp и сайта получает ответ за 5 секунд — в любой час, на арабском, английском или русском. Покупатель чувствует внимание раньше, чем конкурент вообще откроет уведомление.",
+  s1_t:"Ответ до 5 секунд · 24/7",
+  s2_h:"Квалификация на автопилоте",
+  s2_p:"Бюджет, сроки, наличные или ипотека, район — AI задаёт правильные вопросы естественно, отсеивает пустых и передаёт агентам только серьёзных покупателей с готовой сводкой.",
+  s2_t:"К агентам доходят только горячие",
+  s3_h:"Просмотры сразу в календарь",
+  s3_p:"AI проверяет занятость агента, бронирует просмотр, шлёт подтверждения и напоминания — сокращая неявки и убирая переписку туда-сюда.",
+  s3_t:"Меньше неявок",
+  s4_h:"Мгновенный подбор объектов",
+  s4_p:"AI понимает, что хочет покупатель, и подтягивает подходящие объекты из вашей базы — отправляя 3 варианта за секунды, а не на следующий день, когда клиент уже остыл.",
+  s4_t:"Нужный объект нужному клиенту — сразу",
+  s5_h:"Реактивация базы",
+  s5_p:"Ваша CRM забита покупателями, которые интересовались месяцы назад и пропали. AI пишет им в WhatsApp с новыми объектами под их старый запрос, заново квалифицирует и записывает на просмотр — оживляя базу, за которую вы уже заплатили. Полностью законно: ваши собственные opt-in контакты, одобренные шаблоны.",
+  s5_t:"Мёртвые лиды → записи на просмотр",
+  s6_h:"Дожим, который не сдаётся",
+  s6_p:"Большинству сделок нужно 5+ касаний; большинство агентов бросает после двух. Тёплых-но-не-готовых покупателей AI дожимает автоматически в WhatsApp и email, пока они не созреют — тот самый дожим, который закрывает сделки.",
+  s6_t:"Возвращает лиды, которые вы бы потеряли",
+  s7_h:"AI-контент для объектов по запросу",
+  s7_p:"Дайте фото и параметры — AI пишет полное описание объекта, подписи для соцсетей и текст для порталов на арабском, английском и русском за секунды. То, на что агент тратил час, теперь занимает десять минут.",
+  s7_t:"Объекты публикуются быстрее",
+  s8_h:"Документы и рутина — автоматом",
+  s8_p:"MOU, оферы и письма-дожимы формируются из данных сделки. Заметки со звонков и просмотров расшифровываются и заносятся в CRM автоматически. Агенты перестают печатать и начинают закрывать.",
+  s8_t:"Часы обратно каждую неделю",
+  s9_h:"Единый инбокс · связь с CRM",
+  s9_p:"Все каналы стекаются в одну систему, подключённую к вашей CRM. Ни одна заявка не теряется между шестью приложениями — вы видите, где каждый лид и какой агент за него отвечает.",
+  s9_t:"Полная видимость",
+  s10_h:"Скоринг лидов и аналитика",
+  s10_p:"AI ранжирует, кто ближе к покупке, и показывает, где утекают лиды, какой источник конвертит и как работает каждый агент — чтобы вы тратили бюджет на то, что реально приносит просмотры.",
+  s10_t:"Понимаете, что работает",
+
+  demo_eyebrow:"Как это работает",
+  demo_h2:"Так ваш AI-агент ведёт реального лида.",
+  demo_p1:"23:47. Покупатель пишет по вашему объявлению на Property Finder. Ни один агент не бодрствует. AI квалифицирует его и записывает на просмотр до утра — сделка уже в движении к моменту, когда команда зайдёт в систему.",
+  demo_p2:"Хотите увидеть, как он отвечает на <i>ваш</i> реальный лид? Настроим живое демо на ваших объектах во время бесплатного аудита.",
+  demo_btn:"Записаться на живое демо →",
+  chat_status:"● Онлайн — отвечает мгновенно",
+  chat_m1:"Здравствуйте, 2-комнатная в Dubai Marina ещё доступна? Видел на Property Finder",
+  chat_m2:"Да, доступна! 👋 Отличный выбор — из этой квартиры полный вид на марину. Планируете заезд в ближайшее время или рассматриваете как инвестицию?",
+  chat_m3:"Инвестиция, бюджет около 2.2 млн",
+  chat_m4:"Отлично — как раз в диапазоне. Наличные или ипотека? И удобно ли будет просмотр на этой неделе?",
+  chat_m5:"Наличные. Идеально в четверг вечером",
+  chat_m6:"Готово ✅ Записал вас на четверг 18:00 к Омару, нашему специалисту по марине. Он подтвердит к утру. А пока отправляю 3 похожих объекта.",
+
+  out_eyebrow:"Что получают агентства",
+  out_h2:'Больше просмотров. Меньше потерь.<br><span class="serif-i">Та же команда.</span>',
+  out1:"Среднее время ответа днём и ночью — опережаете каждого конкурента к покупателю.",
+  out2:"Больше квалифицированных лидов доходит до агентов, пустые уже отсеяны.",
+  out3:"В неделю освобождается от рутины — агенты тратят это на закрытие, а не на погоню.",
+  out4:"Покрытие всех каналов, чтобы ни одна заявка больше не была упущена.",
+
+  proof_eyebrow:"От агентства из Дубая",
+  proof_q:'ScaleFlow изменил то, как мы работаем с лидами. AI работает <span class="hl">24/7</span> — записывает на просмотры, пока мы спим, а наша конверсия выросла в <span class="hl">3×</span> за первый месяц.',
+  proof_by:'<b>Ahmad Al Mansoori</b> — CEO, агентство недвижимости в Дубае',
+
+  pkg_eyebrow:"Прозрачные цены — без скрытых платежей",
+  pkg_h2:"Начните ловить каждый лид.",
+  pkg_note:"Стартовые цены. Финальная цена фиксируется после бесплатного аудита — не выше указанной, часто ниже.",
+  pkg_badge:"Популярный",
+  pkg_from:"от · стартовая цена",
+  pkg_btn:"Бесплатный аудит",
+  pkg_per:"/проект",
+  pk1_name:"Lead Responder",
+  pk1_l1:"AI-агент на одном канале",
+  pk1_l2:"Мгновенный ответ и квалификация",
+  pk1_l3:"Ответы с подбором объектов",
+  pk1_l4:"Сводка по покупателю агентам",
+  pk1_l5:"Подключение к CRM · 90 дней поддержки",
+  pk2_name:"Lead Engine",
+  pk2_l1:"Все каналы: Bayut · PF · IG · WhatsApp · сайт",
+  pk2_l2:"Полная квалификация, подбор и запись на просмотр",
+  pk2_l3:"Реактивация старых лидов из базы",
+  pk2_l4:"Движок многошагового дожима",
+  pk2_l5:"Единый инбокс + CRM",
+  pk2_l6:"90 дней оптимизации",
+  pk3_name:"Agency OS",
+  pk3_l1:"Всё из Lead Engine",
+  pk3_l2:"AI-контент для объектов (RU/EN/AR)",
+  pk3_l3:"Автоматизация документов и рутины",
+  pk3_l4:"Скоринг лидов + дашборд аналитики",
+  pk3_l5:"Выделенный AI-консультант",
+  pk3_l6:"Приоритетная поддержка",
+
+  final_h2:'Сколько лидов вы<br>потеряли <span class="serif-i">прошлой ночью?</span>',
+  final_p:"Запишитесь на бесплатный 20-минутный аудит. Покажем, где именно утекают ваши лиды — и план на 14 дней, как это закрыть.",
+  final_btn2:"Наши работы",
+
+  foot_main:"Основной сайт",
+  foot_copy:"© 2026 ScaleFlow · Дубай, ОАЭ",
+
+  m_eyebrow:"Бесплатный аудит лидов",
+  m_title:"Найдём ваши потерянные лиды.",
+  m_sub:"Оставьте контакты — свяжемся в течение 24 часов, чтобы записать вас на бесплатный 20-минутный аудит.",
+  m_name_l:"Ваше имя",
+  m_phone_l:"WhatsApp / телефон",
+  m_email_l:"Email (необязательно)",
+  m_send:"Отправить заявку →",
+  m_fine:"Без спама. Используем это только чтобы связаться по вашему аудиту.",
+  m_done_h:"Заявка получена.",
+  m_done_p:"Напишем вам в течение 24 часов, чтобы зафиксировать бесплатный аудит. До связи."
+};
+
+(function(){
+  const btn = document.getElementById('langToggle');
+  // store original EN html for every tagged node
+  const nodes = document.querySelectorAll('[data-i18n]');
+  const EN = {};
+  nodes.forEach(n => { const k=n.getAttribute('data-i18n'); if(!(k in EN)) EN[k]=n.innerHTML; });
+  let lang = 'en';
+  function apply(l){
+    nodes.forEach(n=>{
+      const k=n.getAttribute('data-i18n');
+      const dict = (l==='ru')?RU:EN;
+      if(dict[k]!==undefined) n.innerHTML=dict[k];
+    });
+    document.documentElement.lang = l;
+    btn.textContent = (l==='ru')?'EN':'RU';
+    lang=l;
+  }
+  btn.addEventListener('click',()=>apply(lang==='en'?'ru':'en'));
+
+  // ---- Audit modal ----
+  const ov=document.getElementById('auditOv');
+  const formEl=document.getElementById('auditForm');
+  const doneEl=document.getElementById('auditDone');
+  let selectedPkg='';
+  function openAudit(pkg){
+    selectedPkg=pkg||'';
+    formEl.style.display='block';doneEl.style.display='none';
+    ov.classList.add('open');document.body.style.overflow='hidden';
+  }
+  function closeAudit(){ov.classList.remove('open');document.body.style.overflow='';}
+  document.querySelectorAll('[data-audit]').forEach(b=>{
+    b.addEventListener('click',e=>{e.preventDefault();openAudit(b.getAttribute('data-pkg'));});
+  });
+  document.getElementById('auditX').addEventListener('click',closeAudit);
+  ov.addEventListener('click',e=>{if(e.target===ov)closeAudit();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAudit();});
+  document.getElementById('afSubmit').addEventListener('click',()=>{
+    const name=document.getElementById('afName').value.trim();
+    const phone=document.getElementById('afPhone').value.trim();
+    const email=document.getElementById('afEmail').value.trim();
+    if(!name||!phone){
+      if(!name)document.getElementById('afName').style.borderColor='#e0574f';
+      if(!phone)document.getElementById('afPhone').style.borderColor='#e0574f';
+      return;
+    }
+    fetch('https://hook.eu2.make.com/syl8nkwpzo8vndifh4pxfnt33lfgfsks',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:name,phone:phone,email:email,page:'real-estate.html',package:selectedPkg,lang:lang})
+    }).catch(()=>{});
+    formEl.style.display='none';doneEl.style.display='block';
+  });
+})();
+</script>
+
+</body>
+</html>
