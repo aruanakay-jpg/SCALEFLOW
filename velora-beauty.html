@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Коммерческое предложение — Запуск бизнеса под ключ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap');
+
+  :root{
+    --bg:#0d0e12;
+    --surface:#15171d;
+    --surface-2:#1b1e26;
+    --line:rgba(255,255,255,.08);
+    --line-strong:rgba(255,255,255,.14);
+    --text:#f4f5f7;
+    --muted:#9296a1;
+    --faint:#5f636e;
+    --accent:#8b9cff;
+    --accent-dim:rgba(139,156,255,.12);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+
+  html{scroll-behavior:smooth}
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',-apple-system,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  ::selection{background:var(--accent-dim);color:#fff}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+
+  /* ambient gradient */
+  .glow{
+    position:fixed;top:-30vh;left:50%;transform:translateX(-50%);
+    width:120vw;height:80vh;pointer-events:none;z-index:0;
+    background:radial-gradient(ellipse at center,rgba(139,156,255,.10),transparent 60%);
+    filter:blur(20px);
+  }
+
+  /* ---- HERO ---- */
+  header{position:relative;z-index:1;padding:120px 0 90px}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:'Inter';font-size:12px;font-weight:500;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+    padding:8px 16px;border:1px solid var(--line);border-radius:100px;
+    margin-bottom:40px;
+    opacity:0;animation:rise .8s ease .1s forwards;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+
+  h1{
+    font-family:'Inter Tight';font-weight:600;
+    font-size:clamp(42px,7vw,82px);line-height:1.02;
+    letter-spacing:-.03em;max-width:14ch;
+  }
+  h1 span{color:var(--faint)}
+  h1 .l1{opacity:0;animation:rise .9s ease .2s forwards}
+  h1 .l2{opacity:0;animation:rise .9s ease .32s forwards;display:block}
+
+  .lede{
+    margin-top:34px;max-width:52ch;font-size:19px;color:var(--muted);
+    opacity:0;animation:rise .9s ease .46s forwards;
+  }
+  .client{
+    margin-top:20px;font-size:14px;color:var(--faint);letter-spacing:.01em;
+    opacity:0;animation:rise .9s ease .54s forwards;
+  }
+  .client b{color:var(--text);font-weight:600}
+
+  .meta{
+    margin-top:56px;display:flex;gap:48px;flex-wrap:wrap;
+    padding-top:34px;border-top:1px solid var(--line);
+    opacity:0;animation:rise .9s ease .6s forwards;
+  }
+  .meta div .k{font-family:'Inter Tight';font-size:30px;font-weight:600;letter-spacing:-.02em}
+  .meta div .v{font-size:13px;color:var(--faint);letter-spacing:.02em;margin-top:2px}
+
+  /* ---- SECTION SCAFFOLD ---- */
+  section{position:relative;z-index:1;padding:70px 0}
+  .sec-head{margin-bottom:56px;max-width:60ch}
+  .sec-label{
+    font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:18px;
+  }
+  .sec-head h2{
+    font-family:'Inter Tight';font-weight:600;
+    font-size:clamp(28px,4vw,40px);letter-spacing:-.02em;line-height:1.1;
+  }
+
+  /* ---- STEP LIST ---- */
+  .steps{display:flex;flex-direction:column}
+  .step{
+    display:grid;grid-template-columns:64px 1fr;gap:32px;
+    padding:36px 0;border-top:1px solid var(--line);
+    transition:background .4s ease;
+  }
+  .step:last-child{border-bottom:1px solid var(--line)}
+  .step:hover{background:linear-gradient(90deg,var(--accent-dim),transparent 70%)}
+  .step-num{
+    font-family:'Inter Tight';font-size:15px;font-weight:600;
+    color:var(--faint);padding-top:4px;font-variant-numeric:tabular-nums;
+  }
+  .step h3{font-family:'Inter Tight';font-size:23px;font-weight:600;letter-spacing:-.01em;margin-bottom:8px}
+  .step p{color:var(--muted);font-size:16px;max-width:60ch}
+  .step ul{list-style:none;margin-top:18px;display:flex;flex-wrap:wrap;gap:10px}
+  .step ul li{
+    font-size:14px;color:var(--text);
+    padding:7px 14px;background:var(--surface);border:1px solid var(--line);
+    border-radius:8px;transition:border-color .3s,color .3s;
+  }
+  .step:hover ul li{border-color:var(--line-strong)}
+
+  /* ---- SITES CARDS ---- */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    padding:30px 26px 34px;transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .4s;
+    position:relative;overflow:hidden;
+  }
+  .card::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 30% 0%,var(--accent-dim),transparent 60%);
+    opacity:0;transition:opacity .4s;
+  }
+  .card:hover{transform:translateY(-5px);border-color:var(--line-strong)}
+  .card:hover::before{opacity:1}
+  .card .idx{font-family:'Inter Tight';font-size:13px;color:var(--faint);position:relative}
+  .card h4{font-family:'Inter Tight';font-size:24px;font-weight:600;margin:14px 0 8px;position:relative}
+  .card p{font-size:14px;color:var(--muted);position:relative}
+
+  .features{
+    margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  }
+  .feature{background:var(--bg);padding:24px 22px}
+  .feature .fi{color:var(--accent);font-size:13px;font-weight:500;margin-bottom:8px}
+  .feature p{font-size:14px;color:var(--muted)}
+
+  /* ---- SOCIAL PILLS ---- */
+  .socials{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px}
+  .pill{
+    padding:12px 22px;border:1px solid var(--line);border-radius:100px;
+    font-family:'Inter Tight';font-size:16px;font-weight:500;
+    transition:border-color .3s,background .3s;
+  }
+  .pill:hover{border-color:var(--accent);background:var(--accent-dim)}
+
+  /* ---- DELIVERABLES ---- */
+  .deliver{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:52px 46px}
+  .deliver h2{font-family:'Inter Tight';font-size:clamp(26px,3.5vw,36px);font-weight:600;letter-spacing:-.02em;margin-bottom:36px}
+  .dgrid{display:grid;grid-template-columns:1fr 1fr;gap:2px 40px}
+  .ditem{display:flex;gap:16px;padding:18px 0;border-top:1px solid var(--line);align-items:flex-start}
+  .ditem .chk{
+    flex-shrink:0;width:22px;height:22px;border-radius:50%;
+    background:var(--accent-dim);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;font-size:12px;margin-top:2px;
+  }
+  .ditem span{font-size:16px;color:var(--text)}
+  .ditem b{font-weight:600}
+
+  /* ---- NOTE ---- */
+  .note{
+    margin-top:36px;padding:26px 30px;border:1px dashed var(--line-strong);
+    border-radius:14px;background:var(--surface-2);
+    display:flex;gap:18px;align-items:flex-start;
+  }
+  .note .ni{color:var(--accent);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;flex-shrink:0;padding-top:2px}
+  .note p{color:var(--muted);font-size:15px}
+
+  /* ---- FOOTER CTA ---- */
+  footer{position:relative;z-index:1;padding:110px 0 90px;text-align:center;border-top:1px solid var(--line);margin-top:40px}
+  footer h2{font-family:'Inter Tight';font-size:clamp(30px,5vw,54px);font-weight:600;letter-spacing:-.025em;line-height:1.05;max-width:18ch;margin:0 auto 24px}
+  footer p{color:var(--muted);font-size:17px;max-width:46ch;margin:0 auto 40px}
+  .cta{
+    display:inline-flex;align-items:center;gap:12px;
+    background:var(--text);color:var(--bg);
+    font-family:'Inter Tight';font-weight:600;font-size:16px;
+    padding:16px 30px;border-radius:100px;text-decoration:none;
+    transition:transform .3s,box-shadow .3s;
+  }
+  .cta:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(139,156,255,.25)}
+  .cta .arr{transition:transform .3s}
+  .cta:hover .arr{transform:translateX(4px)}
+  .sign{margin-top:50px;font-size:13px;color:var(--faint)}
+
+  @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+  @media (max-width:760px){
+    .wrap{padding:0 22px}
+    header{padding:80px 0 60px}
+    .meta{gap:32px}
+    .cards{grid-template-columns:1fr}
+    .dgrid{grid-template-columns:1fr}
+    .deliver{padding:36px 26px}
+    .step{grid-template-columns:1fr;gap:12px}
+    .step-num{padding-top:0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important}
+    .eyebrow,h1 .l1,h1 .l2,.lede,.meta{opacity:1}
+  }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span>Коммерческое предложение · Velora Beauty</div>
+    <h1><span class="l1">Запуск бизнеса</span><span class="l2"><span>под ключ.</span></span></h1>
+    <p class="client">Подготовлено для <b>Velora Beauty</b> · Татьяна Богомолова</p>
+    <p class="lede">Комплексное решение для выхода вашего бизнеса на международный рынок — от регистрации компании до готовой цифровой экосистемы бренда.</p>
+    <div class="meta">
+      <div><div class="k">8</div><div class="v">этапов реализации</div></div>
+      <div><div class="k">3</div><div class="v">современных сайта</div></div>
+      <div><div class="k">UK Ltd</div><div class="v">международная структура</div></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-label">Объём работ</div>
+      <h2>Восемь этапов от идеи до запуска</h2>
+    </div>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <h3>Регистрация компании</h3>
+          <p>Регистрация компании в Великобритании и подготовка корпоративной структуры под международную работу.</p>
+          <ul><li>UK Ltd</li><li>Корпоративные документы</li><li>Консультация по структуре</li></ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <h3>Платёжная инфраструктура</h3>
+          <p>Настройка приёма онлайн-платежей с проверкой корректной работы всей системы.</p>
+          <ul><li>Wise Business</li><li>Stripe</li><li>Онлайн-платежи</li><li>Тестирование</li></ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <h3>Разработка сайтов</h3>
+          <p>Три современных сайта с индивидуальным дизайном, адаптацией под мобильные, высокой скоростью загрузки и SEO-структурой.</p>
+          <ul><li>Velora</li><li>БАДы</li><li>Пептиды</li><li>Формы обратной связи</li></ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">04</div>
+        <div>
+          <h3>Интеграция с сайтом клиники</h3>
+          <p>Единая экосистема бренда: все проекты связаны с основным сайтом клиники через удобную навигацию.</p>
+          <ul><li>Перелинковка</li><li>Навигация</li><li>Единая экосистема</li></ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">05</div>
+        <div>
+          <h3>Google и SEO</h3>
+          <p>Аналитика, индексация и базовая оптимизация всех сайтов для видимости в поиске.</p>
+          <ul><li>Google Analytics</li><li>Search Console</li><li>Индексация</li><li>Базовое SEO</li></ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">06</div>
+        <div>
+          <h3>Социальные сети</h3>
+          <p>Профессиональное оформление аккаунтов в едином фирменном стиле с привязкой сайтов.</p>
+          <ul><li>Instagram</li><li>Facebook</li><li>LinkedIn</li><li>TikTok</li><li>YouTube</li></ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">07</div>
+        <div>
+          <h3>Подготовка к международной работе</h3>
+          <p>Масштабируемая цифровая инфраструктура для приёма платежей и работы с клиентами по всему миру.</p>
+          <ul><li>Международные платежи</li><li>Глобальный охват</li><li>Масштабируемость</li></ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">08</div>
+        <div>
+          <h3>Управление проектом</h3>
+          <p>Координация специалистов, контроль сроков и сопровождение каждого этапа вплоть до запуска.</p>
+          <ul><li>Координация</li><li>Контроль сроков</li><li>Сопровождение</li></ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-label">Сайты</div>
+      <h2>Три проекта, один стандарт качества</h2>
+    </div>
+    <div class="cards">
+      <div class="card"><div class="idx">Проект 01</div><h4>Velora</h4><p>Флагманский сайт бренда с индивидуальным современным дизайном.</p></div>
+      <div class="card"><div class="idx">Проект 02</div><h4>БАДы</h4><p>Направление добавок с адаптивной вёрсткой и формами обратной связи.</p></div>
+      <div class="card"><div class="idx">Проект 03</div><h4>Пептиды</h4><p>Специализированный сайт с SEO-оптимизированной структурой страниц.</p></div>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="fi">Дизайн</div><p>Индивидуальный современный стиль</p></div>
+      <div class="feature"><div class="fi">Адаптив</div><p>Корректная работа на всех устройствах</p></div>
+      <div class="feature"><div class="fi">Скорость</div><p>Высокая скорость загрузки</p></div>
+      <div class="feature"><div class="fi">SEO</div><p>Оптимизированная структура</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-label">Присутствие бренда</div>
+      <h2>Оформленные аккаунты в едином стиле</h2>
+    </div>
+    <div class="socials">
+      <div class="pill">Instagram</div>
+      <div class="pill">Facebook</div>
+      <div class="pill">LinkedIn</div>
+      <div class="pill">TikTok</div>
+      <div class="pill">YouTube</div>
+    </div>
+    <p style="color:var(--muted);max-width:56ch">Оформление профилей, единый фирменный стиль, привязка сайтов и настройка контактной информации.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="deliver">
+      <h2>Что вы получите</h2>
+      <div class="dgrid">
+        <div class="ditem"><div class="chk">✓</div><span>Зарегистрированную компанию в <b>Великобритании</b></span></div>
+        <div class="ditem"><div class="chk">✓</div><span>Настроенные <b>Wise Business</b> и <b>Stripe</b></span></div>
+        <div class="ditem"><div class="chk">✓</div><span>Три современных сайта: <b>Velora, БАДы, Пептиды</b></span></div>
+        <div class="ditem"><div class="chk">✓</div><span>Интеграцию всех сайтов с сайтом клиники</span></div>
+        <div class="ditem"><div class="chk">✓</div><span>Google Analytics и Search Console</span></div>
+        <div class="ditem"><div class="chk">✓</div><span>Базовую SEO-оптимизацию</span></div>
+        <div class="ditem"><div class="chk">✓</div><span>Полностью оформленные соцсети</span></div>
+        <div class="ditem"><div class="chk">✓</div><span>Готовую инфраструктуру для международного бизнеса</span></div>
+        <div class="ditem"><div class="chk">✓</div><span>Полное сопровождение проекта до запуска</span></div>
+      </div>
+      <div class="note">
+        <div class="ni">Далее</div>
+        <p>При необходимости регулярное продвижение — ведение соцсетей, создание контента, SEO-продвижение и реклама в Google и Meta — оформляется отдельным ежемесячным пакетом сопровождения.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h2>Готовы запустить бизнес на международном рынке?</h2>
+    <p>Один прозрачный процесс, полная координация и готовая цифровая экосистема на выходе.</p>
+    <a href="#" class="cta">Обсудить проект <span class="arr">→</span></a>
+    <div class="sign">Коммерческое предложение для <b style="color:var(--muted)">Velora Beauty</b> · Татьяна Богомолова · Запуск бизнеса под ключ</div>
+  </div>
+</footer>
+
+</body>
+</html>
