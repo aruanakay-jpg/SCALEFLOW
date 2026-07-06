@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Academy — AI Automation for Real Estate</title>
+<style>
+:root{
+  --bg:#ffffff;
+  --ink:#0d0f14;
+  --muted:#5b6472;
+  --line:#e7e9ee;
+  --line-soft:#f1f3f6;
+  --accent:#2f5bea;
+  --accent-soft:#eef2fe;
+  --good:#0f9d6a;
+  --good-soft:#e9f7f1;
+  --warn:#c2410c;
+  --warn-soft:#fdf0e9;
+  --card:#fbfcfd;
+  --radius:14px;
+  --maxw:820px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.65;
+  font-size:16.5px;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Layout */
+.wrap{display:grid;grid-template-columns:260px 1fr;max-width:1180px;margin:0 auto;}
+nav{
+  position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+  border-right:1px solid var(--line);padding:34px 22px;
+}
+nav .brand{font-weight:700;font-size:15px;letter-spacing:-0.01em;margin-bottom:4px}
+nav .brand span{color:var(--accent)}
+nav .tag{font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.4}
+nav a{
+  display:block;color:var(--muted);text-decoration:none;font-size:13.5px;
+  padding:6px 10px;border-radius:8px;margin-bottom:1px;transition:.15s;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+nav a:hover{background:var(--line-soft);color:var(--ink)}
+nav a .n{display:inline-block;width:22px;color:#aab1bd;font-variant-numeric:tabular-nums;font-size:12px}
+
+main{padding:56px clamp(24px,5vw,72px);max-width:calc(var(--maxw) + 144px);}
+section{padding:40px 0;border-top:1px solid var(--line-soft);scroll-margin-top:24px}
+section:first-of-type{border-top:none}
+
+/* Hero */
+.hero{padding-top:8px;padding-bottom:8px;border:none}
+.eyebrow{
+  display:inline-block;font-size:12px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--accent);background:var(--accent-soft);
+  padding:6px 12px;border-radius:100px;margin-bottom:20px;
+}
+h1{font-size:clamp(30px,5vw,44px);line-height:1.1;letter-spacing:-0.025em;font-weight:750;margin-bottom:18px}
+.hero .lede{font-size:18px;color:var(--muted);max-width:620px}
+.hero .role{
+  margin-top:26px;padding:20px 22px;background:var(--accent-soft);
+  border-radius:var(--radius);border:1px solid #dde5fd;
+}
+.hero .role b{color:var(--accent)}
+
+/* Typography */
+h2{font-size:14px;font-weight:700;letter-spacing:.02em;color:var(--ink);margin-bottom:22px;display:flex;align-items:baseline;gap:12px}
+h2 .num{
+  font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);
+  padding:3px 9px;border-radius:6px;font-variant-numeric:tabular-nums;
+}
+h3{font-size:17px;font-weight:650;letter-spacing:-0.01em;margin-bottom:8px}
+p{margin-bottom:14px;color:#2a2f3a}
+p.mut{color:var(--muted)}
+ul,ol{margin:0 0 16px 20px}
+li{margin-bottom:6px;color:#2a2f3a}
+b,strong{font-weight:650;color:var(--ink)}
+
+/* Cards */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:14px;
+}
+.grid{display:grid;gap:14px}
+.grid-2{grid-template-columns:1fr 1fr}
+
+/* Problem → solution */
+.ps{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.ps > div{background:#fff;padding:16px 18px}
+.ps .p-lab{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--warn);margin-bottom:5px}
+.ps .s-lab{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--good);margin-bottom:5px}
+.ps .p-lab + div, .ps .s-lab + div{font-size:15px}
+
+/* Service phases */
+.phase-lab{
+  font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);margin:26px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line);
+}
+.svc{border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:12px;background:#fff}
+.svc-head{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+.svc-head .idx{font-size:13px;font-weight:700;color:#fff;background:var(--ink);min-width:26px;height:26px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;flex-shrink:0}
+.svc-head h3{margin:0}
+.svc .val{margin-top:10px;font-size:14.5px;color:var(--good);background:var(--good-soft);padding:10px 14px;border-radius:9px}
+.svc .val b{color:#0b7a52}
+
+/* Scripts */
+.script{
+  background:#0d0f14;color:#e8ebf2;border-radius:var(--radius);padding:22px 24px;
+  margin-bottom:14px;font-size:15px;line-height:1.7;white-space:pre-wrap;
+  font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+.script .lbl{
+  display:block;font-family:-apple-system,sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:#7d8aa8;margin-bottom:12px;
+}
+.copy{
+  float:right;font-size:11px;color:#9aa6c2;background:#1c212c;border:1px solid #2b3140;
+  padding:4px 10px;border-radius:6px;cursor:pointer;font-family:-apple-system,sans-serif;transition:.15s;
+}
+.copy:hover{background:#262c3a;color:#fff}
+
+/* Objections */
+.obj{border-left:3px solid var(--line);padding:4px 0 4px 18px;margin-bottom:20px}
+.obj .q{font-weight:650;margin-bottom:6px}
+.obj .q::before{content:"“";color:var(--muted)}
+.obj .q::after{content:"”";color:var(--muted)}
+.obj .a{color:#2a2f3a}
+.obj .a::before{content:"→ ";color:var(--accent);font-weight:700}
+
+/* Questions list */
+ol.q-list{counter-reset:q;list-style:none;margin-left:0}
+ol.q-list li{counter-increment:q;padding-left:38px;position:relative;margin-bottom:10px}
+ol.q-list li::before{
+  content:counter(q);position:absolute;left:0;top:1px;font-size:12px;font-weight:700;
+  color:var(--accent);background:var(--accent-soft);width:26px;height:26px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;
+}
+
+/* KPI */
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:12px}
+.kpi .box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.kpi .box .big{font-size:28px;font-weight:750;letter-spacing:-0.02em;color:var(--ink);line-height:1}
+.kpi .box .lab{font-size:13px;color:var(--muted);margin-top:6px}
+
+/* Steps */
+ol.steps{counter-reset:s;list-style:none;margin-left:0}
+ol.steps li{counter-increment:s;padding-left:44px;position:relative;margin-bottom:12px;padding-top:4px}
+ol.steps li::before{
+  content:counter(s);position:absolute;left:0;top:0;font-size:13px;font-weight:700;color:#fff;
+  background:var(--accent);width:30px;height:30px;border-radius:8px;display:flex;
+  align-items:center;justify-content:center;font-variant-numeric:tabular-nums;
+}
+
+/* Do / Don't */
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dd .col{border-radius:var(--radius);padding:18px 20px}
+.dd .dont{background:var(--warn-soft);border:1px solid #f6d9cb}
+.dd .do{background:var(--good-soft);border:1px solid #cdeede}
+.dd .col .h{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
+.dd .dont .h{color:var(--warn)}
+.dd .do .h{color:var(--good)}
+.dd .col p{margin-bottom:10px;font-size:15px}
+.dd .col p:last-child{margin-bottom:0}
+
+/* Checklist */
+.check{list-style:none;margin-left:0}
+.check li{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.check li:last-child{border-bottom:none}
+.check .box{width:20px;height:20px;border:2px solid var(--line);border-radius:6px;flex-shrink:0;margin-top:2px;cursor:pointer;transition:.15s;position:relative}
+.check li.on .box{background:var(--good);border-color:var(--good)}
+.check li.on .box::after{content:"✓";position:absolute;inset:0;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.check li.on span{color:var(--muted);text-decoration:line-through}
+
+/* Ladder */
+.ladder{display:flex;flex-direction:column;gap:0}
+.ladder .rung{background:var(--card);border:1px solid var(--line);padding:12px 18px;font-weight:600;text-align:center;border-radius:10px}
+.ladder .arrow{text-align:center;color:#b7bdc9;font-size:14px;padding:3px 0}
+.ladder .rung.top{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* Commission */
+.comm{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.comm .box{border:1px solid var(--line);border-radius:var(--radius);padding:22px;background:#fff}
+.comm .pct{font-size:34px;font-weight:750;letter-spacing:-0.02em;color:var(--accent)}
+.comm .box h3{margin-top:4px}
+
+/* callout */
+.callout{background:var(--accent-soft);border:1px solid #dde5fd;border-radius:var(--radius);padding:22px 24px;font-size:17px;font-weight:550;color:#1a2c6b}
+
+.foot{padding:48px 0 20px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+
+/* Mobile */
+.menu-btn{display:none}
+@media(max-width:920px){
+  .wrap{grid-template-columns:1fr}
+  nav{position:fixed;left:0;top:0;width:280px;z-index:50;background:#fff;transform:translateX(-100%);transition:.25s;box-shadow:0 0 40px rgba(0,0,0,.12)}
+  nav.open{transform:none}
+  .menu-btn{display:flex;position:fixed;top:16px;right:16px;z-index:60;background:var(--ink);color:#fff;border:none;width:46px;height:46px;border-radius:12px;font-size:20px;align-items:center;justify-content:center;cursor:pointer}
+  main{padding:64px 22px 40px}
+  .ps,.grid-2,.dd,.comm{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<button class="menu-btn" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
+<div class="wrap">
+
+<nav>
+  <div class="brand">Sales <span>Academy</span></div>
+  <div class="tag">AI Automation for Real Estate Agencies</div>
+  <a href="#about"><span class="n">01</span>About the company</a>
+  <a href="#offer"><span class="n">02</span>Main sales offer</a>
+  <a href="#problems"><span class="n">03</span>Problems we solve</a>
+  <a href="#services"><span class="n">04</span>Our services</a>
+  <a href="#icp"><span class="n">05</span>Ideal client</a>
+  <a href="#find"><span class="n">06</span>Where to find clients</a>
+  <a href="#scripts"><span class="n">07</span>Outreach scripts</a>
+  <a href="#followup"><span class="n">11</span>Follow-ups</a>
+  <a href="#discovery"><span class="n">15</span>Discovery questions</a>
+  <a href="#objections"><span class="n">16</span>Objections</a>
+  <a href="#qualified"><span class="n">17</span>Qualified appointment</a>
+  <a href="#kpi"><span class="n">18</span>Daily KPI</a>
+  <a href="#rules"><span class="n">19</span>Working rules</a>
+  <a href="#daily"><span class="n">20</span>How to work daily</a>
+  <a href="#commission"><span class="n">21</span>Commission</a>
+  <a href="#growth"><span class="n">22</span>Career growth</a>
+  <a href="#sales-rules"><span class="n">23</span>Sales rules</a>
+  <a href="#checklist"><span class="n">25</span>First-day checklist</a>
+</nav>
+
+<main>
+
+  <section class="hero" id="top">
+    <span class="eyebrow">Sales Academy</span>
+    <h1>Everything you need to book qualified appointments.</h1>
+    <p class="lede">Our company, services, sales process, scripts, KPIs, objections and daily rules — in one place. Read it before your first outreach.</p>
+    <div class="role">
+      Your role is to <b>find real estate agencies, start conversations, identify interest, and book qualified appointments with decision-makers.</b> You're not expected to close deals immediately. Your main KPI is <b>qualified appointments booked.</b>
+    </div>
+  </section>
+
+  <section id="about">
+    <h2><span class="num">01</span>About the company</h2>
+    <p>We build AI automation systems for real estate agencies. We help them respond to leads faster, stop losing inquiries, qualify buyers and tenants automatically, automate WhatsApp, CRM and follow-up, book more viewings, reduce manual work, and improve conversion from lead to appointment.</p>
+    <div class="callout">We don't sell “AI” as technology. We sell business outcomes: faster response time, more qualified leads, more booked viewings, fewer lost clients, less admin, a better sales process.</div>
+  </section>
+
+  <section id="offer">
+    <h2><span class="num">02</span>Main sales offer</h2>
+    <p>Don't sell all services at once. The offer for first contact is one thing:</p>
+    <div class="card">
+      <h3>AI Lead Response &amp; Automation System</h3>
+      <p class="mut">We help real estate agencies respond to leads 24/7, qualify buyers and tenants automatically, and book more property viewings using AI.</p>
+    </div>
+    <p>The goal of the first conversation is not to explain every service. The goal is to <b>book a short demo or consultation call.</b></p>
+  </section>
+
+  <section id="problems">
+    <h2><span class="num">03</span>Problems we solve</h2>
+    <div class="grid" style="gap:12px">
+      <div class="ps"><div><div class="p-lab">Problem</div><div>The agency loses leads.</div></div><div><div class="s-lab">Solution</div><div>AI Lead Response System.</div></div></div>
+      <div class="ps"><div><div class="p-lab">Problem</div><div>Agents reply too slowly.</div></div><div><div class="s-lab">Solution</div><div>24/7 AI responder.</div></div></div>
+      <div class="ps"><div><div class="p-lab">Problem</div><div>Leads come from too many places.</div></div><div><div class="s-lab">Solution</div><div>CRM setup and lead automation.</div></div></div>
+      <div class="ps"><div><div class="p-lab">Problem</div><div>No clear follow-up process.</div></div><div><div class="s-lab">Solution</div><div>Nurture &amp; reactivation sequences.</div></div></div>
+      <div class="ps"><div><div class="p-lab">Problem</div><div>Agents repeat the same answers.</div></div><div><div class="s-lab">Solution</div><div>AI assistant for repetitive chats.</div></div></div>
+      <div class="ps"><div><div class="p-lab">Problem</div><div>Clients don't show for viewings.</div></div><div><div class="s-lab">Solution</div><div>Viewing scheduler &amp; reminders.</div></div></div>
+      <div class="ps"><div><div class="p-lab">Problem</div><div>Too much time on documents.</div></div><div><div class="s-lab">Solution</div><div>Document AI.</div></div></div>
+      <div class="ps"><div><div class="p-lab">Problem</div><div>The agency receives too many calls.</div></div><div><div class="s-lab">Solution</div><div>AI voice agent.</div></div></div>
+    </div>
+  </section>
+
+  <section id="services">
+    <h2><span class="num">04</span>Our services</h2>
+
+    <div class="phase-lab">Phase 1 — Quick wins</div>
+    <div class="svc"><div class="svc-head"><span class="idx">1</span><h3>AI Lead Responder 24/7</h3></div><p>Responds instantly to leads from WhatsApp, website forms, Instagram, ads, Bayut, Property Finder and other sources. Asks qualifying questions, collects details, moves the client to the next step.</p><div class="val"><b>Value:</b> The agency never loses leads at night, on weekends, or when agents are busy.</div></div>
+    <div class="svc"><div class="svc-head"><span class="idx">2</span><h3>CRM Setup &amp; Data Hygiene</h3></div><p>We organize the lead process inside a CRM: lead stages, pipeline, follow-up reminders, contact database, duplicate removal, team visibility, lead tracking.</p><div class="val"><b>Value:</b> The agency finally sees what's happening with every lead.</div></div>
+    <div class="svc"><div class="svc-head"><span class="idx">3</span><h3>Lead Source &amp; Conversion Dashboard</h3></div><p>Shows where leads come from, which source performs best, how fast agents respond, who converts better, and how many leads become appointments.</p><div class="val"><b>Value:</b> Decisions based on data instead of guessing.</div></div>
+    <div class="svc"><div class="svc-head"><span class="idx">4</span><h3>Database Reactivation</h3></div><p>Automated messages for old leads, previous clients, tenants and buyers — updates on new properties, price changes or investment opportunities.</p><div class="val"><b>Value:</b> New opportunities from an old database.</div></div>
+    <div class="svc"><div class="svc-head"><span class="idx">5</span><h3>AI Listing Copy &amp; Translation</h3></div><p>AI writes property descriptions and translates listings into English, Arabic, Russian and Chinese.</p><div class="val"><b>Value:</b> Agents save time and publish faster.</div></div>
+
+    <div class="phase-lab">Phase 2 — Deeper automation</div>
+    <div class="svc"><div class="svc-head"><span class="idx">6</span><h3>Lead Qualification, Scoring &amp; Routing</h3></div><p>AI scores leads by seriousness, budget, timeline, area and intent. Hot leads go to stronger agents; warm leads go into follow-up.</p><div class="val"><b>Value:</b> Agents spend time on better leads.</div></div>
+    <div class="svc"><div class="svc-head"><span class="idx">7</span><h3>Viewing Scheduler</h3></div><p>Schedules viewings, confirms time with the client, sends reminders.</p><div class="val"><b>Value:</b> Less back-and-forth, fewer missed appointments.</div></div>
+    <div class="svc"><div class="svc-head"><span class="idx">8</span><h3>Portal Publishing Automation</h3></div><p>Helps manage listing publication across portals and internal systems.</p><div class="val"><b>Value:</b> Less manual work, better control over listings.</div></div>
+    <div class="svc"><div class="svc-head"><span class="idx">9</span><h3>Internal AI Knowledge Assistant</h3></div><p>Agents ask AI about properties, payment plans, developers, availability, brochures and service charges.</p><div class="val"><b>Value:</b> Agents answer clients faster and more accurately.</div></div>
+    <div class="svc"><div class="svc-head"><span class="idx">10</span><h3>Document AI</h3></div><p>Extracts information from documents and pre-fills forms: Emirates ID, passport, title deed, Form F, Ejari.</p><div class="val"><b>Value:</b> Less manual entry, faster deal preparation.</div></div>
+
+    <div class="phase-lab">Phase 3 — Advanced systems</div>
+    <div class="svc"><div class="svc-head"><span class="idx">11</span><h3>AI Voice Agent</h3></div><p>Answers calls, qualifies leads, helps book appointments.</p><div class="val"><b>Value:</b> Handle more calls without growing the call center.</div></div>
+    <div class="svc"><div class="svc-head"><span class="idx">12</span><h3>KYC / AML Support</h3></div><p>Prepares draft checks and organizes client information for compliance workflows.</p><div class="val"><b>Value:</b> Faster prep, less manual admin.</div></div>
+    <div class="svc"><div class="svc-head"><span class="idx">13</span><h3>Property Analytics</h3></div><p>Reports based on property data, market data and investment logic.</p><div class="val"><b>Value:</b> Stronger investment arguments for buyers.</div></div>
+    <div class="svc"><div class="svc-head"><span class="idx">14</span><h3>3D Tours &amp; Remote Investor Experience</h3></div><p>Better remote viewing experiences for international buyers.</p><div class="val"><b>Value:</b> Sell to investors who aren't physically in Dubai.</div></div>
+  </section>
+
+  <section id="icp">
+    <h2><span class="num">05</span>Ideal client profile</h2>
+    <div class="grid grid-2">
+      <div class="card">
+        <h3 style="font-size:15px;margin-bottom:12px">Best clients</h3>
+        <ul style="margin-bottom:0">
+          <li>Real estate agencies &amp; broker teams</li>
+          <li>Property management companies</li>
+          <li>Developers</li>
+          <li>Agencies with 5+ agents receiving daily leads</li>
+          <li>Advertising on portals, active on Instagram</li>
+          <li>Using WhatsApp for sales</li>
+          <li>Spending money on lead generation</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px;margin-bottom:12px">Decision makers</h3>
+        <ul style="margin-bottom:0">
+          <li>Owner / Founder</li>
+          <li>Managing Director</li>
+          <li>Sales Director / Head of Sales</li>
+          <li>Operations Manager</li>
+          <li>Marketing Manager</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="find">
+    <h2><span class="num">06</span>Where to find clients</h2>
+    <p>Sources: Google Maps, Instagram, LinkedIn, Bayut, Property Finder, Dubizzle, agency websites, Facebook groups, real estate directories.</p>
+    <div class="card">
+      <h3 style="font-size:15px;margin-bottom:10px">Start by focusing on</h3>
+      <ol style="margin-bottom:0"><li>Instagram</li><li>LinkedIn</li><li>Email</li><li>Google Maps</li><li>Website contact forms</li></ol>
+    </div>
+    <p class="mut">We currently don't use a UAE WhatsApp Business number. Use WhatsApp only when a client provides a number, or when it's publicly available and appropriate to contact.</p>
+  </section>
+
+  <section id="scripts">
+    <h2><span class="num">07</span>Outreach scripts</h2>
+
+    <div class="script"><button class="copy" onclick="cp(this)">Copy</button><span class="lbl">Main outreach</span>Hi,
+
+I noticed your agency handles property inquiries.
+
+We help real estate agencies respond to leads 24/7, qualify buyers and tenants automatically, and book more property viewings using AI.
+
+Would you be open to a quick 15-minute call this week to see how this could work for your agency?</div>
+
+    <div class="script"><button class="copy" onclick="cp(this)">Copy</button><span class="lbl">Instagram — short</span>Hi,
+
+I came across your agency and wanted to reach out.
+
+We build AI systems that help real estate agencies respond faster, qualify leads and automate appointments.
+
+Would you be interested in a quick demo?</div>
+
+    <div class="script"><button class="copy" onclick="cp(this)">Copy</button><span class="lbl">LinkedIn</span>Hi,
+
+I noticed you work in real estate.
+
+We help real estate agencies automate lead response, qualify inquiries and book more viewings using AI.
+
+I think this could be useful for agencies that receive leads from portals, ads, WhatsApp or Instagram.
+
+Would you be open to a short call this week?</div>
+
+    <div class="script"><button class="copy" onclick="cp(this)">Copy</button><span class="lbl">Email — Subject: AI automation for your real estate agency</span>Hi,
+
+I noticed your agency works with property buyers and tenants in Dubai.
+
+We help real estate agencies respond to leads instantly, qualify buyers automatically and book more property viewings using AI.
+
+This can help reduce lost leads, improve follow-up and save agents time.
+
+Would you be open to a quick 15-minute call this week to see if this could be useful for your agency?
+
+Best,
+[Name]</div>
+  </section>
+
+  <section id="followup">
+    <h2><span class="num">11</span>Follow-ups &amp; replies</h2>
+
+    <div class="script"><button class="copy" onclick="cp(this)">Copy</button><span class="lbl">Follow-up 1</span>Hi,
+
+Just following up.
+
+Many real estate agencies lose valuable leads because responses are delayed or follow-up is inconsistent.
+
+Our AI system helps respond instantly, qualify leads and book more property viewings automatically.
+
+Would 15 minutes this week work for you?</div>
+
+    <div class="script"><button class="copy" onclick="cp(this)">Copy</button><span class="lbl">Follow-up 2</span>Hi,
+
+I do not want to spam you.
+
+Just wanted to check if improving lead response time and booking more qualified viewings is something your agency is currently interested in.
+
+If yes, I can send a short overview or book a quick call.</div>
+
+    <div class="script"><button class="copy" onclick="cp(this)">Copy</button><span class="lbl">If they say “Send information”</span>Of course, I can send a short overview.
+
+However, every agency has a different lead process, so it is much easier to show how this could work for your agency during a quick 15-minute call.
+
+Would tomorrow or Thursday work better?</div>
+
+    <div class="script"><button class="copy" onclick="cp(this)">Copy</button><span class="lbl">If they ask “What exactly do you do?”</span>We build AI automation systems for real estate agencies.
+
+For example, when a lead messages your agency, the AI can respond instantly, ask qualifying questions, understand budget, location, timeline and property type, then help book a viewing or send the qualified lead to your team.
+
+The goal is not to replace agents — it's to help them spend more time with serious buyers and less on repetitive messages.</div>
+  </section>
+
+  <section id="discovery">
+    <h2><span class="num">15</span>Discovery questions</h2>
+    <p class="mut">Ask these once a prospect shows interest.</p>
+    <ol class="q-list">
+      <li>How do you currently receive most of your leads?</li>
+      <li>Do leads come from Bayut, Property Finder, Instagram, WhatsApp, website or ads?</li>
+      <li>How quickly does your team usually respond to new leads?</li>
+      <li>Do you currently use a CRM?</li>
+      <li>How many leads do you receive per week?</li>
+      <li>What happens when a client messages after working hours?</li>
+      <li>Do you have someone following up with old leads?</li>
+      <li>Do agents spend a lot of time answering repetitive questions?</li>
+      <li>Do you currently track response time and conversion?</li>
+      <li>Would it be valuable if AI could qualify leads before agents speak to them?</li>
+      <li>Would more booked viewings help your business?</li>
+      <li>What is the biggest challenge in your current sales process?</li>
+    </ol>
+  </section>
+
+  <section id="objections">
+    <h2><span class="num">16</span>Common objections</h2>
+    <div class="obj"><div class="q">We already have agents replying.</div><div class="a">That's great. AI isn't here to replace your agents — it helps them respond instantly, qualify leads first, and avoid wasting time on repetitive conversations.</div></div>
+    <div class="obj"><div class="q">We already use a CRM.</div><div class="a">Perfect. Our system can work with your CRM and improve how leads are captured, qualified and followed up.</div></div>
+    <div class="obj"><div class="q">We don't need AI.</div><div class="a">I understand — many agencies feel the same at first. Usually the issue isn't AI itself. It's delayed responses, lost leads and inconsistent follow-up. We help fix that process.</div></div>
+    <div class="obj"><div class="q">Send me information.</div><div class="a">Of course. I can send a short overview — it's also easier to show you in 15 minutes how it could work for your agency. Would tomorrow or Thursday work better?</div></div>
+    <div class="obj"><div class="q">How much does it cost?</div><div class="a">Pricing depends on the setup, number of channels, integrations and complexity. First we do a short consultation to understand your lead process, then recommend the best setup.</div></div>
+    <div class="obj"><div class="q">We're not interested.</div><div class="a">No problem at all. Just so I understand — is it because you already have a system for lead response and follow-up, or is this simply not a priority right now?</div></div>
+  </section>
+
+  <section id="qualified">
+    <h2><span class="num">17</span>Qualified appointment rules</h2>
+    <p>An appointment is qualified <b>only if</b> all of the following are true:</p>
+    <ul class="check" style="margin-bottom:16px">
+      <li><span>The company is a real estate business</span></li>
+      <li><span>The person is a decision maker (or close to it)</span></li>
+      <li><span>They understand we offer AI automation</span></li>
+      <li><span>They showed interest</span></li>
+      <li><span>They agreed to a specific call time</span></li>
+      <li><span>The meeting is added to the calendar</span></li>
+      <li><span>The lead is added to Notion</span></li>
+      <li><span>Notes are complete</span></li>
+    </ul>
+    <div class="dd">
+      <div class="col dont"><div class="h">Not qualified</div><p>A random reply.</p><p>A vague “maybe later.”</p></div>
+      <div class="col do"><div class="h">Qualified</div><p>Clear date, time and contact person — booked on the calendar.</p></div>
+    </div>
+  </section>
+
+  <section id="kpi">
+    <h2><span class="num">18</span>Daily KPI</h2>
+    <p class="mut">Minimum daily activity</p>
+    <div class="kpi">
+      <div class="box"><div class="big">50</div><div class="lab">New companies found</div></div>
+      <div class="box"><div class="big">50</div><div class="lab">First messages sent</div></div>
+      <div class="box"><div class="big">20</div><div class="lab">Follow-ups sent</div></div>
+      <div class="box"><div class="big">5</div><div class="lab">Meaningful conversations</div></div>
+      <div class="box"><div class="big">1–3</div><div class="lab">Appointments booked (target)</div></div>
+      <div class="box"><div class="big">100%</div><div class="lab">Leads updated in Notion</div></div>
+    </div>
+    <p class="mut" style="margin-top:6px">Weekly target</p>
+    <div class="kpi">
+      <div class="box"><div class="big">250</div><div class="lab">New companies contacted</div></div>
+      <div class="box"><div class="big">100</div><div class="lab">Follow-ups</div></div>
+      <div class="box"><div class="big">25+</div><div class="lab">Conversations</div></div>
+      <div class="box"><div class="big">5–10</div><div class="lab">Qualified appointments</div></div>
+    </div>
+  </section>
+
+  <section id="rules">
+    <h2><span class="num">19</span>Working rules</h2>
+    <ul>
+      <li>Every lead must be added to Notion.</li>
+      <li>Every conversation must have notes.</li>
+      <li>Every follow-up must have a next follow-up date.</li>
+      <li>Don't keep leads only in Instagram, LinkedIn, WhatsApp or personal notes.</li>
+    </ul>
+    <div class="callout">If it's not in Notion, it doesn't exist.</div>
+  </section>
+
+  <section id="daily">
+    <h2><span class="num">20</span>How to work daily</h2>
+    <ol class="steps">
+      <li>Find new real estate agencies</li>
+      <li>Add them to Notion</li>
+      <li>Send first outreach message</li>
+      <li>Track replies</li>
+      <li>Ask qualifying questions</li>
+      <li>Book appointment</li>
+      <li>Add notes</li>
+      <li>Send follow-up messages</li>
+      <li>Update status in Notion</li>
+      <li>Complete end-of-day report in Notion</li>
+    </ol>
+  </section>
+
+  <section id="commission">
+    <h2><span class="num">21</span>Commission</h2>
+    <div class="comm">
+      <div class="box">
+        <div class="pct">10–13%</div>
+        <h3>Appointment Setter</h3>
+        <p class="mut" style="margin-bottom:0">Find a lead and book a qualified appointment that later becomes a paying client — you earn 10–13% of the closed deal. Paid only after the client completes payment.</p>
+      </div>
+      <div class="box">
+        <div class="pct">20%</div>
+        <h3>Closer</h3>
+        <p class="mut">Run sales calls and close clients yourself — earn 20% of the closed deal.</p>
+        <p class="mut" style="margin-bottom:0;font-size:14px">To become a closer: consistent booked appointments, strong communication, understanding of the offer, clean CRM reporting, and the ability to handle objections and explain value clearly.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="growth">
+    <h2><span class="num">22</span>Career growth</h2>
+    <div class="ladder">
+      <div class="rung">Sales Rep</div><div class="arrow">↓</div>
+      <div class="rung">Senior Sales Rep</div><div class="arrow">↓</div>
+      <div class="rung">Appointment Setter</div><div class="arrow">↓</div>
+      <div class="rung">Closer</div><div class="arrow">↓</div>
+      <div class="rung">Team Lead</div><div class="arrow">↓</div>
+      <div class="rung top">Sales Manager</div>
+    </div>
+    <p class="mut" style="margin-top:16px">Growth depends on performance, discipline and results.</p>
+  </section>
+
+  <section id="sales-rules">
+    <h2><span class="num">23</span>Important sales rules</h2>
+    <div class="dd">
+      <div class="col dont"><div class="h">Don't</div>
+        <p>Sell technology. Don't say “We build AI.”</p>
+        <p>Explain every service at once.</p>
+        <p>Argue with clients.</p>
+        <p>Promise guaranteed revenue.</p>
+      </div>
+      <div class="col do"><div class="h">Do</div>
+        <p>Sell outcomes: “We help agencies respond faster, stop losing leads and book more viewings.”</p>
+        <p>Start with the main problem: lead response, qualification, booked appointments.</p>
+        <p>Ask questions and understand their process.</p>
+        <p>Explain results depend on their process, lead volume and implementation.</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3 style="font-size:15px;margin-bottom:8px">Say it in simple words</h3>
+      <p class="mut" style="margin-bottom:0">We help real estate agencies stop losing leads. When someone messages the agency, AI replies instantly, qualifies the person, collects their requirements and helps book the next step — so agents focus on serious clients instead of repetitive messages.</p>
+    </div>
+  </section>
+
+  <section id="checklist">
+    <h2><span class="num">25</span>First-day checklist</h2>
+    <p class="mut">Tap each item as you complete it.</p>
+    <ul class="check" id="checklist-items">
+      <li onclick="this.classList.toggle('on')"><span class="box"></span><span>I understand what the company does.</span></li>
+      <li onclick="this.classList.toggle('on')"><span class="box"></span><span>I understand the main offer.</span></li>
+      <li onclick="this.classList.toggle('on')"><span class="box"></span><span>I understand the ideal client.</span></li>
+      <li onclick="this.classList.toggle('on')"><span class="box"></span><span>I know where to find leads.</span></li>
+      <li onclick="this.classList.toggle('on')"><span class="box"></span><span>I know how to send the first message.</span></li>
+      <li onclick="this.classList.toggle('on')"><span class="box"></span><span>I know how to follow up.</span></li>
+      <li onclick="this.classList.toggle('on')"><span class="box"></span><span>I know how to qualify an appointment.</span></li>
+      <li onclick="this.classList.toggle('on')"><span class="box"></span><span>I understand the daily KPI.</span></li>
+      <li onclick="this.classList.toggle('on')"><span class="box"></span><span>I understand how to update Notion.</span></li>
+      <li onclick="this.classList.toggle('on')"><span class="box"></span><span>I understand how commission works.</span></li>
+      <li onclick="this.classList.toggle('on')"><span class="box"></span><span>I am ready to start outreach.</span></li>
+    </ul>
+    <div class="callout" style="margin-top:20px">Your job isn't to convince everyone. It's to find the right agencies, start conversations and book qualified appointments with decision-makers.</div>
+  </section>
+
+  <div class="foot">Sales Academy · AI Automation for Real Estate Agencies · Internal training</div>
+
+</main>
+</div>
+
+<script>
+function cp(btn){
+  const t = btn.parentNode.innerText.replace(/^Copy\s*/,'').replace(/^[A-Z].*?\n/,'').trim();
+  const raw = btn.parentNode.cloneNode(true);
+  raw.querySelectorAll('button,.lbl').forEach(e=>e.remove());
+  navigator.clipboard.writeText(raw.innerText.trim()).then(()=>{
+    btn.textContent='Copied'; setTimeout(()=>btn.textContent='Copy',1400);
+  });
+}
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>{
+  document.querySelector('nav').classList.remove('open');
+}));
+</script>
+</body>
+</html>
