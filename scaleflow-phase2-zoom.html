@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScaleFlow · Phase 2 — Running the Audit</title>
+<style>
+:root{
+  --bg:#14161a;--bg-2:#1a1d22;--panel:#1e2229;--panel-2:#23272f;
+  --line:#2e333c;--line-soft:#262a31;
+  --ink:#e8e6e0;--ink-dim:#a4a49c;--ink-faint:#6f7178;
+  --gold:#c9a55c;--gold-soft:#d8bd84;--sand:#e3d6bd;
+  --green:#7fae7a;--red:#c47b6a;--radius:2px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.serif{font-family:Georgia,"Times New Roman",serif;font-style:italic}
+::selection{background:var(--gold);color:#14161a}
+
+.wrap{display:flex;min-height:100vh}
+.nav{width:280px;flex-shrink:0;background:var(--bg-2);border-right:1px solid var(--line);padding:34px 24px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.nav-brand{font-size:19px;font-weight:700;letter-spacing:0.14em;margin-bottom:4px}
+.nav-brand span{color:var(--gold)}
+.nav-sub{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px}
+.phase-badge{display:inline-block;background:var(--sand);color:#14161a;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;padding:5px 11px;border-radius:100px;margin-bottom:20px}
+.back-link{display:block;font-size:12px;color:var(--ink-faint);text-decoration:none;margin-bottom:22px;transition:color .18s}
+.back-link:hover{color:var(--gold)}
+.nav-group{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-faint);margin:26px 0 10px;padding-left:2px}
+.nav a.item{display:block;color:var(--ink-dim);text-decoration:none;font-size:14px;padding:7px 12px;border-left:2px solid transparent;transition:all .18s ease;border-radius:0 var(--radius) var(--radius) 0}
+.nav a.item:hover{color:var(--ink);background:var(--panel);border-left-color:var(--gold)}
+.nav-num{display:inline-block;width:22px;color:var(--ink-faint);font-variant-numeric:tabular-nums;font-size:12px}
+
+.main{flex:1;min-width:0}
+.inner{max-width:820px;margin:0 auto;padding:0 40px}
+section{padding:60px 0;border-bottom:1px solid var(--line-soft)}
+section:last-child{border-bottom:none}
+
+.eyebrow{font-size:11px;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:28px;height:1px;background:var(--gold)}
+h1{font-size:clamp(36px,5.5vw,60px);line-height:1.03;font-weight:700;letter-spacing:-0.02em;margin-bottom:22px}
+h2{font-size:clamp(27px,4vw,38px);line-height:1.09;font-weight:700;letter-spacing:-0.015em;margin-bottom:18px}
+h3{font-size:19px;font-weight:650;margin-bottom:10px;letter-spacing:-0.01em}
+h4{font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;font-weight:600}
+p{color:var(--ink-dim);margin-bottom:14px}
+p strong,li strong{color:var(--ink);font-weight:600}
+.lead{font-size:19px;line-height:1.55;color:var(--sand)}
+
+.hero{padding:80px 0 60px;border-bottom:1px solid var(--line)}
+.hero-tag{display:inline-block;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-dim);border:1px solid var(--line);padding:6px 14px;border-radius:100px;margin-bottom:26px}
+.hero h1 .serif{color:var(--gold-soft)}
+
+.callout{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--gold);padding:22px 26px;border-radius:var(--radius);margin:24px 0}
+.callout.green{border-left-color:var(--green)}
+.callout.red{border-left-color:var(--red)}
+.callout h4{margin-bottom:8px}
+.callout p:last-child{margin-bottom:0}
+
+.grid{display:grid;gap:16px;margin:24px 0}
+.grid-2{grid-template-columns:1fr 1fr}
+.grid-3{grid-template-columns:1fr 1fr 1fr}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+.card h3{font-size:17px}
+.card p{font-size:14px;margin-bottom:0}
+.card .k{color:var(--gold-soft);font-weight:600}
+
+.steps{counter-reset:s;margin:22px 0}
+.step{display:flex;gap:20px;padding:20px 0;border-bottom:1px solid var(--line-soft);counter-increment:s}
+.step:last-child{border-bottom:none}
+.step-n{flex-shrink:0;width:44px;height:44px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold-soft);font-weight:700;font-size:16px;font-variant-numeric:tabular-nums}
+.step-n::before{content:counter(s,decimal-leading-zero)}
+.step-body h3{font-size:17px;margin-bottom:4px}
+.step-body p{font-size:14px;margin-bottom:0}
+.step-body .mins{font-size:12px;color:var(--ink-faint);letter-spacing:0.06em;margin-top:6px}
+
+.script{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);padding:8px;margin:18px 0}
+.script-line{padding:12px 16px;border-radius:var(--radius);margin:6px;font-size:15px;line-height:1.5}
+.script-you{background:var(--panel);border-left:3px solid var(--gold)}
+.script-you .who{color:var(--gold);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:5px;font-weight:600}
+.script-you p{color:var(--ink);margin-bottom:0}
+.script-them{background:transparent;border-left:3px solid var(--line)}
+.script-them .who{color:var(--ink-faint);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:5px}
+.script-them p{color:var(--ink-faint);font-style:italic;margin-bottom:0}
+
+.pkg{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:28px;margin:20px 0;position:relative}
+.pkg.feature{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset,0 20px 50px -30px rgba(201,165,92,.5)}
+.pkg-badge{position:absolute;top:-11px;left:28px;background:var(--gold);color:#14161a;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;font-weight:700;padding:4px 12px;border-radius:100px}
+.pkg-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.pkg-name{font-size:21px;font-weight:700;letter-spacing:-0.01em}
+.pkg-tag{font-size:13px;color:var(--ink-faint);margin:4px 0 16px}
+.pkg-price{text-align:right;flex-shrink:0}
+.pkg-price .from{font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:0.14em}
+.pkg-price .amt{font-size:27px;font-weight:700;color:var(--gold-soft);letter-spacing:-0.02em;line-height:1.1}
+.pkg-price .mo{font-size:13px;color:var(--ink-dim)}
+.pkg ul{list-style:none;margin:14px 0 0}
+.pkg li{padding:8px 0 8px 24px;position:relative;font-size:14px;color:var(--ink-dim);border-bottom:1px solid var(--line-soft)}
+.pkg li:last-child{border-bottom:none}
+.pkg li::before{content:"→";position:absolute;left:0;color:var(--gold)}
+.pkg li b{color:var(--ink)}
+.pkg-say{margin-top:14px;padding:12px 14px;background:var(--bg-2);border-radius:var(--radius);font-size:13px;color:var(--ink-dim)}
+.pkg-say b{color:var(--gold-soft)}
+
+.cases{display:grid;gap:12px;margin:20px 0}
+.case{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;display:flex;gap:16px;align-items:flex-start}
+.case-n{flex-shrink:0;font-size:12px;font-weight:700;color:var(--gold);border:1px solid var(--line);border-radius:var(--radius);padding:4px 8px;letter-spacing:0.08em}
+.case-b .ct{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.case-b .cd{font-size:13.5px;color:var(--ink-dim);margin-bottom:0}
+.case-b .cw{font-size:12px;color:var(--gold-soft);margin-top:6px;letter-spacing:0.03em}
+
+.obj{border:1px solid var(--line);border-radius:var(--radius);margin:14px 0;overflow:hidden}
+.obj-q{background:var(--panel-2);padding:16px 20px;font-weight:600;color:var(--ink);font-size:15px;display:flex;gap:12px;align-items:baseline}
+.obj-q::before{content:"“";color:var(--red);font-size:22px;font-family:Georgia,serif}
+.obj-a{padding:18px 20px;background:var(--panel)}
+.obj-a p{margin-bottom:0;font-size:14.5px}
+.obj-a .move{display:block;margin-top:12px;padding-top:12px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--gold-soft);letter-spacing:0.06em}
+
+.check{list-style:none;margin:18px 0}
+.check li{padding:11px 0 11px 32px;position:relative;color:var(--ink-dim);border-bottom:1px solid var(--line-soft);font-size:15px}
+.check li::before{content:"";position:absolute;left:4px;top:15px;width:14px;height:14px;border:1px solid var(--gold);border-radius:3px}
+.check li b{color:var(--ink)}
+
+.links{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:22px 0}
+.link-card{display:block;text-decoration:none;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;transition:all .18s ease}
+.link-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.link-card .lc-label{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.link-card .lc-title{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.link-card .lc-desc{font-size:12.5px;color:var(--ink-faint)}
+
+.foot{padding:44px 0;text-align:center;color:var(--ink-faint);font-size:13px}
+.foot b{color:var(--gold-soft)}
+
+.menu-btn{display:none;position:fixed;top:16px;right:16px;z-index:50;background:var(--panel);border:1px solid var(--line);color:var(--ink);padding:10px 14px;border-radius:var(--radius);font-size:13px;cursor:pointer}
+
+@media(max-width:960px){.grid-2,.grid-3,.links{grid-template-columns:1fr}}
+@media(max-width:768px){
+  .menu-btn{display:block}
+  .nav{position:fixed;left:0;top:0;z-index:40;transform:translateX(-100%);transition:transform .25s ease;box-shadow:20px 0 60px rgba(0,0,0,.5)}
+  .nav.open{transform:translateX(0)}
+  .inner{padding:0 22px}
+  section{padding:44px 0}
+  .hero{padding:56px 0 44px}
+  .pkg-price{text-align:left}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<button class="menu-btn" onclick="document.querySelector('.nav').classList.toggle('open')">Menu</button>
+
+<div class="wrap">
+  <aside class="nav">
+    <div class="nav-brand">SCALE<span>FLOW</span></div>
+    <div class="nav-sub">Sales System · 2026</div>
+    <div class="phase-badge">Phase 2 · Running the Audit</div>
+    <a class="back-link" href="scaleflow_phase1_audit_close_EN.html">← Back to Phase 1 (closing the audit)</a>
+
+    <div class="nav-group">Preparation</div>
+    <a class="item" href="#prep"><span class="nav-num">01</span>Before the Call</a>
+    <a class="item" href="#agenda"><span class="nav-num">02</span>Audit Structure</a>
+
+    <div class="nav-group">The Meeting</div>
+    <a class="item" href="#discover"><span class="nav-num">03</span>Capturing the "Before"</a>
+    <a class="item" href="#cases"><span class="nav-num">04</span>Showing Cases</a>
+    <a class="item" href="#packages"><span class="nav-num">05</span>Three Packages</a>
+    <a class="item" href="#pilot"><span class="nav-num">06</span>Closing on a Pilot</a>
+
+    <div class="nav-group">In the Call</div>
+    <a class="item" href="#objections"><span class="nav-num">07</span>Objections at the Audit</a>
+    <a class="item" href="#close"><span class="nav-num">08</span>Lock the Deal</a>
+    <a class="item" href="#materials"><span class="nav-num">09</span>Materials to Show</a>
+  </aside>
+
+  <main class="main">
+    <div class="inner">
+
+    <header class="hero">
+      <span class="hero-tag">Rep's Tool · Zoom Audit</span>
+      <h1>Phase 2.<br>The audit is <span class="serif">a presentation that closes.</span></h1>
+      <p class="lead">The client already said "yes" to the meeting. Now we show their numbers, the cases and three packages — and close on a pilot with pay-for-result.</p>
+    </header>
+
+    <!-- 01 PREP -->
+    <section id="prep">
+      <div class="eyebrow">01 · Before the Call</div>
+      <h2>5 minutes of prep = half the sale</h2>
+      <p>Don't walk into Zoom with a blank slate. Gather context before the meeting so you talk about <strong>their</strong> agency, not in the abstract.</p>
+      <ul class="check">
+        <li><b>Open their portals and site</b> — Bayut/PF profile, listing count, whether there's a chat/bot on the site.</li>
+        <li><b>Test whether their number replies</b> — message their WhatsApp as a buyer and time the response. That's your ace at the audit.</li>
+        <li><b>Gauge the size</b> — how many agents, what segment (rental / sales / off-plan).</li>
+        <li><b>Keep open:</b> this page, the cases (PDF), the pricing (PDF). Packages are below on this page.</li>
+        <li><b>Set up the demo</b> — if you have a live bot demo, have the link ready to show in action.</li>
+      </ul>
+      <div class="callout green">
+        <h4>Power move</h4>
+        <p>If you messaged their WhatsApp in advance and they didn't reply within an hour — <strong>show it on screen during the audit.</strong> "I wrote to you as a buyer yesterday at 20:15 — still no reply. That gap right there is costing you money." Nothing sells better than their own leak, live.</p>
+      </div>
+    </section>
+
+    <!-- 02 AGENDA -->
+    <section id="agenda">
+      <div class="eyebrow">02 · Audit Structure</div>
+      <h2>30–40 minutes on a clear script</h2>
+      <p>Don't improvise the order. Lead the client along the route: pain in numbers first → then proof → then solution → then close.</p>
+      <div class="steps">
+        <div class="step"><div class="step-n"></div><div class="step-body"><h3>Frame the meeting</h3><p>"Today we'll look at how your leads flow, where they leak, I'll show similar cases and options. At the end — we decide what's next." You set the agenda, you lead.</p><div class="mins">~3 min</div></div></div>
+        <div class="step"><div class="step-n"></div><div class="step-body"><h3>Capture the "before"</h3><p>Use questions to surface the current picture: response speed, where leads fall, the state of CRM and database. Quantify the pain.</p><div class="mins">~10 min</div></div></div>
+        <div class="step"><div class="step-n"></div><div class="step-body"><h3>Show the cases</h3><p>2–3 relevant cases matched to their pain. Not all five — only the ones that hit their situation.</p><div class="mins">~7 min</div></div></div>
+        <div class="step"><div class="step-n"></div><div class="step-body"><h3>Three packages</h3><p>Present the solution as three tiers. Lead toward the package that fits their scale.</p><div class="mins">~8 min</div></div></div>
+        <div class="step"><div class="step-n"></div><div class="step-body"><h3>Close on a pilot</h3><p>Offer a pilot with pay-for-metric. Lock the next step and a date.</p><div class="mins">~7 min</div></div></div>
+      </div>
+    </section>
+
+    <!-- 03 DISCOVER -->
+    <section id="discover">
+      <div class="eyebrow">03 · Capturing the "Before"</div>
+      <h2>Quantify the pain in their own words</h2>
+      <p>This is the core of the audit. The more concrete the "before" numbers, the easier the close. Ask and note on screen (the client watches the picture build):</p>
+      <div class="grid grid-2">
+        <div class="card"><h4>Speed &amp; channels</h4><p>How many leads a month? From which portals? How fast does a manager reply on average? What happens at night and on weekends?</p></div>
+        <div class="card"><h4>CRM &amp; losses</h4><p>Do all leads reach the CRM? Any duplicates across portals? Can you see which channel brings deals and which burns budget?</p></div>
+        <div class="card"><h4>Database</h4><p>How many contacts in the base? Is it worked at all? Or does it sit as dead weight?</p></div>
+        <div class="card"><h4>Cost per lead</h4><p>What do you pay per lead on Bayut/PF? → Multiply by the number of cooled leads = the loss in money.</p></div>
+      </div>
+      <div class="script">
+        <div class="script-line script-you"><div class="who">You · translate into money</div><p>"Look: a lead costs you [X] dirhams. Each month roughly [Y] leads cool off at night and on weekends. That's [X×Y] dirhams you paid the portal for but never captured. Every single month. That's exactly what we close."</p></div>
+      </div>
+    </section>
+
+    <!-- 04 CASES -->
+    <section id="cases">
+      <div class="eyebrow">04 · Showing Cases</div>
+      <h2>Proof — but only what's relevant</h2>
+      <p>Don't run through all five cases. Pick 2–3 matched to the pain you surfaced. The showing formula: <strong>problem (recognizable) → what we did → result-as-mechanic.</strong></p>
+      <div class="cases">
+        <div class="case"><div class="case-n">01</div><div class="case-b"><div class="ct">Agency, Almaty — leads sank in the evenings</div><div class="cd">Three portals, leads hung until Monday, managers pulled clients to personal numbers. We deployed a WhatsApp bot + order in the CRM.</div><div class="cw">→ Reply in seconds 24/7 · 100% of leads in CRM with source</div></div></div>
+        <div class="case"><div class="case-n">02</div><div class="case-b"><div class="ct">Developer sales team — 120 leads a day sorted by hand</div><div class="cd">Sorting ate 10–12 person-hours a day. We introduced scoring and routing.</div><div class="cw">→ Hot lead to a strong manager in minutes · triage done by the system</div></div></div>
+        <div class="case"><div class="case-n">05</div><div class="case-b"><div class="ct">Developer — a 15,000 base lying as dead weight</div><div class="cd">Lead in the morning, call in the evening, client left for a competitor. Voice AI: instant dial-out + base reactivation.</div><div class="cw">→ Call right after the form · whole base worked by campaigns</div></div></div>
+      </div>
+      <div class="callout">
+        <h4>How to pick the case for the client</h4>
+        <p>Losing leads at night → case 01. Many leads drowning in a pile → case 02. Large dead base → case 05. Document flow, contract errors → case 04. Reception can't keep up (beyond real estate) → case 03.</p>
+      </div>
+      <div class="callout green">
+        <h4>Key line about honesty</h4>
+        <p>"Notice — there's no 'grew 40%' in our cases. We guarantee the mechanic: reply in seconds, 100% of leads in CRM. Growth we measure on your pilot. Anyone promising an exact percentage blind is selling you marketing." This sets us apart from hype-vendors.</p>
+      </div>
+    </section>
+
+    <!-- 05 PACKAGES -->
+    <section id="packages">
+      <div class="eyebrow">05 · Three Packages</div>
+      <h2>The solution as three tiers</h2>
+      <p>Show bottom to top. All prices already include the <strong>−25% launch</strong>. Setup is one-off, monthly is support. Payment 50/50. Third-party costs (Meta, tokens, licenses, ads) are separate — say so out loud.</p>
+
+      <div class="pkg">
+        <div class="pkg-head">
+          <div><div class="pkg-name">Package 1 · "No lead is lost"</div></div>
+          <div class="pkg-price"><div class="from">setup from</div><div class="amt">$5,400</div><div class="mo">+ from $1,270/mo</div></div>
+        </div>
+        <div class="pkg-tag">Entry point. The easiest start.</div>
+        <ul>
+          <li><b>AI WhatsApp/Web bot</b> (AR-EN) — live dialogue, lead capture and qualification</li>
+          <li><b>CRM basic configuration</b> — stages, fields, import, distribution</li>
+          <li><b>Workflow automation</b> — leads ↔ CRM ↔ WhatsApp ↔ email ↔ calendar</li>
+        </ul>
+        <div class="pkg-say"><b>How to present:</b> "This is where most start. Quick to set up, closes the main leak right away — lost leads."</div>
+      </div>
+
+      <div class="pkg feature">
+        <div class="pkg-badge">Steer them here</div>
+        <div class="pkg-head">
+          <div><div class="pkg-name">Package 2 · "Managed funnel"</div></div>
+          <div class="pkg-price"><div class="from">setup from</div><div class="amt">$17,700</div><div class="mo">+ from $3,970/mo</div></div>
+        </div>
+        <div class="pkg-tag">The core package for an agency of 8+ agents.</div>
+        <ul>
+          <li><b>Custom AI agent with CRM actions</b> — creates leads, logs viewings, routes them</li>
+          <li><b>CRM implementation (mid)</b> — sources, distribution, cleaning, dashboards, training</li>
+          <li><b>WhatsApp API + portal feeds</b> — Bayut/PF into one lead flow</li>
+          <li><b>Workflow + marketing retainer</b> — nurture, A/B, CRM sync</li>
+        </ul>
+        <div class="pkg-say"><b>How to present:</b> "If you want to not just catch leads but see and manage the whole funnel — this is your option. Here the system works for you end to end."</div>
+      </div>
+
+      <div class="pkg">
+        <div class="pkg-head">
+          <div><div class="pkg-name">Package 3 · "AI sales department"</div></div>
+          <div class="pkg-price"><div class="from">setup from</div><div class="amt">$56,100</div><div class="mo">+ from $5,670/mo</div></div>
+        </div>
+        <div class="pkg-tag">Flagship for large brokerages and developers.</div>
+        <ul>
+          <li><b>Enterprise Omnichannel AI</b> — 20k+ messages/mo, one hub</li>
+          <li><b>AI Voice Agent</b> (AR/TDRA) — answers and dials out, qualifies</li>
+          <li><b>Document AI</b> — OCR + pre-fill of RERA/Ejari</li>
+          <li><b>CRM + WhatsApp API + feeds + Workflow</b>, full cycle</li>
+        </ul>
+        <div class="pkg-say"><b>How to present:</b> "A full AI sales department — voice, documents, everything. Usually clients reach it after the first stage. I can show it as the goal we grow toward."</div>
+      </div>
+
+      <div class="callout">
+        <h4>The "anchor" move</h4>
+        <p>Showing bottom to top makes Package 2 feel "middle and sensible" against a $56k flagship. Steer the bulk of clients to Package 2, and use Package 3 as the anchor that makes the second package look like a deal.</p>
+      </div>
+    </section>
+
+    <!-- 06 PILOT -->
+    <section id="pilot">
+      <div class="eyebrow">06 · Closing on a Pilot</div>
+      <h2>Our ace — <span class="serif">money on the metric</span></h2>
+      <p>This removes the last fear — "what if it doesn't work." Before the start we take a baseline, fix target metrics in the contract — <strong>part of the fee is paid only when they're met.</strong></p>
+      <div class="script">
+        <div class="script-line script-you"><div class="who">You · pilot offer</div><p>"Let's not take it on faith. We run a pilot: first we fix your current numbers, set the targets in the contract. You pay part of the fee only when we hit them. Minimal risk for you — you pay for the result."</p></div>
+        <div class="script-line script-you"><div class="who">You · closing question</div><p>"Based on what we covered today, it makes most sense for you to start with [Package 1/2]. Let's lock it in: I'll prepare a proposal on your numbers and we start the pilot. How does that plan sound?"</p></div>
+      </div>
+      <div class="callout green">
+        <h4>Pilot metrics</h4>
+        <p>Lead response time · lead → viewing · viewing → deal. We always guarantee the mechanic (reply in seconds, 100% of leads in CRM); growth we measure "before/after."</p>
+      </div>
+    </section>
+
+    <!-- 07 OBJECTIONS -->
+    <section id="objections">
+      <div class="eyebrow">07 · Objections at the Audit</div>
+      <h2>What you'll hear closer to price</h2>
+
+      <div class="obj">
+        <div class="obj-q">It's expensive"</div>
+        <div class="obj-a"><p>"Let's go back to your own number. We calculated it — you lose about [amount] dirhams a month on cooled leads. The package pays back in [timeframe]. And you can start with the basic one at $5,400 and expand once you see the result on the pilot."</p><span class="move">Move: back to their own loss figure + offer the lower tier.</span></div>
+      </div>
+      <div class="obj">
+        <div class="obj-q">I need to think / consult"</div>
+        <div class="obj-a"><p>"Of course. So you have something to think on — I'll prepare a proposal on today's numbers, so you decide on facts, not memory. And since the main risk is 'what if it doesn't work,' we remove it with a pilot that pays for results. Shall I prepare it?"</p><span class="move">Move: convert "think" into preparing the offer + de-risk with the pilot.</span></div>
+      </div>
+      <div class="obj">
+        <div class="obj-q">Do you guarantee the result?"</div>
+        <div class="obj-a"><p>"The mechanic — yes, 100%: reply in seconds, all leads in CRM. An exact growth percentage nobody honestly guarantees blind — that's why we run a pilot with before/after measurement and pay-for-metric. You pay for the result, not the promise."</p><span class="move">Move: honesty + pilot as the guarantee instead of an empty promise.</span></div>
+      </div>
+      <div class="obj">
+        <div class="obj-q">Let's start with the smallest one"</div>
+        <div class="obj-a"><p>"Great call — that's how most work. We start with Package 1, close the main leak, you see the numbers on the pilot, then expand as results come in. Shall we set it up?"</p><span class="move">Move: don't argue — this is our land-and-expand model. Close it.</span></div>
+      </div>
+    </section>
+
+    <!-- 08 CLOSE -->
+    <section id="close">
+      <div class="eyebrow">08 · Lock the Deal</div>
+      <h2>An audit is closed only with a concrete next step</h2>
+      <ul class="check">
+        <li><b>A package chosen</b> (or a direction) for their scale and numbers.</li>
+        <li><b>A pilot agreed</b> — what we measure, which target metrics.</li>
+        <li><b>A date set</b> for sending the proposal and the next touch.</li>
+        <li><b>Third-party costs stated</b> — so there's no surprise on the invoice.</li>
+        <li><b>Logged in the CRM</b> with a stage and deal value.</li>
+      </ul>
+      <div class="callout green">
+        <h4>Audit mini-goal</h4>
+        <p>A successful audit = <strong>the client agreed to a pilot and chose a package / direction, with a proposal date set.</strong> Not "they liked it" — a concrete next step with a date.</p>
+      </div>
+    </section>
+
+    <!-- 09 MATERIALS -->
+    <section id="materials">
+      <div class="eyebrow">09 · Materials to Show</div>
+      <h2>Open during screen share</h2>
+      <div class="links">
+        <a class="link-card" href="Scaleflow_Cases_EN.pdf" target="_blank"><div class="lc-label">Proof</div><div class="lc-title">Cases (EN)</div><div class="lc-desc">5 cases: problem → solution → result.</div></a>
+        <a class="link-card" href="AI_for_Real_Estate_Examples_RU.pdf" target="_blank"><div class="lc-label">Value</div><div class="lc-title">Scenarios (RU)</div><div class="lc-desc">13 AI scenarios + prioritization matrix.</div></a>
+        <a class="link-card" href="Development_Pricing_EN.pdf" target="_blank"><div class="lc-label">Pricing</div><div class="lc-title">Pricing (EN)</div><div class="lc-desc">Full price list with −25% launch.</div></a>
+      </div>
+      <div class="callout">
+        <p style="margin-bottom:0"><strong>Order of showing on screen:</strong> their "before" numbers first (captured live) → then 2–3 cases matched to their pain → then the three packages → the pricing in detail only if they ask for a breakdown. Lead along the route, don't dump it all at once.</p>
+      </div>
+    </section>
+
+    <div class="foot">
+      <p><b>SCALEFLOW</b> · AI Integration &amp; Automation · Dubai 2026</p>
+      <p>+971 56 305 7577 · scaleflow.ae@gmail.com · WhatsApp / Telegram</p>
+      <p style="margin-top:10px;color:var(--ink-faint)">Internal document for the sales team. Not for sharing with clients.</p>
+    </div>
+
+    </div>
+  </main>
+</div>
+<script>
+document.querySelectorAll('.nav a.item').forEach(a=>a.addEventListener('click',()=>document.querySelector('.nav').classList.remove('open')));
+</script>
+</body>
+</html>
