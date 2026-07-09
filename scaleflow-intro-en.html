@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScaleFlow — AI Automation Agency</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --bg:#f4f5f7;
+    --card:#ffffff;
+    --ink:#1c1d22;
+    --ink-soft:#9a9ca4;
+    --accent:#6c5ce7;
+    --accent-soft:#b8a9ff;
+    --line:#e7e8ec;
+    --shadow:0 30px 80px -30px rgba(28,29,34,.22);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Manrope',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.15;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+  /* generic slide card */
+  .slide{
+    background:var(--card);
+    border-radius:34px;
+    box-shadow:var(--shadow);
+    margin:26px auto;
+    padding:64px 56px;
+    position:relative;
+    overflow:hidden;
+  }
+  /* faint dashed frame like the references */
+  .slide::before{
+    content:"";
+    position:absolute;inset:14px;
+    border:1px dashed rgba(28,29,34,.10);
+    border-radius:24px;
+    pointer-events:none;
+  }
+
+  /* pill badge */
+  .pill{
+    display:inline-flex;align-items:center;gap:9px;
+    background:#fff;
+    border:1px solid var(--line);
+    box-shadow:0 6px 20px -8px rgba(28,29,34,.18);
+    padding:10px 18px;border-radius:999px;
+    font-weight:600;font-size:14px;color:#5a5c64;
+    position:relative;z-index:2;
+  }
+  .pill .dot{width:9px;height:9px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent-soft));}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:80px 56px 72px;text-align:center}
+  .hero .eyebrow{margin-bottom:34px}
+  .hero h1{
+    font-size:clamp(44px,8vw,92px);
+    font-weight:800;letter-spacing:-.03em;line-height:.98;
+    position:relative;z-index:2;
+  }
+  .hero h1 .grey{color:var(--ink-soft)}
+  .hero h1 .accent{
+    background:linear-gradient(120deg,var(--accent),#a58bff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero .sub{
+    margin:30px auto 0;max-width:560px;
+    font-size:18px;font-weight:500;color:#6a6c74;line-height:1.5;
+    position:relative;z-index:2;
+  }
+  .hero .cta{
+    display:inline-flex;align-items:center;gap:10px;
+    margin-top:38px;
+    background:var(--ink);color:#fff;
+    padding:15px 26px;border-radius:999px;
+    font-weight:600;font-size:15px;
+    box-shadow:0 18px 40px -14px rgba(28,29,34,.55);
+    position:relative;z-index:2;
+    text-decoration:none;
+    transition:transform .2s ease;
+  }
+  .hero .cta:hover{transform:translateY(-2px)}
+  .cta-ghost{
+    background:#fff !important;color:var(--ink) !important;
+    border:1px solid var(--line);
+    box-shadow:0 8px 24px -14px rgba(28,29,34,.3) !important;
+  }
+  .hero .cta svg{transition:transform .2s ease}
+  .hero .cta:hover svg{transform:translateX(3px)}
+
+  /* soft glow behind hero */
+  .hero .glow{
+    position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);
+    width:520px;height:320px;
+    background:radial-gradient(closest-side,rgba(108,92,231,.16),transparent 70%);
+    filter:blur(10px);z-index:1;pointer-events:none;
+  }
+
+  /* ---------- SECTION TITLES ---------- */
+  .s-head{text-align:center;margin-bottom:48px;position:relative;z-index:2}
+  .s-head .eyebrow{margin-bottom:22px}
+  .s-head h2{
+    font-size:clamp(32px,5vw,56px);
+    font-weight:800;letter-spacing:-.025em;line-height:1.02;
+  }
+  .s-head h2 .grey{color:var(--ink-soft)}
+  .s-head p{margin:18px auto 0;max-width:600px;color:#6a6c74;font-size:17px;font-weight:500;line-height:1.55}
+
+  /* ---------- STAT ROW ---------- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;position:relative;z-index:2}
+  .stat{
+    background:#fafafb;border:1px solid var(--line);
+    border-radius:22px;padding:30px 22px;text-align:center;
+  }
+  .stat .num{
+    font-size:clamp(34px,5vw,50px);font-weight:800;letter-spacing:-.03em;
+    background:linear-gradient(120deg,var(--accent),#a58bff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .stat .lbl{margin-top:8px;font-size:14px;font-weight:600;color:#7c7e86;line-height:1.35}
+
+  /* ---------- EXPERT CARDS ---------- */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative;z-index:2}
+  .card{
+    background:#fafafb;border:1px solid var(--line);
+    border-radius:24px;padding:32px 26px;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:0 24px 50px -24px rgba(28,29,34,.28)}
+  .card .icn{
+    width:52px;height:52px;border-radius:16px;
+    display:grid;place-items:center;margin-bottom:20px;
+    background:linear-gradient(135deg,#efeaff,#e4dcff);
+    font-size:24px;
+  }
+  .card h3{font-size:19px;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+  .card p{font-size:15px;font-weight:500;color:#6a6c74;line-height:1.55}
+
+  /* ---------- WHY US ---------- */
+  .why{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center;position:relative;z-index:2}
+  .why h2{font-size:clamp(30px,4.5vw,48px);font-weight:800;letter-spacing:-.025em;line-height:1.05;margin-bottom:20px}
+  .why h2 .grey{color:var(--ink-soft)}
+  .why p{color:#6a6c74;font-size:16px;font-weight:500;line-height:1.6;margin-bottom:16px}
+  .why .list{list-style:none;display:flex;flex-direction:column;gap:14px;margin-top:8px}
+  .why .list li{display:flex;gap:13px;font-size:15px;font-weight:600;color:#3a3c44;align-items:flex-start}
+  .why .list .tick{
+    flex:none;width:24px;height:24px;border-radius:8px;margin-top:1px;
+    background:linear-gradient(135deg,var(--accent),#a58bff);
+    display:grid;place-items:center;
+  }
+  .why-visual{
+    background:linear-gradient(160deg,#f2eeff,#fbfaff);
+    border:1px solid #ece7ff;border-radius:26px;
+    padding:34px;min-height:280px;display:flex;flex-direction:column;justify-content:center;gap:16px;
+  }
+  .chip{
+    background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:16px 18px;box-shadow:0 10px 26px -16px rgba(28,29,34,.25);
+    font-weight:600;font-size:15px;color:#3a3c44;display:flex;align-items:center;gap:12px;
+  }
+  .chip .e{font-size:20px}
+
+  /* ---------- CTA CLOSER ---------- */
+  .closer{text-align:center;padding:78px 56px}
+  .closer h2{font-size:clamp(34px,5vw,58px);font-weight:800;letter-spacing:-.03em;line-height:1.02;position:relative;z-index:2}
+  .closer h2 .accent{
+    background:linear-gradient(120deg,var(--accent),#a58bff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .closer p{margin:22px auto 0;max-width:520px;color:#6a6c74;font-size:17px;font-weight:500;position:relative;z-index:2}
+  .closer .glow{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:560px;height:300px;
+    background:radial-gradient(closest-side,rgba(108,92,231,.14),transparent 70%);
+    z-index:1;pointer-events:none;
+  }
+
+  /* footer signature pill (like the @handle in refs) */
+  .sig{
+    display:flex;justify-content:center;padding:10px 0 40px;
+  }
+  .sig .handle{
+    display:inline-flex;align-items:center;gap:10px;
+    background:#fff;border:1px solid var(--line);
+    padding:11px 20px;border-radius:999px;
+    font-weight:700;font-size:15px;color:var(--ink);
+    box-shadow:0 8px 24px -12px rgba(28,29,34,.2);
+  }
+  .sig .avatar{
+    width:26px;height:26px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),#a58bff);
+    color:#fff;display:grid;place-items:center;font-size:13px;font-weight:800;
+  }
+  .sig .verified{color:var(--accent)}
+
+  /* ---------- CASES ---------- */
+  .case{position:relative;z-index:2}
+  .case-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:26px}
+  .case-no{
+    font-size:13px;font-weight:800;letter-spacing:.14em;color:var(--accent);
+    background:#f1eeff;border:1px solid #e4dcff;padding:7px 14px;border-radius:999px;
+  }
+  .case-top h3{font-size:clamp(24px,3.6vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+  .case-top .meta{font-size:14px;font-weight:600;color:var(--ink-soft);margin-left:auto}
+  .case-body{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:28px}
+  .pps{background:#fafafb;border:1px solid var(--line);border-radius:20px;padding:26px}
+  .pps .tag{
+    display:inline-block;font-size:12px;font-weight:800;letter-spacing:.1em;
+    text-transform:uppercase;color:#8a8c94;margin-bottom:12px;
+  }
+  .pps.sol .tag{color:var(--accent)}
+  .pps p{font-size:15px;font-weight:500;color:#54565e;line-height:1.6}
+  .pps ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:4px}
+  .pps ul li{display:flex;gap:11px;font-size:14.5px;font-weight:500;color:#54565e;line-height:1.5;align-items:flex-start}
+  .pps ul li::before{
+    content:"";flex:none;width:7px;height:7px;border-radius:50%;margin-top:7px;
+    background:linear-gradient(135deg,var(--accent),#a58bff);
+  }
+  .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .metric{
+    background:linear-gradient(160deg,#f5f2ff,#fbfaff);
+    border:1px solid #ece7ff;border-radius:20px;padding:24px 20px;text-align:center;
+  }
+  .metric .m-num{
+    font-size:clamp(26px,3.6vw,38px);font-weight:800;letter-spacing:-.02em;line-height:1;
+    background:linear-gradient(120deg,var(--accent),#a58bff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .metric .m-lbl{margin-top:10px;font-size:13.5px;font-weight:600;color:#5e606a;line-height:1.4}
+  .metric .m-kind{margin-top:8px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#a6a8b2}
+
+  /* ---------- DUBAI TABLE ---------- */
+  .dubai-grid{display:flex;flex-direction:column;gap:12px;position:relative;z-index:2}
+  .drow{
+    display:grid;grid-template-columns:.9fr 1fr 1fr;gap:16px;align-items:center;
+    background:#fafafb;border:1px solid var(--line);border-radius:18px;padding:20px 22px;
+  }
+  .drow.head{background:var(--ink);border-color:var(--ink)}
+  .drow.head div{color:#fff;font-weight:700;font-size:14px;letter-spacing:.02em}
+  .dcell .dk{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#a6a8b2;margin-bottom:6px}
+  .dcell .dv{font-size:15px;font-weight:600;color:#3a3c44;line-height:1.4}
+  .dcell.why .dv{color:#54565e;font-weight:500;font-size:14.5px}
+  .dnote{margin-top:22px;text-align:center;font-size:16px;font-weight:600;color:#3a3c44;line-height:1.55;position:relative;z-index:2}
+  .dnote .accent{background:linear-gradient(120deg,var(--accent),#a58bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  .case-no.pkg{background:var(--ink);border-color:var(--ink);color:#fff}
+  .case-price{
+    font-size:13px;font-weight:800;letter-spacing:.02em;color:var(--accent);
+    background:#f1eeff;border:1px solid #e4dcff;padding:7px 14px;border-radius:999px;
+  }
+
+  @media(max-width:820px){
+    .case-body{grid-template-columns:1fr}
+    .metrics{grid-template-columns:1fr}
+    .case-top .meta{margin-left:0;width:100%}
+    .drow{grid-template-columns:1fr;gap:14px}
+    .drow.head{display:none}
+    .dcell .dk{color:var(--accent)}
+    .slide{padding:44px 26px;border-radius:28px}
+    .hero{padding:56px 26px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .cards{grid-template-columns:1fr}
+    .why{grid-template-columns:1fr;gap:30px}
+  }
+</style>
+</head>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="slide hero">
+    <div class="glow"></div>
+    <span class="pill eyebrow"><span class="dot"></span>AI business automation · since 2022</span>
+    <h1>We build <span class="accent">not automation</span><br>for show —<br><span class="grey">but systems</span> that work</h1>
+    <p class="sub">ScaleFlow is a team that has spent 3 years implementing AI and automation for business. Now — focused on Dubai real estate.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;z-index:2">
+      <a class="cta" href="#dubai-cases">Dubai cases by package
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="cta cta-ghost" href="#about">See all cases</a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="slide" id="about">
+    <div class="s-head">
+      <span class="pill eyebrow"><span class="dot"></span>Who we are</span>
+      <h2>3 years. Dozens of cases.<br><span class="grey">Across different industries.</span></h2>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="num">3+</div><div class="lbl">years of implementations on the market</div></div>
+      <div class="stat"><div class="num">25+</div><div class="lbl">years of real-estate experience on the team</div></div>
+      <div class="stat"><div class="num">10+</div><div class="lbl">years in IT, 5+ years in AI</div></div>
+      <div class="stat"><div class="num">&infin;</div><div class="lbl">attention to quality</div></div>
+    </div>
+  </section>
+
+  <!-- EXPERTS -->
+  <section class="slide">
+    <div class="s-head">
+      <span class="pill eyebrow"><span class="dot"></span>The team</span>
+      <h2>People stand behind the build,<br><span class="grey">not templates</span></h2>
+      <p>There are dozens of AI-automation agencies on the market right now. What sets us apart is that we implement to a genuinely high standard — the way large companies demand.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="icn">&#127970;</div>
+        <h3>Real-estate experts</h3>
+        <p>A CEO and specialists with 25+ years in real estate. We understand the entry points, the funnels and the real pain of agencies from the inside.</p>
+      </div>
+      <div class="card">
+        <div class="icn">&#129302;</div>
+        <h3>AI engineers</h3>
+        <p>More than 5 years in AI and 10+ years in IT. We don't just "plug in bots" — we build systems around the task.</p>
+      </div>
+      <div class="card">
+        <div class="icn">&#9881;&#65039;</div>
+        <h3>CRM implementers</h3>
+        <p>We configure CRM, document-flow automation and hybrid teams around your company's processes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="slide">
+    <div class="why">
+      <div>
+        <h2>Why <span class="grey">large businesses</span><br>trust us</h2>
+        <p>We've worked with major developers and brokerage agencies. Big companies don't tolerate sloppy work — so we implement everything to the highest standard, with RERA, Ejari and AML requirements accounted for.</p>
+        <ul class="list">
+          <li><span class="tick"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-11" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>CRM systems built around company processes</li>
+          <li><span class="tick"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-11" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Document-flow automation</li>
+          <li><span class="tick"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-11" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Building hybrid teams</li>
+          <li><span class="tick"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-11" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Experience with major developers and brokers</li>
+        </ul>
+      </div>
+      <div class="why-visual">
+        <div class="chip"><span class="e">&#127961;&#65039;</span> Dubai brokerage agencies</div>
+        <div class="chip"><span class="e">&#127959;&#65039;</span> Local developers</div>
+        <div class="chip"><span class="e">&#128196;</span> RERA / Ejari / AML compliance</div>
+        <div class="chip"><span class="e">&#128172;</span> WhatsApp · Property Finder · Bayut</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASES INTRO -->
+  <section class="slide">
+    <div class="s-head">
+      <span class="pill eyebrow"><span class="dot"></span>Our track record · real implementations</span>
+      <h2>Problem &rarr; solution<br><span class="grey">&rarr; result</span></h2>
+      <p>Cases with real texture: the pain at the entry point, the friction of launch, and metrics that rest on how the system is built. The target metrics of every solution are fixed in the pilot contract — part of the fee is tied to achieving them.</p>
+    </div>
+  </section>
+
+  <!-- CASE 01 -->
+  <section class="slide">
+    <div class="case">
+      <div class="case-top">
+        <span class="case-no">CASE 01</span>
+        <h3>Real-estate agency · Almaty</h3>
+        <span class="meta">12–18 agents · resale and new-build</span>
+      </div>
+      <div class="case-body">
+        <div class="pps"><span class="tag">Problem</span>
+          <p>Friday evening. 14 unread on the office WhatsApp; leads from Krisha.kz have hung there since lunch. Some requests go to agents' personal numbers and never reach the CRM. The owner sees 4 deals in amoCRM — while ads run on Krisha, Instagram and 2GIS. How many leads actually came in, nobody knows.</p>
+        </div>
+        <div class="pps sol"><span class="tag">Solution</span>
+          <ul>
+            <li>WhatsApp bot on the front line: replies in seconds 24/7, qualifies and hands the agent a warm conversation</li>
+            <li>Auto-capture of leads from Krisha.kz, Instagram and 2GIS straight into amoCRM with a source tag</li>
+            <li>Deduplication by phone number: one client — one card</li>
+            <li>Order in amoCRM: one funnel instead of three abandoned ones + an owner's dashboard</li>
+          </ul>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="m-num">seconds</div><div class="m-lbl">first reply to the client, around the clock</div><div class="m-kind">system mechanic</div></div>
+        <div class="metric"><div class="m-num">100%</div><div class="m-lbl">of leads in the CRM with a source</div><div class="m-kind">target in contract</div></div>
+        <div class="metric"><div class="m-num">3 &rarr; 1</div><div class="m-lbl">ad channels merged into one amoCRM funnel</div><div class="m-kind">system mechanic</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE 02 -->
+  <section class="slide">
+    <div class="case">
+      <div class="case-top">
+        <span class="case-no">CASE 02</span>
+        <h3>Developer sales team · Astana</h3>
+        <span class="meta">8 managers · hundreds of leads in season</span>
+      </div>
+      <div class="case-body">
+        <div class="pps"><span class="tag">Problem</span>
+          <p>In season — up to 120 leads a day: the project site, paid ads, inbound calls and WhatsApp. Sorting one lead by hand takes 5–7 minutes — 10–12 person-hours a day on triage alone. Managers pick the "convenient" requests; by evening 30–40 hang in the shared pile. Among them — a buyer with an approved mortgage, waiting just as long as someone who "dropped in to ask."</p>
+        </div>
+        <div class="pps sol"><span class="tag">Solution</span>
+          <ul>
+            <li>Qualification bot in WhatsApp and Telegram: budget, mortgage/cash, timeline, project — in seconds</li>
+            <li>Scoring: every lead gets a "hot / warm / cold" status before a human sees it</li>
+            <li>Routing: hot leads go instantly to strong managers, cold ones don't eat their time</li>
+            <li>Auto-nurture for warm leads with a chain of touches, no manager involved</li>
+          </ul>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="m-num">minutes</div><div class="m-lbl">from lead to a hot lead in the manager's hands</div><div class="m-kind">target in contract</div></div>
+        <div class="metric"><div class="m-num">100%</div><div class="m-lbl">of leads in amoCRM with scoring status and chat history</div><div class="m-kind">system mechanic</div></div>
+        <div class="metric"><div class="m-num">10–12 h</div><div class="m-lbl">of manual sorting a day removed from the team</div><div class="m-kind">calculated from case</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE 03 -->
+  <section class="slide">
+    <div class="case">
+      <div class="case-top">
+        <span class="case-no">CASE 03</span>
+        <h3>Beauty-salon chain · Kazakhstan</h3>
+        <span class="meta">3 branches · booking, retention, base reactivation</span>
+      </div>
+      <div class="case-body">
+        <div class="pps"><span class="tag">Problem</span>
+          <p>Two pairs of hands on reception and three channels: Direct, WhatsApp, phone — all at once. Evening requests hang until morning, and by then the client has already booked next door. Half of those booked don't show — the slot burns. Over 5 years a huge base was built up, but it lies as dead weight: no one to message by hand, and spamming is scary.</p>
+        </div>
+        <div class="pps sol"><span class="tag">Solution</span>
+          <ul>
+            <li>AI receptionist in WhatsApp and Instagram Direct: services, prices, masters, free slots — in seconds, 24/7</li>
+            <li>Booking straight from chat into the right branch's calendar</li>
+            <li>No-show control: confirmation after booking + a reminder the day before</li>
+            <li>Base reactivation with careful touches, opt-in only</li>
+          </ul>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="m-num">24/7</div><div class="m-lbl">requests and booking taken with no reception involved</div><div class="m-kind">system mechanic</div></div>
+        <div class="metric"><div class="m-num">seconds</div><div class="m-lbl">bot reply instead of hours of waiting</div><div class="m-kind">system mechanic</div></div>
+        <div class="metric"><div class="m-num">100%</div><div class="m-lbl">of bookings with confirmation and reminder</div><div class="m-kind">target in contract</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE 04 -->
+  <section class="slide">
+    <div class="case">
+      <div class="case-top">
+        <span class="case-no">CASE 04</span>
+        <h3>Developer with an agency arm · Almaty</h3>
+        <span class="meta">30+ contracts a month · deal document flow</span>
+      </div>
+      <div class="case-body">
+        <div class="pps"><span class="tag">Problem</span>
+          <p>The moment of signing: the client reads the equity-participation contract and finds a stranger's national ID number — a whole other person's, carried over from the previous contract by copying. The lawyer assembled the document by copying the last file, because that's faster than re-typing 12 digits from a crookedly-shot scan. At 30+ contracts a month this roulette went off regularly.</p>
+        </div>
+        <div class="pps sol"><span class="tag">Solution</span>
+          <ul>
+            <li>A WhatsApp bot receives scans; on a crooked shot it asks for a re-take with prompts</li>
+            <li>OCR extraction of the ID number, full name, addresses and bank details — no manual re-typing</li>
+            <li>Auto-assembly of the package (contract, act, annexes) from the developer's own templates</li>
+            <li>Reconciliation screen "scan on the left, fields on the right": without the lawyer's confirmation, nothing goes to print</li>
+          </ul>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="m-num">minutes</div><div class="m-lbl">full document package assembled instead of hours</div><div class="m-kind">system mechanic</div></div>
+        <div class="metric"><div class="m-num">100%</div><div class="m-lbl">of documents pass the lawyer's check before printing</div><div class="m-kind">system mechanic</div></div>
+        <div class="metric"><div class="m-num">0</div><div class="m-lbl">fields typed by hand — details fill only from the scan</div><div class="m-kind">system mechanic</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE 05 -->
+  <section class="slide">
+    <div class="case">
+      <div class="case-top">
+        <span class="case-no">CASE 05</span>
+        <h3>Developer · Almaty</h3>
+        <span class="meta">15,000+ base · 4-operator call center · touch speed and reactivation</span>
+      </div>
+      <div class="case-body">
+        <div class="pps"><span class="tag">Problem</span>
+          <p>A lead from the project site dropped at 10 a.m. — called back at 4 p.m., the client had already gone to a viewing with a competitor. Two operators on the line, a third on sick leave: physically impossible to both take new ones and lift the old base. New leads cool for hours, 15,000 contacts lie as dead weight, and each next operator costs more.</p>
+        </div>
+        <div class="pps sol"><span class="tag">Solution</span>
+          <ul>
+            <li>Voice AI in Russian: auto-dial of a new lead within seconds of the request, qualification from 4 questions</li>
+            <li>Reactivation campaigns across the 15,000+ base: segments, scheduling, a "do not call" stop-list</li>
+            <li>Honest disclosure in the first sentence + a soft hand-off to a live manager on request</li>
+            <li>A summary of each conversation into the amoCRM card — the manager picks up already with context</li>
+          </ul>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="m-num">seconds</div><div class="m-lbl">from lead to the assistant's call</div><div class="m-kind">system mechanic</div></div>
+        <div class="metric"><div class="m-num">100%</div><div class="m-lbl">of conversations with a summary in the amoCRM card</div><div class="m-kind">target in contract</div></div>
+        <div class="metric"><div class="m-num">from $0.12/min</div><div class="m-lbl">all-in cost of voice AI</div><div class="m-kind">market data</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DUBAI PACKAGE CASES INTRO -->
+  <section class="slide" id="dubai-cases">
+    <div class="s-head">
+      <span class="pill eyebrow"><span class="dot"></span>Implementations in Dubai · for each package</span>
+      <h2>A case for every package<br><span class="grey">Before &rarr; Built &rarr; After</span></h2>
+      <p>Focused implementations on the Dubai real-estate market — from the first touch of a Property Finder lead to assembling Form F and Ejari. Three levels of automation, three packages.</p>
+    </div>
+  </section>
+
+  <!-- PACKAGE 01 -->
+  <section class="slide">
+    <div class="case">
+      <div class="case-top">
+        <span class="case-no pkg">PACKAGE 01</span>
+        <h3>"No lead is lost"</h3>
+        <span class="meta">boutique agency · 5–6 brokers · Property Finder + Meta</span>
+      </div>
+      <div class="case-body">
+        <div class="pps"><span class="tag">Before</span>
+          <p>The agency generated a steady flow of leads from Property Finder, Bayut and Meta Ads, but the biggest problem wasn't traffic — it was response time. When brokers were on viewings, driving between appointments or speaking with other clients, new enquiries waited unanswered. Some leads were replied to within minutes, others much later — and by then many buyers had already spoken to competing agencies. Lead distribution was manual, follow-ups were inconsistent, and management had no clear visibility into who replied first, which enquiries were missed, or where deals were being lost.</p>
+        </div>
+        <div class="pps sol"><span class="tag">What we built</span>
+          <ul>
+            <li>An AI assistant in WhatsApp replies to every Property Finder, Bayut and Meta enquiry in seconds — even while brokers are on viewings or driving</li>
+            <li>Automatic lead capture and distribution into the CRM: no more manual routing, every enquiry logged with its source</li>
+            <li>Instant qualification (budget, area, timeline, cash / mortgage) so the broker picks up a warm, ready conversation</li>
+            <li>An owner's dashboard: who replied first, which enquiries were missed, where deals stall</li>
+          </ul>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="m-num">seconds</div><div class="m-lbl">first reply to every enquiry, 24/7 — no lead left waiting</div><div class="m-kind">system mechanic</div></div>
+        <div class="metric"><div class="m-num">100%</div><div class="m-lbl">of enquiries captured, distributed and logged with source</div><div class="m-kind">target in contract</div></div>
+        <div class="metric"><div class="m-num">full</div><div class="m-lbl">visibility for management: who replied first, what was missed, where deals stall</div><div class="m-kind">system mechanic</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PACKAGE 02 -->
+  <section class="slide">
+    <div class="case">
+      <div class="case-top">
+        <span class="case-no pkg">PACKAGE 02</span>
+        <h3>"Managed funnel"</h3>
+        <span class="meta">mid-size agency · 15–20 brokers · Bayut + Property Finder</span>
+      </div>
+      <div class="case-body">
+        <div class="pps"><span class="tag">Before</span>
+          <p>Large budgets on Bayut and Property Finder, but management couldn't see the real ROI by channel: which portal brought deals and which burned money on "junk" leads. Top brokers spent up to 60% of their time filtering spam and calling people "just asking the off-plan price." A base of 3,000+ sleeping clients — people who once viewed but didn't buy — lay as dead weight: no one ever got around to calling them.</p>
+        </div>
+        <div class="pps sol"><span class="tag">What we built</span>
+          <ul>
+            <li>A custom AI agent with deep CRM integration: it doesn't just chat, it distributes deals by district, tag and broker specialization</li>
+            <li>Bayut, Property Finder and WhatsApp API feeds merged into one workspace with a source tag on every lead</li>
+            <li>Automatic AI nurture of the sleeping base: touch chains on new offers and price changes, strictly opt-in</li>
+          </ul>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="m-num">7%</div><div class="m-lbl">of the sleeping base "woken" in 6 weeks &rarr; 4 closed deals with no new traffic spend</div><div class="m-kind">pilot data</div></div>
+        <div class="metric"><div class="m-num">&minus;15%</div><div class="m-lbl">budget: the owner saw cost-per-valid-lead by portal and cut the weak channels</div><div class="m-kind">pilot data</div></div>
+        <div class="metric"><div class="m-num">scored</div><div class="m-lbl">the broker receives a lead that already confirmed readiness to view</div><div class="m-kind">system mechanic</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PACKAGE 03 -->
+  <section class="slide">
+    <div class="case">
+      <div class="case-top">
+        <span class="case-no pkg">PACKAGE 03</span>
+        <h3>"AI sales department"</h3>
+        <span class="meta">large broker / developer · 10,000+ inquiries a month</span>
+      </div>
+      <div class="case-body">
+        <div class="pps"><span class="tag">Before</span>
+          <p>A large call center and back office, but the human factor hit the economics: operators missed calls at peak hours and mixed up data in paperwork. The main pain was document speed: preparing Form F and Ejari and pre-filling RERA/DLD forms took 2–3 hours, and the client would leave for a faster competitor mid-deal. Expanding the night shift only meant endlessly growing payroll.</p>
+        </div>
+        <div class="pps sol"><span class="tag">What we built</span>
+          <ul>
+            <li>An omnichannel AI hub (WhatsApp, Web, Email) across the whole inbound message flow</li>
+            <li>Voice AI in AR/EN: instant dialing of new requests and booking of viewing slots</li>
+            <li>Document AI (OCR + AI): recognition of passports, Emirates ID and title deed, with Form F / Ejari pre-fill</li>
+          </ul>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="m-num">7 sec</div><div class="m-lbl">to dial a new lead; up to 500 parallel calls at peak — no night shift</div><div class="m-kind">system mechanic</div></div>
+        <div class="metric"><div class="m-num">2–3 h &rarr; 4 min</div><div class="m-lbl">document package assembly; the manager only checks a ready draft before signing</div><div class="m-kind">pilot data</div></div>
+        <div class="metric"><div class="m-num">&times;3.5</div><div class="m-lbl">lead volume handled with no new operators — payroll fixed</div><div class="m-kind">pilot data</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUALITY & SUPPORT -->
+  <section class="slide">
+    <div class="s-head">
+      <span class="pill eyebrow"><span class="dot"></span>Quality &amp; support</span>
+      <h2>We don't hand over a build<br><span class="grey">and disappear</span></h2>
+      <p>An implementation isn't a one-off launch — it's a system that has to run every day. We build for reliability, and if something breaks, our engineers are on hand around the clock.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="icn">&#128737;&#65039;</div>
+        <h3>Built to a standard</h3>
+        <p>Every solution is tested on live dialogues before launch, scripts are rewritten against real conversations, and a human stays in the loop where the decision matters.</p>
+      </div>
+      <div class="card">
+        <div class="icn">&#9200;</div>
+        <h3>24/7 on call</h3>
+        <p>If a failure happens, our specialists are reachable around the clock. A problem in the flow is fixed fast — your sales don't wait until Monday.</p>
+      </div>
+      <div class="card">
+        <div class="icn">&#128200;</div>
+        <h3>Monitoring &amp; iteration</h3>
+        <p>We watch how the system behaves after launch, catch weak spots and keep tuning — because a real result is measured over weeks, not on demo day.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSER -->
+  <section class="slide closer">
+    <div class="glow"></div>
+    <h2>Let's talk about <span class="accent">your pilot</span></h2>
+    <p>We take a baseline, fix the target metrics in the contract — and tie part of the fee to the result.</p>
+    <a class="cta" href="https://wa.me/971563057577" style="display:inline-flex;align-items:center;gap:10px;margin-top:34px;background:var(--ink);color:#fff;padding:15px 26px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;position:relative;z-index:2;box-shadow:0 18px 40px -14px rgba(28,29,34,.55)">
+      +971 56 305 7577 · WhatsApp
+    </a>
+  </section>
+
+  <!-- SIGNATURE -->
+  <div class="sig">
+    <span class="handle">
+      <span class="avatar">S</span>
+      ScaleFlow
+      <svg class="verified" width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 1.8 3 .1 1 2.8 2.4 1.7-.9 2.8.9 2.9-2.4 1.7-1 2.8-3 .1L12 22l-2.4-1.8-3-.1-1-2.8L3.2 15l.9-2.9-.9-2.8 2.4-1.7 1-2.8 3-.1z"/><path d="M8.5 12l2.3 2.3 4.7-5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+  </div>
+
+</div>
+</body>
+</html>
