@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScaleFlow — Outbound Playbook for Setters</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root{
+    --ink:#0B0C0E;
+    --ink-2:#131519;
+    --line:#25292F;
+    --bone:#EDEAE3;
+    --dim:#7C838E;
+    --signal:#C9F24D;
+    --alert:#E4573D;
+    --pad: clamp(28px, 6vw, 88px);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *{animation:none !important;transition:none !important}
+  }
+
+  body{
+    background:var(--ink);
+    color:var(--bone);
+    font-family:'Inter',system-ui,sans-serif;
+    font-weight:300;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- deck mechanics ---------- */
+  .deck{
+    height:100vh;
+    overflow-y:scroll;
+    scroll-snap-type:y mandatory;
+  }
+  .slide{
+    min-height:100vh;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+    padding:var(--pad);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    position:relative;
+    border-bottom:1px solid var(--line);
+  }
+  .slide-num{
+    position:absolute;
+    top:var(--pad);
+    right:var(--pad);
+    font-family:'DM Mono',monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    color:var(--dim);
+  }
+  .eyebrow{
+    font-family:'DM Mono',monospace;
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--signal);
+    margin-bottom:22px;
+  }
+  h1{
+    font-family:'Instrument Serif',serif;
+    font-weight:400;
+    font-size:clamp(44px,7.5vw,104px);
+    line-height:.95;
+    letter-spacing:-.02em;
+  }
+  h2{
+    font-family:'Instrument Serif',serif;
+    font-weight:400;
+    font-size:clamp(32px,4.6vw,62px);
+    line-height:1.02;
+    letter-spacing:-.015em;
+    margin-bottom:34px;
+  }
+  h2 em{font-style:italic;color:var(--signal)}
+  p{font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:#C4C8CE;max-width:62ch}
+  .lede{font-size:clamp(17px,1.9vw,22px);color:var(--bone)}
+
+  /* ---------- cover ---------- */
+  .cover{justify-content:space-between}
+  .cover-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px}
+  .mark{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.3em;text-transform:uppercase}
+  .cover-mid h1{max-width:14ch}
+  .cover-mid h1 em{font-style:italic;color:var(--signal)}
+  .cover-meta{
+    display:flex;gap:40px;flex-wrap:wrap;
+    padding-top:26px;border-top:1px solid var(--line);
+    font-family:'DM Mono',monospace;font-size:12px;color:var(--dim);
+  }
+  .scroll-hint{
+    font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;
+    color:var(--dim);display:flex;align-items:center;gap:10px;
+  }
+  .scroll-hint span{display:inline-block;width:34px;height:1px;background:var(--dim);
+    animation:pull 2.4s ease-in-out infinite}
+  @keyframes pull{0%,100%{transform:translateX(0);opacity:.4}50%{transform:translateX(8px);opacity:1}}
+
+  /* ---------- the mandate (negative space slide) ---------- */
+  .mandate{display:grid;gap:8px;max-width:1000px}
+  .neg{
+    display:flex;align-items:center;gap:18px;
+    padding:18px 0;border-bottom:1px solid var(--line);
+    font-family:'Instrument Serif',serif;
+    font-size:clamp(26px,3.6vw,46px);
+    color:#4B5058;
+    text-decoration:line-through;
+    text-decoration-color:var(--alert);
+    text-decoration-thickness:2px;
+  }
+  .pos{
+    margin-top:34px;padding:30px 34px;
+    border:1px solid var(--signal);
+    background:rgba(201,242,77,.05);
+  }
+  .pos .k{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--signal);text-transform:uppercase}
+  .pos .v{font-family:'Instrument Serif',serif;font-size:clamp(28px,4vw,52px);line-height:1.06;margin-top:12px}
+
+  /* ---------- targets ---------- */
+  .targets{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:34px}
+  .chip{
+    font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.06em;
+    padding:12px 20px;border:1px solid var(--bone);border-radius:100px;
+  }
+  .chip.no{border-color:var(--line);color:#4B5058;text-decoration:line-through;text-decoration-color:var(--alert)}
+
+  /* ---------- KPI ---------- */
+  .kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .kpi-cell{background:var(--ink);padding:30px 24px}
+  .kpi-cell .n{font-family:'Instrument Serif',serif;font-size:clamp(38px,5vw,64px);line-height:1}
+  .kpi-cell .l{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--dim);margin-top:12px;text-transform:uppercase}
+  .kpi-cell.hero{background:var(--signal);color:var(--ink)}
+  .kpi-cell.hero .l{color:rgba(11,12,14,.65)}
+  .kpi-note{margin-top:26px;font-family:'DM Mono',monospace;font-size:12px;color:var(--dim);letter-spacing:.04em}
+
+  /* ---------- steps ---------- */
+  .steps{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+  .step{background:var(--ink);padding:26px 30px;display:grid;grid-template-columns:56px 1fr;gap:22px;align-items:start}
+  .step .i{font-family:'DM Mono',monospace;font-size:12px;color:var(--signal);padding-top:5px;letter-spacing:.1em}
+  .step .t{font-size:17px;color:var(--bone);font-weight:400;margin-bottom:10px}
+  .step .d{font-size:14px;color:var(--dim);line-height:1.6}
+
+  .script{
+    margin-top:14px;padding:18px 20px;
+    background:var(--ink-2);border-left:2px solid var(--signal);
+    font-family:'DM Mono',monospace;font-size:13.5px;line-height:1.75;color:#D8DCE2;
+  }
+  .script.alt{border-left-color:var(--alert)}
+
+  /* ---------- cadence ---------- */
+  .cadence{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:10px}
+  .day{background:var(--ink);padding:24px 16px;min-height:190px;display:flex;flex-direction:column;justify-content:space-between}
+  .day .d{font-family:'DM Mono',monospace;font-size:11px;color:var(--signal);letter-spacing:.14em}
+  .day .a{font-size:14px;line-height:1.45;color:#C4C8CE}
+  .day .bar{height:2px;background:var(--line);margin-top:16px}
+  .day:nth-child(1) .bar{background:var(--signal)}
+  @media(max-width:820px){.cadence{grid-template-columns:repeat(2,1fr)}}
+
+  /* ---------- close ---------- */
+  .close{align-items:flex-start}
+  .close h2{max-width:16ch}
+  .rule-list{margin-top:10px;display:grid;gap:0}
+  .rule{padding:16px 0;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:baseline}
+  .rule .x{font-family:'DM Mono',monospace;font-size:12px;color:var(--alert)}
+  .rule .c{font-family:'DM Mono',monospace;font-size:12px;color:var(--signal)}
+  .rule span:last-child{font-size:16px;color:#C4C8CE}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,64px);align-items:start}
+  @media(max-width:900px){.grid2{grid-template-columns:1fr}}
+
+  .email{
+    background:var(--ink-2);border:1px solid var(--line);padding:0;
+  }
+  .email-h{padding:16px 22px;border-bottom:1px solid var(--line);font-family:'DM Mono',monospace;font-size:12px;color:var(--dim)}
+  .email-h b{color:var(--bone);font-weight:500}
+  .email-b{padding:22px;font-family:'DM Mono',monospace;font-size:13.5px;line-height:1.8;color:#D8DCE2}
+
+  ::-webkit-scrollbar{width:0}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 01 -->
+  <section class="slide cover">
+    <div class="cover-top">
+      <div class="mark">ScaleFlow</div>
+      <div class="mark" style="color:var(--dim)">Internal / Setters</div>
+    </div>
+    <div class="cover-mid">
+      <div class="eyebrow">Outbound Playbook</div>
+      <h1>You don't sell AI.<br>You book the <em>Audit</em>.</h1>
+    </div>
+    <div>
+      <div class="cover-meta">
+        <div>Dubai Real Estate</div>
+        <div>Owners · Founders · CEOs · MDs</div>
+        <div>v1.0</div>
+      </div>
+      <div class="scroll-hint" style="margin-top:26px">Scroll <span></span></div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="slide">
+    <div class="slide-num">02 / 09</div>
+    <div class="eyebrow">The Mandate</div>
+    <div class="mandate">
+      <div class="neg">Sell AI</div>
+      <div class="neg">Sell automation</div>
+      <div class="neg">Explain the technology</div>
+      <div class="neg">Close the deal</div>
+      <div class="pos">
+        <div class="k">Your only product</div>
+        <div class="v">A complimentary Executive Revenue Audit that shows an owner where revenue leaks out of the sales process they already have.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="slide">
+    <div class="slide-num">03 / 09</div>
+    <div class="eyebrow">Who Picks Up</div>
+    <h2>Decision-makers only.<br>An agent can't <em>buy</em>.</h2>
+    <div class="targets">
+      <div class="chip">Owner</div>
+      <div class="chip">Founder</div>
+      <div class="chip">CEO</div>
+      <div class="chip">Managing Director</div>
+      <div class="chip no">Individual agents</div>
+    </div>
+    <p class="lede">An agent will nod, agree with every pain point, and never sign anything. If the conversation is not with someone who controls the P&L, it is practice — not pipeline.</p>
+  </section>
+
+  <!-- 04 -->
+  <section class="slide">
+    <div class="slide-num">04 / 09</div>
+    <div class="eyebrow">Daily KPI</div>
+    <h2>What a full day <em>looks like</em>.</h2>
+    <div class="kpi">
+      <div class="kpi-cell"><div class="n">40–50</div><div class="l">LinkedIn connects</div></div>
+      <div class="kpi-cell"><div class="n">30–40</div><div class="l">First messages</div></div>
+      <div class="kpi-cell"><div class="n">30–50</div><div class="l">Follow-ups</div></div>
+      <div class="kpi-cell"><div class="n">20–30</div><div class="l">Cold calls</div></div>
+      <div class="kpi-cell"><div class="n">5–10</div><div class="l">Real conversations</div></div>
+      <div class="kpi-cell hero"><div class="n">1–2</div><div class="l">Audits booked</div></div>
+    </div>
+    <div class="kpi-note">Consistency beats intensity. Fifty average days outperform five heroic ones.</div>
+  </section>
+
+  <!-- 05 -->
+  <section class="slide">
+    <div class="slide-num">05 / 09</div>
+    <div class="eyebrow">Channel 01 — LinkedIn</div>
+    <h2>Connect. Ask. <em>Listen.</em></h2>
+    <div class="steps">
+      <div class="step">
+        <div class="i">01</div>
+        <div>
+          <div class="t">Send the connection request</div>
+          <div class="d">No note, no pitch. A pitch on the request is a declined request.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="i">02</div>
+        <div>
+          <div class="t">Once accepted — open with a question, not an offer</div>
+          <div class="script">Hi [Name], thanks for connecting. I came across your agency and wanted to ask you something regarding your sales process.</div>
+          <div class="d" style="margin-top:12px">Then wait. Silence is part of the message.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="i">03</div>
+        <div>
+          <div class="t">No reply after 2–3 days — get specific</div>
+          <div class="script">Quick question. How quickly does your team usually respond to Property Finder, Bayut or Meta Ads leads?</div>
+          <div class="d" style="margin-top:12px">Your objective is to understand their process, not to sell it something.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section class="slide">
+    <div class="slide-num">06 / 09</div>
+    <div class="eyebrow">Channel 02 — Instagram</div>
+    <h2>Be the lead <em>before</em> you're the vendor.</h2>
+    <div class="grid2">
+      <div class="steps">
+        <div class="step">
+          <div class="i">01</div>
+          <div>
+            <div class="t">Message as a genuine buyer</div>
+            <div class="script">Hi! Is this property still available?</div>
+            <div class="d" style="margin-top:12px">Note the timestamp. Their response time is the evidence you'll use tomorrow.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="i">02</div>
+          <div>
+            <div class="t">Next day — transition honestly</div>
+            <div class="script alt">By the way, I'm not actually looking to purchase. We help Dubai real estate agencies reduce lost commissions caused by delayed responses and missed follow-ups. I thought this might be relevant for your agency. Would you be open to a complimentary 15-minute Executive Revenue Audit?</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="lede" style="margin-bottom:20px">Why this works</p>
+        <p>You are not describing a problem to an owner. You have already lived it inside their own funnel, and you have the reply time to prove it. That's not a pitch — that's a data point they can't argue with.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section class="slide">
+    <div class="slide-num">07 / 09</div>
+    <div class="grid2">
+      <div>
+        <div class="eyebrow">Channel 03 — Cold Calls</div>
+        <h2>Under <em>five</em> minutes.</h2>
+        <p>The call is not the sale. Ask a few questions, find the interest, put the audit in the calendar, hang up. Every extra minute past five moves you from setter to salesperson — and that is the closer's job, not yours.</p>
+        <div class="pos" style="margin-top:28px">
+          <div class="k">Call outcome</div>
+          <div class="v" style="font-size:clamp(24px,3vw,36px)">Booked, or not booked. There is no third result.</div>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow">Channel 04 — Email</div>
+        <div class="email">
+          <div class="email-h"><b>Subject:</b> Quick question about your agency</div>
+          <div class="email-b">
+            Hi [Name],<br><br>
+            I noticed your agency has a strong presence on Property Finder.<br><br>
+            I wanted to ask one quick question.<br><br>
+            How does your team currently make sure every enquiry receives a fast response, including evenings and weekends?<br><br>
+            We help Dubai real estate agencies identify revenue leaks inside their sales process before they spend more on advertising.<br><br>
+            Would you be open to a complimentary Executive Revenue Audit?
+          </div>
+        </div>
+        <div class="kpi-note">Short. Personalised. One question. Never a brochure.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 -->
+  <section class="slide">
+    <div class="slide-num">08 / 09</div>
+    <div class="eyebrow">The Cadence</div>
+    <h2>Most audits are booked on the <em>fourth</em> touch.</h2>
+    <div class="cadence">
+      <div class="day"><div class="d">DAY 01</div><div class="a">Initial outreach</div><div class="bar"></div></div>
+      <div class="day"><div class="d">DAY 03</div><div class="a">Short follow-up question</div><div class="bar"></div></div>
+      <div class="day"><div class="d">DAY 06</div><div class="a">Relevant insight or case study</div><div class="bar"></div></div>
+      <div class="day"><div class="d">DAY 10</div><div class="a">Follow-up</div><div class="bar"></div></div>
+      <div class="day"><div class="d">DAY 15</div><div class="a">Another useful resource</div><div class="bar"></div></div>
+      <div class="day"><div class="d">DAY 20</div><div class="a">Final follow-up</div><div class="bar"></div></div>
+    </div>
+    <div class="kpi-note">Never pressure. Every touch gives something — a question, an insight, a resource. Twenty days of usefulness, then you let go.</div>
+  </section>
+
+  <!-- 09 -->
+  <section class="slide close">
+    <div class="slide-num">09 / 09</div>
+    <div class="eyebrow">The Rule Above All Rules</div>
+    <h2>If you're explaining <em>how it works</em>, you've already lost the meeting.</h2>
+    <div class="rule-list" style="width:100%;max-width:900px">
+      <div class="rule"><span class="x">NO</span><span>Do not sell AI</span></div>
+      <div class="rule"><span class="x">NO</span><span>Do not sell automation</span></div>
+      <div class="rule"><span class="x">NO</span><span>Do not explain technical solutions</span></div>
+      <div class="rule"><span class="c">YES</span><span>Book the Executive Revenue Audit</span></div>
+    </div>
+    <div class="cover-meta" style="margin-top:48px;width:100%">
+      <div>ScaleFlow · Dubai</div>
+      <div>Questions → your team lead</div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
