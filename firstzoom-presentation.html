@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScaleFlow — Discovery Call Deck</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --bg:#f4f5f7;
+    --card:#ffffff;
+    --ink:#1c1d22;
+    --ink-soft:#9a9ca4;
+    --accent:#6c5ce7;
+    --accent-soft:#b8a9ff;
+    --line:#e7e8ec;
+    --red:#e05252;
+    --shadow:0 30px 80px -30px rgba(28,29,34,.22);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:'Manrope',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.15;
+    padding:0 0 90px;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+  /* ---------- SLIDE SHELL ---------- */
+  .slide{
+    background:var(--card);
+    border-radius:34px;
+    box-shadow:var(--shadow);
+    margin:26px auto;
+    padding:60px 56px;
+    position:relative;
+    overflow:hidden;
+    min-height:560px;
+    display:flex;flex-direction:column;justify-content:center;
+    scroll-margin-top:20px;
+  }
+  .slide::before{
+    content:"";
+    position:absolute;inset:14px;
+    border:1px dashed rgba(28,29,34,.10);
+    border-radius:24px;
+    pointer-events:none;
+  }
+  .slide.dark{background:var(--ink)}
+  .slide.dark::before{border-color:rgba(255,255,255,.14)}
+  .slide.dark h2,.slide.dark h1,.slide.dark h3{color:#fff}
+  .slide.dark p{color:#a8aab4}
+
+  /* slide number tag */
+  .sn{
+    position:absolute;top:26px;right:32px;z-index:3;
+    font-size:12px;font-weight:800;letter-spacing:.12em;color:#c7c9d2;
+  }
+  .slide.dark .sn{color:#4c4e58}
+
+  /* pill badge */
+  .pill{
+    display:inline-flex;align-items:center;gap:9px;
+    background:#fff;
+    border:1px solid var(--line);
+    box-shadow:0 6px 20px -8px rgba(28,29,34,.18);
+    padding:10px 18px;border-radius:999px;
+    font-weight:600;font-size:14px;color:#5a5c64;
+    position:relative;z-index:2;
+  }
+  .pill .dot{width:9px;height:9px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent-soft));}
+  .slide.dark .pill{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:#d3d5dd;box-shadow:none}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:80px 56px;text-align:center;align-items:center}
+  .hero .eyebrow{margin-bottom:34px}
+  .hero h1{
+    font-size:clamp(40px,7vw,82px);
+    font-weight:800;letter-spacing:-.03em;line-height:1.0;
+    position:relative;z-index:2;
+  }
+  .hero h1 .grey{color:var(--ink-soft)}
+  .hero h1 .accent{
+    background:linear-gradient(120deg,var(--accent),#a58bff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero .sub{
+    margin:30px auto 0;max-width:620px;
+    font-size:18px;font-weight:500;color:#6a6c74;line-height:1.5;
+    position:relative;z-index:2;
+  }
+  .hero .glow{
+    position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);
+    width:560px;height:340px;
+    background:radial-gradient(closest-side,rgba(108,92,231,.16),transparent 70%);
+    filter:blur(10px);z-index:1;pointer-events:none;
+  }
+  .geo{
+    display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+    margin-top:40px;position:relative;z-index:2;
+  }
+  .geo span{
+    background:#fafafb;border:1px solid var(--line);border-radius:999px;
+    padding:10px 20px;font-size:14px;font-weight:700;color:#4a4c54;letter-spacing:.01em;
+  }
+
+  /* ---------- SECTION HEAD ---------- */
+  .s-head{text-align:center;margin-bottom:44px;position:relative;z-index:2}
+  .s-head .eyebrow{margin-bottom:22px}
+  .s-head h2{
+    font-size:clamp(30px,4.6vw,52px);
+    font-weight:800;letter-spacing:-.025em;line-height:1.04;
+  }
+  .s-head h2 .grey{color:var(--ink-soft)}
+  .s-head h2 .accent{background:linear-gradient(120deg,var(--accent),#a58bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .s-head p{margin:18px auto 0;max-width:640px;color:#6a6c74;font-size:17px;font-weight:500;line-height:1.55}
+  .slide.dark .s-head h2 .grey{color:#5e606a}
+
+  /* ---------- COST OF INACTION ---------- */
+  .coi{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;position:relative;z-index:2}
+  .coi-item{
+    background:rgba(224,82,82,.07);border:1px solid rgba(224,82,82,.22);
+    border-radius:22px;padding:30px 24px;
+  }
+  .coi-item .n{
+    font-size:clamp(32px,4.4vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1;
+    color:var(--red);
+  }
+  .coi-item .l{margin-top:12px;font-size:14.5px;font-weight:600;color:#5e606a;line-height:1.45}
+  .kicker{
+    margin-top:34px;text-align:center;font-size:18px;font-weight:700;color:#3a3c44;
+    line-height:1.5;position:relative;z-index:2;max-width:720px;margin-left:auto;margin-right:auto;
+  }
+  .kicker .accent{background:linear-gradient(120deg,var(--accent),#a58bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* ---------- LEAK FUNNEL ---------- */
+  .leaks{display:flex;flex-direction:column;gap:12px;position:relative;z-index:2}
+  .leak{
+    display:grid;grid-template-columns:56px 1fr 190px;gap:20px;align-items:center;
+    background:#fafafb;border:1px solid var(--line);border-radius:20px;padding:22px 24px;
+    transition:transform .2s ease,box-shadow .2s ease;
+  }
+  .leak:hover{transform:translateX(4px);box-shadow:0 18px 40px -26px rgba(28,29,34,.35)}
+  .leak .idx{
+    width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),#a58bff);
+    color:#fff;font-weight:800;font-size:17px;
+  }
+  .leak h4{font-size:18px;font-weight:800;letter-spacing:-.01em;margin-bottom:5px}
+  .leak p{font-size:14.5px;font-weight:500;color:#6a6c74;line-height:1.5}
+  .leak .loss{
+    text-align:right;font-size:14px;font-weight:800;color:var(--red);line-height:1.35;
+  }
+
+  /* ---------- GEOGRAPHY ---------- */
+  .geo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative;z-index:2}
+  .geo-card{
+    background:#fafafb;border:1px solid var(--line);
+    border-radius:24px;padding:32px 26px;
+    transition:transform .25s ease,box-shadow .25s ease;
+  }
+  .geo-card:hover{transform:translateY(-4px);box-shadow:0 24px 50px -24px rgba(28,29,34,.28)}
+  .geo-card .flag{font-size:28px;margin-bottom:16px;display:block}
+  .geo-card h3{font-size:20px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+  .geo-card .role{
+    font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:12px;display:block;
+  }
+  .geo-card p{font-size:14.5px;font-weight:500;color:#6a6c74;line-height:1.55}
+
+  /* ---------- ANCHOR / TEAM ---------- */
+  .anchor{display:grid;grid-template-columns:.9fr 1.1fr;gap:44px;align-items:center;position:relative;z-index:2}
+  .anchor-visual{
+    background:linear-gradient(160deg,#f2eeff,#fbfaff);
+    border:1px solid #ece7ff;border-radius:26px;
+    padding:40px 34px;text-align:center;
+  }
+  .anchor-visual .av{
+    width:90px;height:90px;border-radius:50%;margin:0 auto 20px;
+    background:linear-gradient(135deg,var(--accent),#a58bff);
+    color:#fff;display:grid;place-items:center;font-size:36px;font-weight:800;
+    box-shadow:0 18px 40px -16px rgba(108,92,231,.6);
+  }
+  .anchor-visual h3{font-size:24px;font-weight:800;letter-spacing:-.02em}
+  .anchor-visual .r{margin-top:8px;font-size:14px;font-weight:700;color:var(--accent)}
+  .anchor-visual .y{margin-top:18px;font-size:13px;font-weight:600;color:#7c7e86;line-height:1.5}
+  .anchor h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-.025em;line-height:1.06;margin-bottom:18px}
+  .anchor h2 .grey{color:var(--ink-soft)}
+  .anchor .quote{
+    font-size:17px;font-weight:600;color:#3a3c44;line-height:1.6;
+    border-left:3px solid var(--accent);padding-left:18px;margin-bottom:22px;
+  }
+  .anchor ul{list-style:none;display:flex;flex-direction:column;gap:13px}
+  .anchor ul li{display:flex;gap:12px;font-size:15px;font-weight:600;color:#4a4c54;align-items:flex-start;line-height:1.45}
+  .tick{
+    flex:none;width:22px;height:22px;border-radius:7px;margin-top:1px;
+    background:linear-gradient(135deg,var(--accent),#a58bff);
+    display:grid;place-items:center;
+  }
+
+  /* ---------- CASE ---------- */
+  .case{position:relative;z-index:2}
+  .case-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:24px}
+  .case-no{
+    font-size:13px;font-weight:800;letter-spacing:.14em;color:#fff;
+    background:var(--ink);border:1px solid var(--ink);padding:7px 14px;border-radius:999px;
+  }
+  .case-top h3{font-size:clamp(22px,3.4vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+  .case-top .meta{font-size:13.5px;font-weight:600;color:var(--ink-soft);margin-left:auto;text-align:right}
+  .ba{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
+  .pps{background:#fafafb;border:1px solid var(--line);border-radius:20px;padding:24px}
+  .pps.bad{background:rgba(224,82,82,.05);border-color:rgba(224,82,82,.18)}
+  .pps .tag{
+    display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.1em;
+    text-transform:uppercase;color:#8a8c94;margin-bottom:12px;
+  }
+  .pps.bad .tag{color:var(--red)}
+  .pps.sol .tag{color:var(--accent)}
+  .pps p{font-size:14.5px;font-weight:500;color:#54565e;line-height:1.6}
+  .pps ul{list-style:none;display:flex;flex-direction:column;gap:9px;margin-top:2px}
+  .pps ul li{display:flex;gap:11px;font-size:14px;font-weight:500;color:#54565e;line-height:1.5;align-items:flex-start}
+  .pps ul li::before{
+    content:"";flex:none;width:7px;height:7px;border-radius:50%;margin-top:6px;
+    background:linear-gradient(135deg,var(--accent),#a58bff);
+  }
+  .broke{
+    background:var(--ink);border-radius:16px;padding:16px 20px;margin-bottom:18px;
+    font-size:14.5px;font-weight:600;color:#fff;line-height:1.5;
+  }
+  .broke b{color:var(--accent-soft)}
+  .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .metric{
+    background:linear-gradient(160deg,#f5f2ff,#fbfaff);
+    border:1px solid #ece7ff;border-radius:20px;padding:22px 18px;text-align:center;
+  }
+  .metric .m-num{
+    font-size:clamp(24px,3.4vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1;
+    background:linear-gradient(120deg,var(--accent),#a58bff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .metric .m-lbl{margin-top:10px;font-size:13px;font-weight:600;color:#5e606a;line-height:1.4}
+  .metric .m-kind{margin-top:8px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#a6a8b2}
+  /* recognition scene — the owner sees himself */
+  .scene{
+    background:rgba(224,82,82,.05);border:1px solid rgba(224,82,82,.18);
+    border-left:3px solid var(--red);
+    border-radius:0 14px 14px 0;padding:14px 18px;margin-bottom:13px;
+  }
+  .scene p{font-size:14px;font-weight:600;color:#8c3a3a;line-height:1.45;font-style:italic}
+  .scene .who{
+    display:block;margin-top:7px;font-size:10.5px;font-weight:800;
+    letter-spacing:.08em;text-transform:uppercase;color:#c08484;font-style:normal;
+  }
+  /* the cost of the leak, in money */
+  .cost{
+    display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+    background:#fff;border:1px dashed rgba(224,82,82,.4);
+    border-radius:12px;padding:11px 15px;margin-top:12px;
+  }
+  .cost .c-num{font-size:19px;font-weight:800;letter-spacing:-.02em;color:var(--red)}
+  .cost .c-lbl{font-size:12px;font-weight:600;color:#7c7e86;line-height:1.35}
+  /* case slides run long — tighten so they fit a laptop screen */
+  .slide.case-slide,.slide:has(.case){padding:32px 44px 38px;min-height:0;margin:18px auto}
+  .case .case-top{margin-bottom:14px}
+  .case .ba{gap:14px;margin-bottom:12px}
+  .case .pps{padding:16px}
+  .case .pps p{font-size:13px;line-height:1.5}
+  .case .pps ul li{font-size:12.5px;line-height:1.45}
+  .case .broke{margin-bottom:12px;padding:12px 16px;font-size:13px}
+  .case .metric{padding:14px 13px}
+  .case .metric .m-lbl{font-size:11.5px;margin-top:6px}
+  .case .metrics{gap:13px}
+
+  /* ---------- NOT DOING ---------- */
+  .nots{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;position:relative;z-index:2;max-width:840px;margin:0 auto}
+  .not{
+    display:flex;align-items:center;gap:16px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+    border-radius:18px;padding:22px 24px;
+  }
+  .not .x{
+    flex:none;width:30px;height:30px;border-radius:9px;
+    background:rgba(224,82,82,.16);border:1px solid rgba(224,82,82,.3);
+    display:grid;place-items:center;color:#ff8f8f;font-weight:800;font-size:16px;
+  }
+  .not span.t{font-size:16px;font-weight:700;color:#e8e9ee;letter-spacing:-.01em}
+
+  /* ---------- PROCESS ---------- */
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;position:relative;z-index:2}
+  .step{
+    background:#fafafb;border:1px solid var(--line);border-radius:22px;padding:28px 22px;
+    position:relative;
+  }
+  .step .num{
+    width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),#a58bff);color:#fff;
+    font-weight:800;font-size:14px;margin-bottom:16px;
+  }
+  .step h4{font-size:16.5px;font-weight:800;letter-spacing:-.01em;margin-bottom:8px;line-height:1.25}
+  .step p{font-size:13.5px;font-weight:500;color:#6a6c74;line-height:1.5}
+  .step .arw{
+    position:absolute;right:-11px;top:50%;transform:translateY(-50%);
+    color:var(--ink-soft);z-index:3;
+  }
+  .step:last-child .arw{display:none}
+
+  /* ---------- CLOSER ---------- */
+  .closer{text-align:center;align-items:center;padding:78px 56px}
+  .closer h2{font-size:clamp(32px,4.8vw,56px);font-weight:800;letter-spacing:-.03em;line-height:1.03;position:relative;z-index:2}
+  .closer h2 .accent{
+    background:linear-gradient(120deg,var(--accent-soft),#d6ccff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .closer .lead{margin:24px auto 0;max-width:620px;font-size:17.5px;font-weight:500;line-height:1.6;position:relative;z-index:2}
+  .audit-box{
+    margin:36px auto 0;max-width:720px;position:relative;z-index:2;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+    border-radius:24px;padding:32px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:20px;text-align:left;
+  }
+  .audit-box .ai{display:flex;flex-direction:column;gap:8px}
+  .audit-box .ai .k{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-soft)}
+  .audit-box .ai .v{font-size:14.5px;font-weight:600;color:#e2e3e9;line-height:1.45}
+  .closer .cta{
+    display:inline-flex;align-items:center;gap:10px;margin-top:36px;
+    background:#fff;color:var(--ink);
+    padding:16px 30px;border-radius:999px;
+    font-weight:700;font-size:15.5px;text-decoration:none;
+    position:relative;z-index:2;
+    box-shadow:0 18px 44px -14px rgba(0,0,0,.6);
+    transition:transform .2s ease;
+  }
+  .closer .cta:hover{transform:translateY(-2px)}
+  .closer .glow{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:660px;height:360px;
+    background:radial-gradient(closest-side,rgba(108,92,231,.4),transparent 70%);
+    z-index:1;pointer-events:none;
+  }
+  .guarantee{margin-top:22px;font-size:14px;font-weight:600;color:#8a8c96;position:relative;z-index:2}
+
+  /* ---------- NAV BAR ---------- */
+  .nav{
+    position:fixed;bottom:0;left:0;right:0;z-index:50;
+    background:rgba(244,245,247,.86);
+    backdrop-filter:blur(14px);
+    border-top:1px solid var(--line);
+    padding:12px 20px;
+    display:flex;align-items:center;justify-content:center;gap:14px;
+  }
+  .nav button{
+    background:#fff;border:1px solid var(--line);border-radius:999px;
+    width:38px;height:38px;display:grid;place-items:center;cursor:pointer;
+    box-shadow:0 6px 18px -10px rgba(28,29,34,.3);
+    transition:transform .15s ease;
+  }
+  .nav button:hover{transform:translateY(-2px)}
+  .nav button:active{transform:translateY(0)}
+  .dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:520px}
+  .dots i{
+    width:8px;height:8px;border-radius:50%;background:#d3d5dd;cursor:pointer;
+    transition:all .2s ease;
+  }
+  .dots i.on{background:var(--accent);width:22px;border-radius:999px}
+  .counter{font-size:13px;font-weight:800;color:#6a6c74;min-width:52px;text-align:center;letter-spacing:.02em}
+  .hint{position:fixed;bottom:66px;left:50%;transform:translateX(-50%);z-index:49;
+    font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#b0b2bc}
+
+  @media(max-width:860px){
+    .slide{padding:44px 26px;border-radius:28px;min-height:auto}
+    .coi,.geo-grid,.nots,.metrics{grid-template-columns:1fr}
+    .ba{grid-template-columns:1fr}
+    .flow{grid-template-columns:1fr 1fr}
+    .step .arw{display:none}
+    .anchor{grid-template-columns:1fr;gap:30px}
+    .leak{grid-template-columns:44px 1fr;gap:14px}
+    .leak .loss{grid-column:2;text-align:left}
+    .audit-box{grid-template-columns:1fr}
+    .case-top .meta{margin-left:0;width:100%;text-align:left}
+    .hint{display:none}
+  }
+  @media print{
+    .nav,.hint{display:none}
+    .slide{break-after:page;box-shadow:none;margin:0}
+    body{padding:0}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="deck">
+
+  <!-- 01 — TITLE -->
+  <section class="slide hero">
+    <div class="glow"></div>
+    <span class="sn">01</span>
+    <span class="pill eyebrow"><span class="dot"></span>ScaleFlow · Discovery Call</span>
+    <h1>We don't sell <span class="grey">AI.</span><br>We recover the money<br><span class="accent">you already lost</span></h1>
+    <p class="sub">The revenue that leaks between the moment a lead raises their hand and the moment your agent picks up the phone.</p>
+    <div class="geo">
+      <span>United Kingdom</span>
+      <span>Russia</span>
+      <span>Central Asia</span>
+      <span>Dubai</span>
+    </div>
+  </section>
+
+  <!-- 02 — COST OF INACTION -->
+  <section class="slide">
+    <span class="sn">02</span>
+    <div class="s-head">
+      <span class="pill eyebrow"><span class="dot"></span>The cost of doing nothing</span>
+      <h2>Your problem isn't traffic.<br><span class="grey">You already paid for the leads you never worked.</span></h2>
+    </div>
+    <div class="coi">
+      <div class="coi-item">
+        <div class="n">6.5 h</div>
+        <div class="l">Average first response time in a typical Dubai agency. Conversion drops sharply after the first 5 minutes.</div>
+      </div>
+      <div class="coi-item">
+        <div class="n">~60%</div>
+        <div class="l">Of inbound enquiries never receive a second touch. They aren't lost to competitors — they're lost to silence.</div>
+      </div>
+      <div class="coi-item">
+        <div class="n">3 h/day</div>
+        <div class="l">Per agent spent on copy-paste into the CRM, repetitive follow-ups and manual viewing scheduling.</div>
+      </div>
+    </div>
+    <div class="kicker">
+      You are paying Bayut and Property Finder full price for every lead.<br>
+      <span class="accent">You are working a fraction of them.</span>
+    </div>
+  </section>
+
+  <!-- 03 — THE REVENUE LEAK MAP -->
+  <section class="slide">
+    <span class="sn">03</span>
+    <div class="s-head">
+      <span class="pill eyebrow"><span class="dot"></span>The Revenue Leak Map</span>
+      <h2>Four points where<br><span class="grey">the money leaves</span></h2>
+      <p>Every agency we've audited leaks in at least two of these. Most leak in all four — and none of them show up in a CRM report.</p>
+    </div>
+    <div class="leaks">
+      <div class="leak">
+        <div class="idx">1</div>
+        <div>
+          <h4>Speed</h4>
+          <p>The lead messages at 23:40. The agent replies at 10:00. By then they've spoken to three other agencies.</p>
+        </div>
+        <div class="loss">First-mover<br>advantage gone</div>
+      </div>
+      <div class="leak">
+        <div class="idx">2</div>
+        <div>
+          <h4>Qualification</h4>
+          <p>Your best agent spends the morning on tyre-kickers "just asking the off-plan price" while a mortgage-approved buyer waits in the queue.</p>
+        </div>
+        <div class="loss">Best hours on<br>worst leads</div>
+      </div>
+      <div class="leak">
+        <div class="idx">3</div>
+        <div>
+          <h4>Follow-up</h4>
+          <p>Most deals need 5+ touches. Your agent makes two, then moves on to fresh leads. The old ones go quiet forever.</p>
+        </div>
+        <div class="loss">Paid-for pipeline<br>abandoned</div>
+      </div>
+      <div class="leak">
+        <div class="idx">4</div>
+        <div>
+          <h4>Visibility</h4>
+          <p>Leads land on personal WhatsApp numbers. The owner sees 4 deals in the CRM while ads run on three portals. Nobody knows the real number.</p>
+        </div>
+        <div class="loss">Can't manage<br>what you can't see</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 — GEOGRAPHY AS ARGUMENT -->
+  <section class="slide">
+    <span class="sn">04</span>
+    <div class="s-head">
+      <span class="pill eyebrow"><span class="dot"></span>Who we are</span>
+      <h2>Four markets.<br><span class="grey">One conclusion.</span></h2>
+      <p>We didn't collect countries for a slide. Each market taught us something the next one needed.</p>
+    </div>
+    <div class="geo-grid">
+      <div class="geo-card">
+        <span class="flag">&#127468;&#127463;</span>
+        <span class="role">The standard</span>
+        <h3>United Kingdom</h3>
+        <p>Where we learned to build against compliance requirements and complex CRM stacks. Nothing ships without an audit trail.</p>
+      </div>
+      <div class="geo-card">
+        <span class="flag">&#127479;&#127482; &#127472;&#127487;</span>
+        <span class="role">The volume</span>
+        <h3>Russia &amp; Central Asia</h3>
+        <p>Where we learned to handle scale: 120 leads a day in season, developer sales floors, 15,000-contact databases, voice AI at peak load.</p>
+      </div>
+      <div class="geo-card">
+        <span class="flag">&#127462;&#127466;</span>
+        <span class="role">The adaptation</span>
+        <h3>Dubai</h3>
+        <p>Where we rebuilt it all for a WhatsApp-first market: EN / RU / AR, off-plan cycles, Property Finder and Bayut, RERA and Ejari.</p>
+      </div>
+    </div>
+    <div class="kicker">
+      We've watched property sell on four markets. Dubai is the only one where<br>
+      <span class="accent">90% of the deal lives inside WhatsApp</span> — and most agencies still handle it by hand.
+    </div>
+  </section>
+
+  <!-- 05 — TRACK RECORD -->
+  <section class="slide dark">
+    <span class="sn">05</span>
+    <div class="s-head">
+      <span class="pill eyebrow"><span class="dot"></span>The numbers behind us</span>
+      <h2>Three years.<br><span class="grey">Dozens of implementations.</span></h2>
+    </div>
+    <div class="coi" style="grid-template-columns:repeat(4,1fr)">
+      <div class="coi-item" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)">
+        <div class="n" style="color:var(--accent-soft)">3+</div>
+        <div class="l" style="color:#a8aab4">years shipping AI automation to live sales teams</div>
+      </div>
+      <div class="coi-item" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)">
+        <div class="n" style="color:var(--accent-soft)">25+</div>
+        <div class="l" style="color:#a8aab4">years of real-estate experience inside the team</div>
+      </div>
+      <div class="coi-item" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)">
+        <div class="n" style="color:var(--accent-soft)">10+</div>
+        <div class="l" style="color:#a8aab4">years in IT, 5+ years building with AI</div>
+      </div>
+      <div class="coi-item" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)">
+        <div class="n" style="color:var(--accent-soft)">4</div>
+        <div class="l" style="color:#a8aab4">markets: UK, Russia, Central Asia, UAE</div>
+      </div>
+    </div>
+    <div class="kicker" style="color:#c8cad2">
+      We've worked with major developers and brokerages. Big companies don't tolerate sloppy work —<br>
+      <span style="color:var(--accent-soft)">so we build to the standard they demand, RERA / Ejari / AML included.</span>
+    </div>
+  </section>
+
+  <!-- 06 — CREDIBILITY ANCHOR -->
+  <section class="slide">
+    <span class="sn">06</span>
+    <div class="anchor">
+      <div class="anchor-visual">
+        <div class="av">D</div>
+        <h3>Damir</h3>
+        <div class="r">Real Estate Lead · ScaleFlow</div>
+        <div class="y">Years selling property in Dubai before building systems for it. Knows the process from the agent's side of the desk.</div>
+      </div>
+      <div>
+        <h2>We're not an IT company<br><span class="grey">that discovered real estate</span></h2>
+        <div class="quote">
+          "Every automation vendor tells you they understand your business. We have someone on the team who actually sold in this market — and knows exactly where the process breaks."
+        </div>
+        <ul>
+          <li><span class="tick"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-11" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Real-estate operators who've run the funnel themselves</li>
+          <li><span class="tick"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-11" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>AI engineers — 5+ years in AI, 10+ in IT</li>
+          <li><span class="tick"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-11" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>CRM implementers who build around your process, not ours</li>
+          <li><span class="tick"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-11" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Engineers on call 24/7 — your sales don't wait until Monday</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — CASES INTRO -->
+  <section class="slide">
+    <span class="sn">07</span>
+    <div class="s-head">
+      <span class="pill eyebrow"><span class="dot"></span>Track record · real implementations</span>
+      <h2>Three agencies.<br><span class="accent">Three different leaks.</span></h2>
+      <p>Not three versions of the same story. Each one lost money in a different place — and each one is a leak we've seen in almost every Dubai agency we've opened up.</p>
+      <p style="margin-top:14px">As we go through these, one question is worth holding: <b style="color:#3a3c44">which of these three is already happening in your business?</b> In our experience the answer is rarely none — and almost never just one.</p>
+      <p style="margin-top:14px;font-weight:700;color:#3a3c44">Target metrics are written into the pilot contract. Part of our fee is tied to hitting them.</p>
+    </div>
+  </section>
+
+  <!-- 08 — CASE 01 -->
+  <section class="slide case-slide">
+    <span class="sn">08</span>
+    <div class="case">
+      <div class="case-top">
+        <span class="case-no">LEAK 01 · SPEED</span>
+        <h3>Real-estate agency · Dubai</h3>
+        <span class="meta">150–200 inbound leads / mo · 4 agents</span>
+      </div>
+      <div class="ba">
+        <div class="pps bad"><span class="tag">Before</span>
+          <div class="scene">
+            <p>"We're paying Bayut and Property Finder every month. The leads are coming in. So why are we closing the same number of deals as last year?"</p>
+            <span class="who">What the owner said on our first call</span>
+          </div>
+          <p>The answer wasn't in the traffic. It was in the four hours between an enquiry landing and someone seeing it. Four agents, 150–200 leads a month — they physically worked whichever lead happened to be on top. A buyer enquiring at 8pm got a reply the next morning. By then he'd already spoken to three other agencies and booked a viewing with one of them.</p>
+          <p style="margin-top:10px">Nobody was lazy. Each agent burned up to 3 hours a day copy-pasting enquiries into the CRM and writing the same follow-up for the tenth time. The most expensive people in the business were doing data entry while ready buyers went cold.</p>
+          <div class="cost">
+            <span class="c-num">AED 180,000+</span>
+            <span class="c-lbl">a year in commission on leads they'd already paid for and never reached in time</span>
+          </div>
+        </div>
+        <div class="pps sol"><span class="tag">What we built</span>
+          <ul>
+            <li>Every lead from Bayut, Property Finder and the website auto-syncs into the CRM — manual entry removed entirely</li>
+            <li>First reply on WhatsApp inside 90 seconds, referencing the specific property, price range and the buyer's name</li>
+            <li>Intent scoring: hot leads pushed to agents instantly, warm leads into a 7-day nurture sequence</li>
+            <li>Self-service viewing scheduler synced to agent calendars, with reminders that cut no-shows</li>
+          </ul>
+        </div>
+      </div>
+      <div class="broke">
+        <b>What was actually broken:</b> not the traffic, not the agents — the gap between an enquiry landing and a human seeing it. Buying more leads would have widened that gap, not closed it.
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="m-num">6.5 h &rarr; 68 sec</div><div class="m-lbl">average first response — the buyer hears back while he's still looking at the listing</div></div>
+        <div class="metric"><div class="m-num">3&times;</div><div class="m-lbl">more leads followed up per week — same four agents, no new hires</div></div>
+        <div class="metric"><div class="m-num">+40%</div><div class="m-lbl">booked viewings in the first two months. Same spend, same team</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 — CASE 02 -->
+  <section class="slide case-slide">
+    <span class="sn">09</span>
+    <div class="case">
+      <div class="case-top">
+        <span class="case-no">LEAK 02 · FOLLOW-UP</span>
+        <h3>Mid-size agency · 15–20 brokers</h3>
+        <span class="meta">Bayut + Property Finder · 3,000+ dormant contacts</span>
+      </div>
+      <div class="ba">
+        <div class="pps bad"><span class="tag">Before</span>
+          <div class="scene">
+            <p>"I'm spending six figures a year on portals. Ask me which one actually brings deals and I can't tell you. I'm guessing."</p>
+            <span class="who">What the owner said on our first call</span>
+          </div>
+          <p>Money went out across Bayut and Property Finder every month, and nobody could say what came back. Not because the team was careless — because the answer lived in four places at once and nowhere in full. Budget decisions were made on instinct.</p>
+          <p style="margin-top:10px">Meanwhile the best brokers — the ones who actually close — spent up to 60% of their day filtering spam and answering "just asking the off-plan price." And 3,000 people who had already viewed a property and simply hadn't bought yet sat in the database untouched. Every one of them had raised a hand once. Nobody ever got around to calling back.</p>
+          <div class="cost">
+            <span class="c-num">3,000 buyers</span>
+            <span class="c-lbl">already paid for, sitting in the CRM — while new budget was spent to find replacements for them</span>
+          </div>
+        </div>
+        <div class="pps sol"><span class="tag">What we built</span>
+          <ul>
+            <li>Deep CRM integration that doesn't just chat — it distributes deals by district, tag and broker specialisation</li>
+            <li>Bayut, Property Finder and WhatsApp merged into one workspace, every lead carrying its source tag</li>
+            <li>Automated nurture across the sleeping base: touch chains on new inventory and price changes, strictly opt-in</li>
+            <li>One owner view: cost per valid lead and per closed deal, by portal — not cost per click</li>
+          </ul>
+        </div>
+      </div>
+      <div class="broke">
+        <b>What was actually broken:</b> they were buying new leads to replace the ones they already had and never called. The database wasn't dead — it was unopened.
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="m-num">4 deals</div><div class="m-lbl">from waking 7% of the sleeping base in 6 weeks — zero new traffic spend</div></div>
+        <div class="metric"><div class="m-num">&minus;15%</div><div class="m-lbl">ad budget: the owner finally saw cost per deal by portal, and cut what wasn't working</div></div>
+        <div class="metric"><div class="m-num">60% &rarr; selling</div><div class="m-lbl">brokers stopped filtering spam. Leads now arrive pre-qualified and ready to view</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 — CASE 03 -->
+  <section class="slide case-slide">
+    <span class="sn">10</span>
+    <div class="case">
+      <div class="case-top">
+        <span class="case-no">LEAK 03 · CAPACITY</span>
+        <h3>Large broker / developer</h3>
+        <span class="meta">10,000+ enquiries a month · call centre + back office</span>
+      </div>
+      <div class="ba">
+        <div class="pps bad"><span class="tag">Before</span>
+          <div class="scene">
+            <p>"Every time volume goes up, I hire. Revenue grows, profit doesn't. I'm running faster to stand still."</p>
+            <span class="who">What the owner said on our first call</span>
+          </div>
+          <p>A large call centre and a full back office — and the economics still didn't work. At peak hours calls went unanswered. Not occasionally: predictably, every single day, because ten thousand enquiries a month don't arrive politely spaced out.</p>
+          <p style="margin-top:10px">The real damage was at the finish line. Preparing Form F and Ejari, pre-filling RERA and DLD paperwork took 2–3 hours of manual re-typing. That's 2–3 hours a buyer sits waiting at the exact moment he is most certain — and most likely to be pulled away by an agency that can move today. Deals were being lost after the client had already said yes.</p>
+          <div class="cost">
+            <span class="c-num">Every AED of growth</span>
+            <span class="c-lbl">converted straight into payroll. The only lever available was hiring — so margin compressed while revenue climbed</span>
+          </div>
+        </div>
+        <div class="pps sol"><span class="tag">What we built</span>
+          <ul>
+            <li>Every inbound channel — WhatsApp, web, phone, email — answered in one flow, at any hour, without a night shift</li>
+            <li>New enquiries reached within seconds, in Arabic or English, with viewing slots booked automatically</li>
+            <li>Passports, Emirates ID and title deeds read automatically; Form F and Ejari arrive pre-filled — the manager approves a finished draft instead of building it by hand</li>
+            <li>Judgement stays with people. The repetition doesn't</li>
+          </ul>
+        </div>
+      </div>
+      <div class="broke">
+        <b>What was actually broken:</b> growth was tied to payroll. Every extra lead needed an extra human — so scale was something the owner bought, not something the business produced.
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="m-num">7 sec</div><div class="m-lbl">to reach a new lead; up to 500 at once at peak — no night shift, no missed calls</div></div>
+        <div class="metric"><div class="m-num">2–3 h &rarr; 4 min</div><div class="m-lbl">document package ready for signing — the buyer signs while he's still certain</div></div>
+        <div class="metric"><div class="m-num">&times;3.5</div><div class="m-lbl">lead volume handled with zero new operators. Payroll flat, throughput up</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 — WHAT WE DON'T DO -->
+  <section class="slide dark">
+    <span class="sn">11</span>
+    <div class="s-head">
+      <span class="pill eyebrow"><span class="dot"></span>Scope, honestly</span>
+      <h2>What we <span style="color:var(--accent-soft)">don't</span> do</h2>
+      <p>Most vendors promise everything. Here's what we deliberately stay out of.</p>
+    </div>
+    <div class="nots">
+      <div class="not"><span class="x">&times;</span><span class="t">We don't sell chatbots</span></div>
+      <div class="not"><span class="x">&times;</span><span class="t">We don't replace your agents</span></div>
+      <div class="not"><span class="x">&times;</span><span class="t">We don't rebuild your marketing</span></div>
+      <div class="not"><span class="x">&times;</span><span class="t">We don't ask you to change CRM</span></div>
+    </div>
+    <div class="kicker" style="color:#c8cad2;margin-top:38px">
+      We fix exactly one stretch of your funnel:<br>
+      <span style="color:var(--accent-soft)">from the moment a lead raises their hand, to the moment your agent picks up a ready buyer.</span>
+    </div>
+  </section>
+
+  <!-- 12 — HOW WE WORK -->
+  <section class="slide">
+    <span class="sn">12</span>
+    <div class="s-head">
+      <span class="pill eyebrow"><span class="dot"></span>How this works</span>
+      <h2>No big-bang rollout.<br><span class="grey">A leak map first.</span></h2>
+      <p>We never propose a build before we know what's actually leaking. That's what the audit is for.</p>
+    </div>
+    <div class="flow">
+      <div class="step">
+        <div class="num">1</div>
+        <h4>Revenue Leak Audit</h4>
+        <p>We open your funnel: response times, follow-up coverage, CRM hygiene, dormant base.</p>
+        <svg class="arw" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h4>The leak map</h4>
+        <p>You get a number in AED: what each leak costs you per month. Yours to keep either way.</p>
+        <svg class="arw" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h4>Pilot with fixed targets</h4>
+        <p>We take a baseline, write the target metrics into the contract, and tie part of our fee to hitting them.</p>
+        <svg class="arw" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <h4>Your team, unchanged</h4>
+        <p>Same agents, same CRM, same process — except the leads arriving are already warm and already qualified.</p>
+        <svg class="arw" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 — CLOSE -->
+  <section class="slide dark closer">
+    <div class="glow"></div>
+    <span class="sn">13</span>
+    <h2>The next step is<br><span class="accent">the Revenue Leak Audit</span></h2>
+    <p class="lead">We take apart your funnel and show you, in dirhams, what you're losing every month. Not a projection — a number built from your own data.</p>
+    <div class="audit-box">
+      <div class="ai">
+        <span class="k">What it takes</span>
+        <span class="v">One working session with you and your CRM. That's the whole ask.</span>
+      </div>
+      <div class="ai">
+        <span class="k">What you get</span>
+        <span class="v">A leak map with a monthly AED figure attached to each leak. Yours to keep.</span>
+      </div>
+      <div class="ai">
+        <span class="k">What happens next</span>
+        <span class="v">If the number is big enough to act on, we talk about a pilot. If it isn't, we say so.</span>
+      </div>
+    </div>
+    <a class="cta" href="https://wa.me/971563057577">
+      +971 56 305 7577 · WhatsApp
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <div class="guarantee">If there's no leak worth fixing, we'll tell you straight — and we'll part ways.</div>
+  </section>
+
+</div>
+
+<div class="hint">← → arrows · or scroll</div>
+
+<div class="nav">
+  <button id="prev" aria-label="Previous slide">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 18l-6-6 6-6" stroke="#1c1d22" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="dots" id="dots"></div>
+  <span class="counter" id="counter">01 / 13</span>
+  <button id="next" aria-label="Next slide">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#1c1d22" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dotsEl = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  let current = 0;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('i');
+    d.addEventListener('click', () => go(i));
+    dotsEl.appendChild(d);
+  });
+  const dots = Array.from(dotsEl.children);
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function paint(i){
+    current = i;
+    dots.forEach((d, j) => d.classList.toggle('on', j === i));
+    counter.textContent = pad(i+1) + ' / ' + pad(slides.length);
+  }
+
+  function go(i){
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    slides[i].scrollIntoView({behavior:'smooth', block:'center'});
+    paint(i);
+  }
+
+  document.getElementById('prev').addEventListener('click', () => go(current - 1));
+  document.getElementById('next').addEventListener('click', () => go(current + 1));
+
+  document.addEventListener('keydown', e => {
+    if(e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' '){ e.preventDefault(); go(current + 1); }
+    if(e.key === 'ArrowLeft'  || e.key === 'ArrowUp'){ e.preventDefault(); go(current - 1); }
+    if(e.key === 'Home'){ e.preventDefault(); go(0); }
+    if(e.key === 'End'){ e.preventDefault(); go(slides.length - 1); }
+  });
+
+  // keep dots in sync on manual scroll
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if(en.isIntersecting) paint(slides.indexOf(en.target));
+    });
+  }, {threshold:0.5});
+  slides.forEach(s => io.observe(s));
+
+  paint(0);
+</script>
+
+</body>
+</html>
