@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Better Parker — ScaleFlow</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090F; --panel:#0E131C; --line:#1F2938;
+  --text:#F4F6FA; --soft:#98A6BD; --dim:#5B6880;
+  --signal:#FF6B35; --ok:#3DD68C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+
+.slide{
+  position:fixed;inset:0;bottom:64px;
+  display:none;align-items:center;
+  padding:clamp(24px,4vh,40px) clamp(40px,7vw,110px);
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.slide::-webkit-scrollbar{width:0;background:transparent}
+.slide{scrollbar-width:none}
+.slide.on{display:flex;animation:in .4s cubic-bezier(.2,.7,.3,1)}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.inner{width:100%;max-width:1100px;margin:auto}
+
+.kick{
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  letter-spacing:.2em;color:var(--signal);margin-bottom:clamp(16px,3vh,30px);
+}
+h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(46px,6.4vw,88px);line-height:1.02;letter-spacing:-.02em}
+h2{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(34px,4.4vw,60px);line-height:1.08;letter-spacing:-.015em;margin-bottom:clamp(18px,3.4vh,36px)}
+
+/* the one big spoken line */
+.line{font-size:clamp(24px,2.7vw,38px);line-height:1.45;max-width:26ch;color:var(--soft);font-weight:400}
+.line strong{color:var(--text);font-weight:600}
+.line.wide{max-width:34ch}
+
+/* story rows — plain sentences, no numbers as heroes */
+.story{margin-top:10px}
+.st{
+  display:flex;gap:26px;align-items:flex-start;
+  padding:clamp(14px,2.2vh,26px) 0;border-bottom:1px solid var(--line);
+}
+.st:last-child{border-bottom:0}
+.st-i{
+  flex:0 0 12px;height:12px;border-radius:50%;margin-top:12px;
+  background:var(--signal);
+}
+.st-i.grey{background:var(--dim)}
+.st-i.green{background:var(--ok)}
+.st-t{font-size:clamp(20px,2vw,27px);line-height:1.45;font-weight:500}
+.st-t span{color:var(--soft);font-weight:400}
+
+/* cover */
+.meta{display:flex;gap:46px;flex-wrap:wrap;margin-top:54px;padding-top:32px;border-top:1px solid var(--line)}
+.mk{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--dim);margin-bottom:8px}
+.mv{font-size:19px;font-weight:500}
+
+/* two paths */
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.path{border:1px solid var(--line);border-radius:4px;padding:34px 30px;background:var(--panel)}
+.path.hot{border-color:var(--signal)}
+.pk{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--dim);margin-bottom:16px}
+.path.hot .pk{color:var(--signal)}
+.pt{font-family:'Instrument Serif',serif;font-size:36px;margin-bottom:10px}
+.ps{font-size:17px;color:var(--soft);margin-bottom:24px;line-height:1.5;min-height:52px}
+.path ul{list-style:none}
+.path li{position:relative;padding-left:26px;margin-bottom:15px;font-size:18px;line-height:1.45}
+.path li::before{content:"→";position:absolute;left:0;color:var(--signal)}
+@media(max-width:900px){
+  .paths{grid-template-columns:1fr;gap:16px}
+  .ps{min-height:0;margin-bottom:16px}
+  .path{padding:24px 20px}
+  .pt{font-size:29px}
+  .path li{font-size:16px;margin-bottom:11px}
+  h2{font-size:30px;margin-bottom:22px}
+  .kick{margin-bottom:20px}
+  .st{padding:18px 0}
+  .st-t{font-size:17px}
+  .line{font-size:20px}
+}
+
+/* asks */
+.asks{list-style:none;counter-reset:q;margin-top:8px}
+.asks li{
+  counter-increment:q;position:relative;padding-left:72px;margin-bottom:32px;
+  font-size:clamp(22px,2.3vw,31px);line-height:1.4;font-weight:500;
+}
+.asks li::before{
+  content:counter(q);position:absolute;left:0;top:-3px;
+  font-family:'JetBrains Mono',monospace;font-size:17px;
+  color:var(--signal);border:2px solid var(--signal);
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* proof — small, supporting, never the hero */
+.proof{
+  margin-top:38px;padding-top:22px;border-top:1px solid var(--line);
+  font-size:14px;color:var(--dim);line-height:1.75;max-width:62ch;
+}
+
+/* chrome */
+#chrome{
+  position:fixed;left:0;right:0;bottom:0;height:64px;z-index:30;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 26px;
+  background:var(--bg);border-top:1px solid var(--line);
+}
+.brand{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.nav{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.dots{display:flex;gap:7px;margin-right:8px;flex-wrap:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--line);border:0;padding:0;cursor:pointer;transition:.2s}
+.dot.on{background:var(--signal);transform:scale(1.4)}
+.dot:focus-visible{outline:2px solid var(--text);outline-offset:3px}
+.arw{background:transparent;border:1px solid var(--line);color:var(--soft);width:38px;height:38px;border-radius:3px;cursor:pointer;font-size:15px}
+.arw:hover{border-color:var(--soft);color:var(--text)}
+.arw:focus-visible{outline:2px solid var(--text);outline-offset:2px}
+.cnt{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);min-width:52px;text-align:center}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* three stages */
+.paths.three{grid-template-columns:repeat(3,1fr);gap:18px}
+.paths.three .path{padding:26px 22px}
+.paths.three .pt{font-size:29px}
+.paths.three .ps{font-size:15px;min-height:66px;margin-bottom:18px}
+.paths.three .path li{font-size:15.5px;margin-bottom:11px;padding-left:22px}
+@media(max-width:1000px){
+  .paths.three{grid-template-columns:1fr;gap:14px}
+  .paths.three .ps{min-height:0}
+}
+
+/* chrome must never push the arrows off-screen */
+@media(max-width:900px){
+  .dots{display:none}
+  #chrome{padding:0 16px}
+}
+@media(max-width:420px){
+  .brand{display:none}
+  .cnt{min-width:44px}
+}
+</style>
+</head>
+<body>
+
+<!-- 1 COVER -->
+<div class="slide on">
+  <div class="inner">
+    <div class="kick">SCALEFLOW · AI AUTOMATION · DUBAI</div>
+    <h1>Better Parker<br>Lead Audit</h1>
+    <div class="meta">
+      <div><div class="mk">FOR</div><div class="mv">Raj Tomar</div></div>
+      <div><div class="mk">TEAM</div><div class="mv">15 agents</div></div>
+      <div><div class="mk">GOAL</div><div class="mv">10,000 agents</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 2 THE QUESTION -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">THE QUESTION</div>
+    <h2>You're about to get<br>3,000 leads a month.</h2>
+    <p class="line wide">How will 15 agents<br><strong>actually handle them?</strong></p>
+  </div>
+</div>
+
+<!-- 3 WHAT USUALLY HAPPENS -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">HERE'S WHAT USUALLY HAPPENS</div>
+    <div class="story">
+      <div class="st"><div class="st-i"></div><div class="st-t">Your agents take the ones that look easy. <span>They're on commission — of course they do.</span></div></div>
+      <div class="st"><div class="st-i"></div><div class="st-t">The rest sit there. <span>Nobody says no — they just never get called.</span></div></div>
+      <div class="st"><div class="st-i"></div><div class="st-t">You paid for every single one of those leads. <span>The money is already gone.</span></div></div>
+      <div class="st"><div class="st-i grey"></div><div class="st-t">And 3,000 leads quietly becomes 300.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 TWO TO THREE HOURS -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">RIGHT NOW</div>
+    <h2>A new lead waits<br>two to three hours.</h2>
+    <p class="line">You told us it could be instant.<br><strong>That's the whole conversation today.</strong></p>
+  </div>
+</div>
+
+<!-- 5 THE RACE -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">WHY THE WAIT COSTS YOU</div>
+    <div class="story">
+      <div class="st"><div class="st-i"></div><div class="st-t">That same buyer messaged four agencies. <span>Not just you.</span></div></div>
+      <div class="st"><div class="st-i"></div><div class="st-t">Whoever answers first gets the conversation.</div></div>
+      <div class="st"><div class="st-i"></div><div class="st-t">Three hours later, your agent calls someone who already booked a viewing with somebody else.</div></div>
+      <div class="st"><div class="st-i grey"></div><div class="st-t">Same lead. Same price. <span>You just paid to be second.</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 6 NIGHTS -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">AND MOST OF THEM WRITE AT NIGHT</div>
+    <h2>Your buyers message<br>after 8pm.</h2>
+    <p class="line wide">Most Dubai property enquiries come in when the office is closed. <strong>Two hours becomes all night.</strong></p>
+    <div class="proof">Industry data for Dubai real estate (TechBullion, 2026) puts roughly two thirds of enquiries between 8pm and 2am. Your India team helps with time zones — but nights and weekends stay open on both sides.</div>
+  </div>
+</div>
+
+<!-- 7 OUTBOUND IS THE REAL CHANNEL -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">BUT TODAY YOU DON'T WAIT FOR LEADS</div>
+    <h2>You call them.</h2>
+    <p class="line wide">Your team's main channel is outbound — you ring and message buyers yourselves. <strong>That's the part 3,000 inbound leads doesn't replace.</strong></p>
+    <div class="proof">Which raises the question we keep coming back to: when a lead does land, who calls it first — and how fast? Right now that depends on which agent is free, and whether it's a weekday.</div>
+  </div>
+</div>
+
+<!-- 8 WHAT WE FOUND -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">WE LOOKED AT EVERYTHING YOU RUN PUBLICLY</div>
+    <div class="story">
+      <div class="st"><div class="st-i green"></div><div class="st-t">You run a CRM and your team works in it. <span>That's a real head start — most agencies don't have that.</span></div></div>
+      <div class="st"><div class="st-i"></div><div class="st-t">Your website has a contact form. <span>No WhatsApp, no chat — a form nobody rushes to answer.</span></div></div>
+      <div class="st"><div class="st-i"></div><div class="st-t">Instagram says "DM for expert advice" — <span>and those DMs wait for a human to open them.</span></div></div>
+      <div class="st"><div class="st-i grey"></div><div class="st-t">We couldn't find you on Bayut or Property Finder. <span>Is that right?</span></div></div>
+      <div class="st"><div class="st-i grey"></div><div class="st-t">And one question: does every lead really reach the CRM? <span>Commission pays for closing, not for logging.</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 9 ABOUT THE 10,000 -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">ABOUT THE 10,000</div>
+    <h2>You can't hire<br>your way there.</h2>
+    <p class="line wide">Today one manager hands out leads by hand. <strong>That works at fifteen agents. It doesn't work at a hundred and fifty.</strong></p>
+  </div>
+</div>
+
+<!-- 10 THE POINT -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">SO THE REAL QUESTION ISN'T HIRING</div>
+    <h2>It's what each new<br>agent plugs into.</h2>
+    <p class="line wide">Build that first, and every agent you add works. Add agents without it, and they leave. <strong>Build the machine. Then hire into it.</strong></p>
+  </div>
+</div>
+
+<!-- 11 THE DATABASE -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">BEFORE WE CHASE A SINGLE NEW LEAD</div>
+    <h2>There's money sitting<br>in your CRM right now.</h2>
+    <div class="story">
+      <div class="st"><div class="st-i"></div><div class="st-t">While your team worked outbound, leads piled up. <span>Some went cold. Some never got a second message.</span></div></div>
+      <div class="st"><div class="st-i"></div><div class="st-t">You already paid for every one of them. <span>That's not new business — it's business you bought and never collected.</span></div></div>
+      <div class="st"><div class="st-i green"></div><div class="st-t">Follow-up runs through that database on its own — <span>new launches, price changes, a tenancy about to expire.</span></div></div>
+      <div class="st"><div class="st-i green"></div><div class="st-t">The ones who are ready raise their hand. <span>Your agent picks up a warm conversation. Zero agent hours.</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 12 THE DASHBOARD -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">AND YOU SEE ALL OF IT</div>
+    <h2>One screen. Every lead,<br>from first message to deal.</h2>
+    <div class="story">
+      <div class="st"><div class="st-i"></div><div class="st-t">Every lead is tracked automatically — <span>where it came from, who touched it, what happened next. Nobody logs anything by hand.</span></div></div>
+      <div class="st"><div class="st-i"></div><div class="st-t">You finally see which portal brings real deals — <span>and which one just burns your budget every month.</span></div></div>
+      <div class="st"><div class="st-i"></div><div class="st-t">You see how each agent actually works — <span>how fast they answer, how many they convert, where they stall.</span></div></div>
+      <div class="st"><div class="st-i green"></div><div class="st-t">The leads stay yours. <span>When an agent leaves, he doesn't walk out with your database — it's in your system, not on his phone.</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 13 THREE STAGES -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">THREE WAYS FORWARD · EACH BUILDS ON THE LAST</div>
+    <div class="paths three">
+      <div class="path">
+        <div class="pk">01 · 3–4 WEEKS</div>
+        <div class="pt">Stop losing leads</div>
+        <div class="ps">Fixes the two-hour wait — and works the database you already paid for.</div>
+        <ul>
+          <li>Every enquiry answered in seconds, any hour</li>
+          <li>Your agent picks up a lead that's already qualified</li>
+          <li>Dormant leads get a reason to reply</li>
+          <li>One screen: speed, sources, agents</li>
+        </ul>
+      </div>
+      <div class="path hot">
+        <div class="pk">02 · MOST AGENCIES START HERE</div>
+        <div class="pt">Send it to the right agent</div>
+        <div class="ps">Everything in 01, plus the answer to your real goal.</div>
+        <ul>
+          <li>Hot leads reach your best agents on their own</li>
+          <li>Routed by area and by what each agent closes</li>
+          <li>No manager handing out leads by hand</li>
+          <li>This is what carries you past fifteen</li>
+        </ul>
+      </div>
+      <div class="path">
+        <div class="pk">03 · IF THE VOLUME IS REAL</div>
+        <div class="pt">Built for 3,000 a month</div>
+        <div class="ps">Everything in 02, sized for the numbers you gave us.</div>
+        <ul>
+          <li>Built for 20,000+ messages a month</li>
+          <li>WhatsApp, web and email in one hub</li>
+          <li>Only worth it if the leads are already flowing</li>
+          <li>If 3,000 is a plan — start at 01, step up later</li>
+        </ul>
+      </div>
+    </div>
+    <div class="proof">Everything else — an AI that calls your leads, the property knowledge base, permit checks on listings, document autofill — comes later, once one of these is live and measured. You don't decide any of it today.</div>  </div>
+</div>
+
+<!-- 14 HOW WE DE-RISK -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">HOW WE MAKE THIS SAFE FOR YOU</div>
+    <h2>We measure your numbers<br>before we build anything.</h2>
+    <p class="line wide">We write today's numbers into the contract. Then we measure against them. <strong>If nothing changes, we fix it at our cost.</strong></p>
+    <div class="proof">We don't promise "+40% more leads." Numbers like that are vendor marketing. The only number that matters is the one we measure on your own leads, before and after.</div>
+  </div>
+</div>
+
+<!-- 15 THREE QUESTIONS -->
+<div class="slide">
+  <div class="inner">
+    <div class="kick">THREE THINGS AND WE CAN QUOTE YOU EXACTLY</div>
+    <ol class="asks">
+      <li>Are you live on Bayut and Property Finder?</li>
+      <li>Where will the 3,000 leads a month come from?</li>
+      <li>Which CRM are you using?</li>
+    </ol>
+  </div>
+</div>
+
+<div id="chrome">
+  <div class="brand">SCALEFLOW · BETTER PARKER</div>
+  <div class="nav">
+    <div class="dots" id="dots"></div>
+    <button class="arw" id="prev" aria-label="Previous slide">←</button>
+    <div class="cnt" id="cnt">1 / 15</div>
+    <button class="arw" id="next" aria-label="Next slide">→</button>
+  </div>
+</div>
+
+<script>
+const S=[...document.querySelectorAll('.slide')];
+const dotsEl=document.getElementById('dots');
+let i=0;
+S.forEach((_,n)=>{
+  const b=document.createElement('button');
+  b.className='dot'+(n?'':' on');
+  b.setAttribute('aria-label','Slide '+(n+1));
+  b.onclick=()=>go(n);
+  dotsEl.appendChild(b);
+});
+const D=[...document.querySelectorAll('.dot')];
+function go(n){
+  i=Math.max(0,Math.min(S.length-1,n));
+  S.forEach(s=>s.classList.remove('on'));
+  S[i].classList.add('on');
+  D.forEach((d,x)=>d.classList.toggle('on',x===i));
+  document.getElementById('cnt').textContent=(i+1)+' / '+S.length;
+}
+document.getElementById('next').onclick=()=>go(i+1);
+document.getElementById('prev').onclick=()=>go(i-1);
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(i+1)}
+  if(e.key==='ArrowLeft'){e.preventDefault();go(i-1)}
+  if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+});
+</script>
+
+</body>
+</html>
