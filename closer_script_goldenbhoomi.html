@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Closer Script — Golden Bhoomi × ScaleFlow</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#000;scroll-behavior:smooth}
+body{
+  background:#000;color:#FFF;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  font-size:18px;line-height:1.55;letter-spacing:-.01em;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:820px;margin:0 auto;padding:0 32px}
+
+/* HERO */
+.hero{
+  min-height:52vh;display:flex;align-items:center;text-align:center;
+  padding:80px 0 56px;
+  background:radial-gradient(120% 80% at 50% 0%, #101826 0%, #000 62%);
+}
+.eyebrow{
+  font-size:17px;font-weight:600;
+  background:linear-gradient(90deg,#2997FF,#30D158);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;margin-bottom:14px;
+}
+h1{font-size:clamp(38px,6vw,64px);font-weight:700;line-height:1.05;letter-spacing:-.035em;margin-bottom:18px}
+.hero-sub{font-size:19px;color:#A9AAAE;line-height:1.5;max-width:44ch;margin:0 auto}
+
+/* how-to strip */
+.howto{
+  max-width:820px;margin:0 auto;
+  background:linear-gradient(135deg,#0F1A26,#0E1116);
+  border:1px solid rgba(41,151,255,.3);border-radius:18px;
+  padding:24px 28px;margin-top:8px;
+}
+.howto p{font-size:15px;color:#A9AAAE;line-height:1.65}
+.howto strong{color:#FFF;font-weight:600}
+
+/* progress */
+#bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;
+  background:linear-gradient(90deg,#2997FF,#30D158)}
+
+/* slide block */
+.slide{
+  border-top:1px solid #22262F;padding:46px 0;
+}
+.slide:first-of-type{border-top:0}
+.slide-of{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#101A28;border:1px solid rgba(41,151,255,.35);
+  border-radius:8px;padding:6px 12px;margin-bottom:14px;
+}
+.slide-of .big{font-size:15px;font-weight:700;color:#2997FF;letter-spacing:.02em}
+.slide-of .of{font-size:12px;color:#5E6470;font-weight:600}
+.slide.price .slide-of{background:linear-gradient(135deg,rgba(41,151,255,.18),rgba(48,209,88,.14));border-color:rgba(48,209,88,.4)}
+.slide.price .slide-of .big{color:#30D158}
+.tag{
+  display:block;
+  font-size:19px;font-weight:700;color:#FFF;letter-spacing:-.02em;
+  margin-bottom:16px;line-height:1.25;
+}
+
+/* the spoken quote */
+.say{
+  border-left:2px solid #2997FF;
+  background:linear-gradient(90deg,rgba(41,151,255,.06),transparent 75%);
+  border-radius:0 12px 12px 0;
+  padding:20px 24px;font-size:18px;line-height:1.65;color:#E6E7EA;
+}
+.say strong{color:#FFF;font-weight:600}
+.pause{
+  display:inline-block;
+  background:rgba(255,159,10,.16);color:#FF9F0A;
+  font-size:12px;font-weight:700;letter-spacing:.04em;
+  padding:2px 9px;border-radius:6px;margin:0 2px;
+  vertical-align:middle;text-transform:uppercase;
+}
+.note{
+  margin-top:16px;font-size:15px;color:#86868B;line-height:1.6;
+  padding-left:16px;border-left:1px solid #22262F;
+}
+.note::before{content:"Why this slide — ";color:#5E6470;font-weight:600}
+
+/* section divider label */
+.divider{
+  text-align:center;padding:60px 0 20px;
+}
+.divider .badge{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(90deg,#2997FF,#30D158);
+  color:#000;font-weight:700;font-size:14px;
+  padding:9px 18px;border-radius:100px;letter-spacing:0;
+}
+
+/* the close */
+.close-block{
+  background:linear-gradient(135deg,#0F1A26,#0E1116);
+  border:1px solid rgba(41,151,255,.35);border-radius:20px;
+  padding:38px 34px;margin-top:8px;
+}
+.close-block .tag{color:#2997FF}
+.close-block h2{font-size:26px;margin-bottom:18px}
+
+/* objections */
+.obj{
+  background:#0E1116;border:1px solid #22262F;border-radius:16px;
+  padding:24px 28px;margin-bottom:14px;
+}
+.obj-q{font-size:17px;font-weight:600;color:#FFF;margin-bottom:10px;display:flex;gap:10px;align-items:baseline}
+.obj-q .mk{color:#FF9F0A;font-size:15px;flex:0 0 auto}
+.obj-a{font-size:16px;color:#A9AAAE;line-height:1.6}
+
+footer{padding:60px 0 80px;text-align:center;border-top:1px solid #22262F;margin-top:50px}
+footer p{font-size:15px;color:#86868B;margin-bottom:6px}
+footer .fb{color:#FFF;font-weight:600;font-size:16px;margin-bottom:10px}
+
+@media(max-width:640px){
+  .wrap{padding:0 20px}
+  .say{padding:18px 18px;font-size:17px}
+  .slide{padding:42px 0}
+  .close-block,.howto{padding:26px 22px}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+
+<div class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Closer Script · ScaleFlow × Golden Bhoomi</p>
+    <h1>The call,<br>slide by slide.</h1>
+    <p class="hero-sub">Walkthrough for the 14-slide deck. Speak it, don't read it. Your one job on this call is a yes to Step 1 — the START package.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="howto">
+    <p><strong>How to use this.</strong> Each block matches one slide. The <span class="pause">pause</span> tags are where you stop talking. This client has no CRM and works by phone — so the whole story is "put everything in one place first, then grow." Don't sell AI. Don't sell ads. Sell the one clear system.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- 1 -->
+  <div class="slide">
+    <div class="slide-of"><span class="big">SLIDE 1</span><span class="of">/ 14 · Cover</span></div>
+    <div class="tag">Frame it as a system, not a tool</div>
+    <div class="say">"Maruti, thanks for the time. What I've put together isn't an AI pitch — it's a plan to put every enquiry your team gets into one clear system. Everything here came from what you told me. Stop me anywhere."</div>
+  </div>
+
+  <!-- 2 -->
+  <div class="slide">
+    <div class="slide-of"><span class="big">SLIDE 2</span><span class="of">/ 14 · What we understood</span></div>
+    <div class="tag">Set the priority order</div>
+    <div class="say">"The first priority isn't more advertising, and it isn't a complex AI. <span class="pause">pause</span> It's putting every enquiry in one place — so nothing gets lost before you grow. Make it visible first, then advertise, then automate."</div>
+  </div>
+
+  <!-- 3 -->
+  <div class="slide">
+    <div class="slide-of"><span class="big">SLIDE 3</span><span class="of">/ 14 · Problem 01 — scattered</span></div>
+    <div class="tag">Name what he lives with daily</div>
+    <div class="say">"Right now enquiries are scattered — calls, buyer requirements, next actions, all in different places. <span class="pause">pause</span> The fix is simple: one place where every call and requirement lands in the same list."</div>
+  </div>
+
+  <!-- 4 -->
+  <div class="slide">
+    <div class="slide-of"><span class="big">SLIDE 4</span><span class="of">/ 14 · Problem 02 — held in memory</span></div>
+    <div class="tag">The risk of a team of 10</div>
+    <div class="say">"Every next step is held in memory — there's no list of who contacts which client, and when. <span class="pause">pause</span> The fix: one responsible person per enquiry, with the next step recorded, not remembered."</div>
+  </div>
+
+  <!-- 5 -->
+  <div class="slide">
+    <div class="slide-of"><span class="big">SLIDE 5</span><span class="of">/ 14 · Problem 03 — manager can't see</span></div>
+    <div class="tag">Speak to the owner directly</div>
+    <div class="say">"As the manager, you can't easily see workload, reply speed, or which enquiries are actually moving toward a deal. <span class="pause">pause</span> The fix: one report — workload, reply speed and status, on one screen."</div>
+  </div>
+
+  <!-- 6 -->
+  <div class="slide">
+    <div class="slide-of"><span class="big">SLIDE 6</span><span class="of">/ 14 · Problem 04 — ads add confusion</span></div>
+    <div class="tag">Protect him from wasting money</div>
+    <div class="say">"And here's the important one: spending on ads before the process is fixed just brings enquiries nobody handles properly. <span class="pause">pause</span> Fix the process first — then advertising brings leads into a system that can actually hold them."</div>
+  </div>
+
+  <!-- 7 -->
+  <div class="slide">
+    <div class="slide-of"><span class="big">SLIDE 7</span><span class="of">/ 14 · What we suggest</span></div>
+    <div class="tag">The honest sequence</div>
+    <div class="say">"So what we suggest is an order, not a big spend. <span class="pause">pause</span> First, one place for every enquiry. Then test advertising. Then add automatic steps only where they're clearly needed. One list, one owner, one report."</div>
+  </div>
+
+  <!-- 8 -->
+  <div class="slide">
+    <div class="slide-of"><span class="big">SLIDE 8</span><span class="of">/ 14 · What we do first</span></div>
+    <div class="tag">The START package, concretely</div>
+    <div class="say">"Step one is the START package: a CRM set up around your work, the channels connected, one owner per enquiry, WhatsApp replies and reminders, a manager's report, plus training and handover. <span class="pause">pause</span> Nothing lives in memory — every opportunity is visible from day one."</div>
+  </div>
+
+  <!-- 9 -->
+  <div class="slide">
+    <div class="slide-of"><span class="big">SLIDE 9</span><span class="of">/ 14 · What we'll check</span></div>
+    <div class="tag">We invent no percentages</div>
+    <div class="say">"I won't promise you a number of enquiries before we've measured anything. <span class="pause">pause</span> At the start we record the real figures — are all enquiries saved, how fast you reply, do next contacts happen, where clients stop — then we agree together what should improve."</div>
+  </div>
+
+  <!-- 10 -->
+  <div class="slide">
+    <div class="slide-of"><span class="big">SLIDE 10</span><span class="of">/ 14 · The three steps</span></div>
+    <div class="tag">Show the whole road</div>
+    <div class="say">"Three steps. One: one place for enquiries — that's what we do now. Two: replies and reminders, once we check your phone and WhatsApp setup — included in START. Three: only after step one, we test one or two ad channels with a separate budget. <span class="pause">pause</span> We never skip to step three."</div>
+  </div>
+
+  <!-- 11 -->
+  <div class="slide">
+    <div class="slide-of"><span class="big">SLIDE 11</span><span class="of">/ 14 · Three packages</span></div>
+    <div class="tag">Anchor START before any price</div>
+    <div class="say">"The build comes in three sizes. <span class="pause">pause</span> The middle one, START, is what I recommend — it's the full 'one place for every enquiry.' Entry is the lightest way in; Growth adds a real AI assistant and the ad test. You choose the level; we confirm scope after a short channel review."</div>
+  </div>
+
+  <!-- 12 -->
+  <div class="slide">
+    <div class="slide-of"><span class="big">SLIDE 12</span><span class="of">/ 14 · A few questions</span></div>
+    <div class="tag">What makes the price exact</div>
+    <div class="say">"To quote you exactly I need a few things: which phone numbers and WhatsApp version the team uses, where enquiries come from today and whether there's a contact database, and which segments are priority. <span class="pause">pause</span> Answer those and I can lock the exact scope."</div>
+  </div>
+
+  <!-- 13 -->
+  <div class="slide price">
+    <div class="slide-of"><span class="big">SLIDE 13</span><span class="of">/ 14 · Prices — only now</span></div>
+    <div class="tag">Let the slide land before you speak</div>
+    <div class="say"><span class="pause">pause — let him read the whole slide first</span> "Entry from $2,250. START — the one I recommend — from $4,800. Growth from $8,700. Support on top, discount already in. Third-party costs — CRM licences, WhatsApp, AI usage, ad budget — go straight to the provider, zero markup. Payment: half to start, half on completion."</div>
+    <div class="note">Silence after the START number is your friend. Don't rush.</div>
+  </div>
+
+  <!-- 14 -->
+  <div class="slide">
+    <div class="slide-of"><span class="big">SLIDE 14</span><span class="of">/ 14 · What's in each</span></div>
+    <div class="tag">Everything builds on the last</div>
+    <div class="say">"Last slide — the three side by side, so you see what steps up between them. <span class="pause">pause</span> Each builds on the one before, so if you start at Entry you're never rebuilding to reach START later."</div>
+  </div>
+
+  </div>
+
+<!-- THE CLOSE -->
+<div class="divider">
+  <div class="wrap"><span class="badge">THE CLOSE · AFTER THE DECK</span></div>
+</div>
+<div class="wrap">
+  <div class="close-block">
+    <div class="slide-of"><span class="big">AFTER SLIDE 14</span><span class="of">· The close</span></div>
+    <h2>Ask for Step 1 — nothing bigger.</h2>
+    <div class="say">"So that's the whole picture, Maruti. I'm not asking you to commit to ads or a big system today — just Step 1, the one place for every enquiry. We do a short review of your channels, I confirm the exact scope and price, and you decide with real numbers. <span class="pause">pause — then ask, and stop talking</span> Can we start that this week?"</div>
+    <div class="note">Do not fill the silence. The next person to speak should be Maruti.</div>
+  </div>
+</div>
+
+<!-- OBJECTIONS -->
+<div class="divider">
+  <div class="wrap"><span class="badge">OBJECTION QUICK-REFERENCE</span></div>
+</div>
+<div class="wrap">
+
+  <div class="obj">
+    <div class="obj-q"><span class="mk">✕</span> "I want more leads first — can't you just run ads?"</div>
+    <div class="obj-a">"I can, but I'd be spending your money badly. Ads before the system just bring enquiries nobody handles — you'd pay for leads that still get lost. One place first, then ads land somewhere that holds them. That's why Step 1 comes before Step 3."</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-q"><span class="mk">✕</span> "It's expensive for a small team."</div>
+    <div class="obj-a">"That's exactly why START is sized for about 10 people — it's the one place for every enquiry, nothing more. Entry is lighter still if you want to start smaller. And the price is confirmed after a short review, so there are no surprises."</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-q"><span class="mk">✕</span> "We don't even have a CRM — is this too early?"</div>
+    <div class="obj-a">"It's the opposite — no CRM is exactly why now is the right time. We set one up around how you already work, so nothing lives in memory. You're not fixing an old system; you're starting clean."</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-q"><span class="mk">✕</span> "Can you guarantee more deals?"</div>
+    <div class="obj-a">"No — and I won't invent a percentage before I've seen your numbers. That's why we measure at the start. What I guarantee is that every enquiry becomes visible and nothing gets lost. The growth conversation comes after, on real figures."</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-q"><span class="mk">✕</span> "Let me think about it."</div>
+    <div class="obj-a">"Of course. The thinking's easier once we've done the short channel review — it costs you nothing and gives you the exact scope and price. Shall we at least start there?"</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-q"><span class="mk">✕</span> "Send me the details."</div>
+    <div class="obj-a">"I will — I've got the written proposal ready to send right after this. The prices are set; the review just confirms the exact scope. Can we get it booked while I've got you?"</div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <p class="fb">ScaleFlow Automation Agency</p>
+    <p>Dubai · AI Integration &amp; Automation</p>
+    <p>+971 56 305 7577 · scaleflow.ae@gmail.com</p>
+  </div>
+</footer>
+
+<script>
+  const bar=document.getElementById('bar');
+  addEventListener('scroll',()=>{
+    const h=document.documentElement;
+    const p=(h.scrollTop)/(h.scrollHeight-h.clientHeight);
+    bar.style.width=(p*100)+'%';
+  },{passive:true});
+</script>
+</body>
