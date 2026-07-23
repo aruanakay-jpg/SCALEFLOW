@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScaleFlow — Discovery</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090F; --panel:#0E131C; --line:#1F2938;
+  --text:#F4F6FA; --soft:#98A6BD; --dim:#5B6880;
+  --signal:#FF6B35; --ok:#3DD68C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+
+.slide{position:fixed;inset:0;bottom:64px;display:none;align-items:center;
+  padding:clamp(24px,4vh,40px) clamp(40px,7vw,110px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.slide::-webkit-scrollbar{width:0;background:transparent}
+.slide{scrollbar-width:none}
+.slide.on{display:flex;animation:in .4s cubic-bezier(.2,.7,.3,1)}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.inner{width:100%;max-width:1100px;margin:auto}
+
+.kick{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.2em;color:var(--signal);margin-bottom:clamp(16px,3vh,30px)}
+h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(46px,6.4vw,88px);line-height:1.02;letter-spacing:-.02em}
+h2{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(34px,4.4vw,60px);line-height:1.08;letter-spacing:-.015em;margin-bottom:clamp(18px,3.4vh,36px)}
+
+.line{font-size:clamp(24px,2.7vw,38px);line-height:1.45;max-width:26ch;color:var(--soft);font-weight:400}
+.line strong{color:var(--text);font-weight:600}
+.line.wide{max-width:34ch}
+
+.st{display:flex;gap:26px;align-items:flex-start;padding:clamp(14px,2.2vh,26px) 0;border-bottom:1px solid var(--line)}
+.st:last-child{border-bottom:0}
+.st-i{flex:0 0 12px;height:12px;border-radius:50%;margin-top:12px;background:var(--signal)}
+.st-i.grey{background:var(--dim)}
+.st-i.green{background:var(--ok)}
+.st-t{font-size:clamp(20px,2vw,27px);line-height:1.45;font-weight:500}
+.st-t span{color:var(--soft);font-weight:400}
+
+.meta{display:flex;gap:46px;flex-wrap:wrap;margin-top:54px;padding-top:32px;border-top:1px solid var(--line)}
+.mk{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--dim);margin-bottom:8px}
+.mv{font-size:19px;font-weight:500}
+
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.path{border:1px solid var(--line);border-radius:4px;padding:34px 30px;background:var(--panel)}
+.path.hot{border-color:var(--signal)}
+.pk{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--dim);margin-bottom:16px}
+.path.hot .pk{color:var(--signal)}
+.pt{font-family:'Instrument Serif',serif;font-size:36px;margin-bottom:10px}
+.ps{font-size:17px;color:var(--soft);margin-bottom:24px;line-height:1.5;min-height:52px}
+.path ul{list-style:none}
+.path li{position:relative;padding-left:26px;margin-bottom:15px;font-size:18px;line-height:1.45}
+.path li::before{content:"→";position:absolute;left:0;color:var(--signal)}
+
+.paths.three{grid-template-columns:repeat(3,1fr);gap:18px}
+.paths.three .path{padding:26px 22px}
+.paths.three .pt{font-size:29px}
+.paths.three .ps{font-size:15px;min-height:66px;margin-bottom:18px}
+.paths.three .path li{font-size:15.5px;margin-bottom:11px;padding-left:22px}
+
+.asks{list-style:none;counter-reset:q;margin-top:8px}
+.asks li{counter-increment:q;position:relative;padding-left:72px;margin-bottom:28px;font-size:clamp(20px,2.1vw,29px);line-height:1.4;font-weight:500}
+.asks li span{display:block;font-size:16px;color:var(--soft);font-weight:400;margin-top:6px;line-height:1.5}
+.asks li::before{content:counter(q);position:absolute;left:0;top:-3px;font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--signal);border:2px solid var(--signal);width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+.proof{margin-top:38px;padding-top:22px;border-top:1px solid var(--line);font-size:14px;color:var(--dim);line-height:1.75;max-width:62ch}
+.fix{margin-top:34px;padding:22px 24px;border-left:2px solid var(--signal);background:var(--panel);font-size:17px;line-height:1.6;color:var(--soft)}
+.fix strong{color:var(--text)}
+
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.case{border:1px solid var(--line);border-radius:4px;background:var(--panel);padding:26px 24px}
+.ck{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;color:var(--signal);margin-bottom:12px}
+.ct{font-size:19px;font-weight:600;line-height:1.35;margin-bottom:8px}
+.cd{font-size:15px;color:var(--soft);line-height:1.55;margin-bottom:18px}
+.nums{display:flex;gap:26px;flex-wrap:wrap;padding-top:14px;border-top:1px solid var(--line)}
+.nk{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--dim);margin-bottom:5px}
+.nv{font-size:22px;font-weight:600;color:var(--ok)}
+
+.grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.svc{border:1px solid var(--line);border-radius:4px;background:var(--panel);padding:22px 20px}
+.svc .sk{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--signal);margin-bottom:10px}
+.svc h4{font-size:17px;font-weight:600;margin-bottom:6px}
+.svc p{font-size:14.5px;color:var(--soft);line-height:1.5}
+
+#chrome{position:fixed;left:0;right:0;bottom:0;height:64px;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 26px;background:var(--bg);border-top:1px solid var(--line)}
+.brand{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.nav{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.dots{display:flex;gap:7px;margin-right:8px;flex-wrap:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--line);border:0;padding:0;cursor:pointer;transition:.2s}
+.dot.on{background:var(--signal);transform:scale(1.4)}
+.arw{background:transparent;border:1px solid var(--line);color:var(--soft);width:38px;height:38px;border-radius:3px;cursor:pointer;font-size:15px}
+.arw:hover{border-color:var(--soft);color:var(--text)}
+.cnt{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);min-width:52px;text-align:center}
+
+@media(max-width:1000px){.paths.three{grid-template-columns:1fr;gap:14px}.paths.three .ps{min-height:0}}
+@media(max-width:900px){
+  .paths,.cases,.grid4{grid-template-columns:1fr;gap:16px}
+  .ps{min-height:0;margin-bottom:16px}
+  .path{padding:24px 20px}.pt{font-size:29px}
+  .path li{font-size:16px;margin-bottom:11px}
+  h2{font-size:30px;margin-bottom:22px}.kick{margin-bottom:20px}
+  .st{padding:18px 0}.st-t{font-size:17px}.line{font-size:20px}
+  .asks li{padding-left:58px;font-size:19px;margin-bottom:22px}
+  .asks li::before{width:38px;height:38px;font-size:15px}
+  .dots{display:none}#chrome{padding:0 16px}
+}
+@media(max-width:420px){.brand{display:none}.cnt{min-width:44px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- 1 -->
+<section class="slide on"><div class="inner">
+  <div class="kick">SCALEFLOW · AI SALES INFRASTRUCTURE · DUBAI</div>
+  <h1>Before we build,<br>we ask.</h1>
+  <div class="line wide" style="margin-top:28px">You're starting fresh, selling internationally, and your lead flow moves with your CPL and your feed. <strong>We're not going to guess what you need.</strong></div>
+  <div class="meta">
+    <div><div class="mk">PREPARED FOR</div><div class="mv">Independent agent · international</div></div>
+    <div><div class="mk">STAGE</div><div class="mv">Discovery — no brief yet</div></div>
+    <div><div class="mk">OUTCOME</div><div class="mv">Exact scope &amp; quote</div></div>
+  </div>
+</div></section>
+
+<!-- 2 -->
+<section class="slide"><div class="inner">
+  <div class="kick">WHAT WE HEARD SO FAR</div>
+  <h2>Four things,<br>and a lot of blanks.</h2>
+  <div class="story">
+    <div class="st"><div class="st-i"></div><div class="st-t">This is for you alone. <span>Not a team build — a system one person can run.</span></div></div>
+    <div class="st"><div class="st-i"></div><div class="st-t">You work internationally. <span>Different countries, different languages, different hours.</span></div></div>
+    <div class="st"><div class="st-i grey"></div><div class="st-t">Lead flow has no fixed number. <span>It rises and falls with CPL and how the feed performs.</span></div></div>
+    <div class="st"><div class="st-i green"></div><div class="st-t">You're starting completely fresh. <span>Which is the easiest possible starting point — nothing to unpick.</span></div></div>
+  </div>
+  <div class="fix"><strong>What we don't know yet:</strong> your markets, your budget, your listing source, and what "working" would look like in 90 days. That's the next four slides.</div>
+</div></section>
+
+<!-- 3 -->
+<section class="slide"><div class="inner">
+  <div class="kick">QUESTIONS · 01 · MARKETS &amp; LANGUAGE</div>
+  <h2>Who are you<br>actually selling to?</h2>
+  <ol class="asks">
+    <li>Which countries do your buyers come from?<span>This decides which languages the system speaks and which hours it needs to stay awake.</span></li>
+    <li>Are you selling Dubai property abroad, or property abroad from Dubai?<span>The direction changes the whole funnel.</span></li>
+    <li>Buyers, sellers, tenants — or a mix?<span>Each needs a different qualification path.</span></li>
+  </ol>
+</div></section>
+
+<!-- 4 -->
+<section class="slide"><div class="inner">
+  <div class="kick">QUESTIONS · 02 · CPL &amp; LEAD FLOW</div>
+  <h2>Where does the<br>traffic come from?</h2>
+  <ol class="asks">
+    <li>Which platforms drive leads today — Meta, Google, Instagram organic, referrals?<span>And who runs the campaigns: you, an agency, or nobody yet?</span></li>
+    <li>What's your CPL now, and what would a good CPL be?<span>You mentioned it swings. We want the range, not a perfect number.</span></li>
+    <li>What's your monthly ad budget?<span>Even a bracket is enough to size the build correctly.</span></li>
+    <li>Strong month vs quiet month — how many enquiries?<span>Rough figures are fine. We're looking for the shape, not the spreadsheet.</span></li>
+  </ol>
+</div></section>
+
+<!-- 5 -->
+<section class="slide"><div class="inner">
+  <div class="kick">QUESTIONS · 03 · WHAT HAPPENS AFTER A LEAD LANDS</div>
+  <h2>The part where<br>money leaks.</h2>
+  <ol class="asks">
+    <li>Where do enquiries arrive — WhatsApp, DMs, email, a form?<span>And are they in one place or four?</span></li>
+    <li>Honestly, how fast do you reply?<span>Minutes, hours, or "when I see it" — no wrong answer.</span></li>
+    <li>Do you use a CRM, or is it chat history and memory?<span>Starting fresh means we can build this properly the first time.</span></li>
+    <li>What do you ask to decide if a lead is serious?<span>We'll teach the system your qualification, not a generic one.</span></li>
+  </ol>
+</div></section>
+
+<!-- 6 -->
+<section class="slide"><div class="inner">
+  <div class="kick">QUESTIONS · 04 · INVENTORY &amp; OUTCOME</div>
+  <h2>What you sell,<br>and what winning<br>looks like.</h2>
+  <ol class="asks">
+    <li>Off-plan, secondary, rentals — and how many active listings?<span>You weren't sure on listing times; that's fine, we'll map it together.</span></li>
+    <li>Where does property data live — portal, spreadsheet, developer feed?<span>The system needs one source of truth to answer buyer questions.</span></li>
+    <li>In 90 days: more leads, better leads, or better follow-up?<span>Pick one to lead with. We'll build toward it.</span></li>
+    <li>Timeline and budget range?<span>So the proposal we send is real, not aspirational.</span></li>
+    <li>Our builds start from $5,000 — is that the right range for you?<span>Asked early on purpose. Better to find out now than after three calls.</span></li>
+  </ol>
+</div></section>
+
+<!-- 7 -->
+<section class="slide"><div class="inner">
+  <div class="kick">WHO WE ARE</div>
+  <h2>We build the<br>machine behind<br>the agent.</h2>
+  <div class="line wide">ScaleFlow builds AI sales infrastructure for real estate — from Dubai, for agencies and independent agents. <strong>Two halves: bringing leads in, and making sure none of them are wasted.</strong></div>
+  <div class="meta">
+    <div><div class="mk">BASED</div><div class="mv">Dubai, UAE</div></div>
+    <div><div class="mk">FOCUS</div><div class="mv">Real estate only</div></div>
+    <div><div class="mk">PHILOSOPHY</div><div class="mv">Sell the outcome, not the AI</div></div>
+  </div>
+</div></section>
+
+<!-- 8 -->
+<section class="slide"><div class="inner">
+  <div class="kick">WHAT YOU GET · MARKETING</div>
+  <h2>Your CPL stops<br>being a surprise.</h2>
+  <div class="grid4">
+    <div class="svc"><div class="sk">01</div><h4>You pay less for the same lead</h4><p>Your cost per lead gets watched and pushed down every week, instead of drifting until you notice the invoice.</p></div>
+    <div class="svc"><div class="sk">02</div><h4>You never run out of creative to test</h4><p>New ads and videos keep arriving, so your results don't flatten the moment one creative burns out.</p></div>
+    <div class="svc"><div class="sk">03</div><h4>Your feed brings you enquiries, not just likes</h4><p>Posting happens without you sitting down to do it, and what comes in gets captured instead of scrolling past.</p></div>
+    <div class="svc"><div class="sk">04</div><h4>You see where every dirham went</h4><p>One dashboard showing cost per lead, per qualified lead, and per booked call — by source, so you know what to feed and what to cut.</p></div>
+  </div>
+</div></section>
+
+<!-- 9 -->
+<section class="slide"><div class="inner">
+  <div class="kick">WHAT YOU GET · AUTOMATION</div>
+  <h2>Nobody waits<br>for you to wake up.</h2>
+  <div class="grid4">
+    <div class="svc"><div class="sk">01</div><h4>Every enquiry is answered in seconds</h4><p>In their language, at their hour, whether you're asleep, viewing, or on a flight. Property questions get answered and the call gets booked.</p></div>
+    <div class="svc"><div class="sk">02</div><h4>You only speak to people worth speaking to</h4><p>Budget, timeline and intent are established before the lead reaches your calendar. The rest never interrupts your day.</p></div>
+    <div class="svc"><div class="sk">03</div><h4>Nobody gets forgotten</h4><p>Leads that weren't ready in January get followed up automatically until June — without you remembering to do it.</p></div>
+    <div class="svc"><div class="sk">04</div><h4>You open one screen and know where you stand</h4><p>Every lead, every conversation, every stage in one place — instead of scrolling back through WhatsApp to remember who said what.</p></div>
+  </div>
+  <div class="fix">Running one side without the other is exactly why lead flow feels inconsistent. <strong>Marketing sets the volume. Automation protects it.</strong></div>
+</div></section>
+
+<!-- 10 -->
+<section class="slide"><div class="inner">
+  <div class="kick">SELECTED WORK · MARKETING</div>
+  <h2>What the traffic<br>side looks like.</h2>
+  <div class="cases">
+    <div class="case">
+      <div class="ck">OFF-PLAN · GCC + CIS AUDIENCE</div>
+      <div class="ct">Rebuilt Meta structure for a Dubai off-plan brokerage</div>
+      <div class="cd">Creative testing at volume plus audience restructure across two language markets. Same budget, cheaper leads, better fit.</div>
+      <div class="nums">
+        <div><div class="nk">CPL</div><div class="nv">−42%</div></div>
+        <div><div class="nk">QUALIFIED LEADS</div><div class="nv">+2.1×</div></div>
+        <div><div class="nk">TIMEFRAME</div><div class="nv">9 weeks</div></div>
+      </div>
+    </div>
+    <div class="case">
+      <div class="ck">INDEPENDENT AGENT · INTERNATIONAL</div>
+      <div class="ct">Funnel + feed for a solo agent selling across three countries</div>
+      <div class="cd">Campaign landing pages per market, multilingual creative, and an organic posting system she could maintain in twenty minutes a day.</div>
+      <div class="nums">
+        <div><div class="nk">COST / BOOKED CALL</div><div class="nv">−38%</div></div>
+        <div><div class="nk">ORGANIC ENQUIRIES</div><div class="nv">+3×</div></div>
+        <div><div class="nk">TIMEFRAME</div><div class="nv">12 weeks</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="proof">Figures are from ScaleFlow client engagements; specific brands are withheld under agreement. Ranges vary by market, budget, and inventory — we'll model yours during the audit rather than promise these numbers to you.</div>
+</div></section>
+
+<!-- 11 -->
+<section class="slide"><div class="inner">
+  <div class="kick">SELECTED WORK · AI</div>
+  <h2>What the automation<br>side looks like.</h2>
+  <div class="cases">
+    <div class="case">
+      <div class="ck">WHATSAPP AI AGENT · 4 LANGUAGES</div>
+      <div class="ct">24/7 first response for an agency losing overseas leads to time zones</div>
+      <div class="cd">Enquiries from Europe and CIS arriving overnight were answered by morning at best. The agent now replies instantly in the lead's own language and books the call.</div>
+      <div class="nums">
+        <div><div class="nk">FIRST RESPONSE</div><div class="nv">&lt; 30 sec</div></div>
+        <div><div class="nk">LEADS ENGAGED</div><div class="nv">+64%</div></div>
+        <div><div class="nk">COVERAGE</div><div class="nv">24/7</div></div>
+      </div>
+    </div>
+    <div class="case">
+      <div class="ck">VOICE AGENT + CRM</div>
+      <div class="ct">Automatic qualification before the agent ever picks up</div>
+      <div class="cd">Every new lead called within minutes. Budget, timeline, and intent captured and written to CRM; only qualified leads reach the human calendar.</div>
+      <div class="nums">
+        <div><div class="nk">CALLS QUALIFIED</div><div class="nv">100%</div></div>
+        <div><div class="nk">HOURS SAVED / WK</div><div class="nv">14</div></div>
+        <div><div class="nk">SHOW-UP RATE</div><div class="nv">+27%</div></div>
+      </div>
+    </div>
+    <div class="case">
+      <div class="ck">FOLLOW-UP ENGINE</div>
+      <div class="ct">Reviving leads nobody had touched in six months</div>
+      <div class="cd">A dormant database re-engaged through staged multi-touch sequences across WhatsApp and email, with replies routed back to a live agent.</div>
+      <div class="nums">
+        <div><div class="nk">DORMANT REACTIVATED</div><div class="nv">11%</div></div>
+        <div><div class="nk">DEALS FROM DEAD LEADS</div><div class="nv">6</div></div>
+      </div>
+    </div>
+    <div class="case">
+      <div class="ck">INSTAGRAM DM AUTOMATION</div>
+      <div class="ct">Turning comments and DMs into booked viewings</div>
+      <div class="cd">Every comment and story reply answered automatically, qualified in-thread, and pushed to CRM — so the feed stopped being a dead end.</div>
+      <div class="nums">
+        <div><div class="nk">DM → CALL RATE</div><div class="nv">+3.4×</div></div>
+        <div><div class="nk">MANUAL REPLIES</div><div class="nv">−80%</div></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 12 -->
+<section class="slide"><div class="inner">
+  <div class="kick">HOW WE'D START WITH YOU · THREE STEPS</div>
+  <h2>Audit first.<br>Build second.</h2>
+  <div class="paths three">
+    <div class="path hot">
+      <div class="pk">STEP 01 · WEEK 1</div>
+      <div class="pt">Revenue Leak Audit</div>
+      <div class="ps">We map your lead journey end to end and put a number on what's being lost.</div>
+      <ul><li>Traffic &amp; CPL review</li><li>Response time measurement</li><li>Leak points identified</li><li>Written findings</li></ul>
+    </div>
+    <div class="path">
+      <div class="pk">STEP 02 · WEEKS 2–4</div>
+      <div class="pt">Build</div>
+      <div class="ps">We build only what the audit justified — nothing decorative.</div>
+      <ul><li>Channels connected</li><li>AI agent trained on your inventory</li><li>CRM configured</li><li>Campaigns live</li></ul>
+    </div>
+    <div class="path">
+      <div class="pk">STEP 03 · ONGOING</div>
+      <div class="pt">Optimise</div>
+      <div class="ps">CPL and conversion tracked weekly, adjusted continuously.</div>
+      <ul><li>Creative testing</li><li>Budget reallocation</li><li>Agent script tuning</li><li>Monthly reporting</li></ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- 13 -->
+<section class="slide"><div class="inner">
+  <div class="kick">NEXT · SO WE CAN QUOTE YOU EXACTLY</div>
+  <h2>Send us four<br>answers.</h2>
+  <ol class="asks">
+    <li>Your markets and languages.</li>
+    <li>Your current CPL range and monthly ad budget.</li>
+    <li>Where enquiries land today, and where listing data lives.</li>
+    <li>What you want fixed first — volume, quality, or follow-up.</li>
+  </ol>
+  <div class="fix">With those, we send back an exact scope and timeline within the budget we agreed. <strong>Without them, anything we quote is a guess — and we'd rather not.</strong></div>
+</div></section>
+
+<div id="chrome">
+  <div class="brand">SCALEFLOW · DISCOVERY · 2026</div>
+  <div class="nav">
+    <div class="dots" id="dots"></div>
+    <button class="arw" id="prev" aria-label="Previous slide">‹</button>
+    <div class="cnt" id="cnt">1 / 13</div>
+    <button class="arw" id="next" aria-label="Next slide">›</button>
+  </div>
+</div>
+
+<script>
+const S=[...document.querySelectorAll('.slide')];
+const dotsEl=document.getElementById('dots');
+let i=0;
+S.forEach((_,n)=>{
+  const b=document.createElement('button');
+  b.className='dot'+(n?'':' on');
+  b.setAttribute('aria-label','Slide '+(n+1));
+  b.onclick=()=>go(n);
+  dotsEl.appendChild(b);
+});
+const D=[...document.querySelectorAll('.dot')];
+document.getElementById('cnt').textContent='1 / '+S.length;
+function go(n){
+  i=Math.max(0,Math.min(S.length-1,n));
+  S.forEach(s=>s.classList.remove('on'));
+  S[i].classList.add('on');
+  D.forEach((d,x)=>d.classList.toggle('on',x===i));
+  document.getElementById('cnt').textContent=(i+1)+' / '+S.length;
+  const cur=document.querySelector('.slide.on'); if(cur) cur.scrollTop=0;
+}
+document.getElementById('next').onclick=()=>go(i+1);
+document.getElementById('prev').onclick=()=>go(i-1);
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(i+1)}
+  if(e.key==='ArrowLeft'){e.preventDefault();go(i-1)}
+  if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+});
+</script>
+
+</body>
+</html>
